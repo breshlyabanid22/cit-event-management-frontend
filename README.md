@@ -1,5 +1,11 @@
-# cit-event-management-system
-CIT Event Management System
+# CIT Event Management System
+
+## Is a event management system built with spring boot and reat js 
+
+### Installations
+npm install
+npm i react-router-dom
+npm i axios
+npm install -D tailwindcss postcss autoprefixer
 
 author: Breshly U. Abanid
-
