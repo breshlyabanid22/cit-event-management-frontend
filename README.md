@@ -6,6 +6,7 @@
 npm install\    
 npm i react-router-dom\
 npm i axios\
-npm install -D tailwindcss postcss autoprefixer
+npm install -D tailwindcss postcss autoprefixer\
+npx tailwindcss init -p
 
 author: Breshly U. Abanid
