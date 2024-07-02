@@ -12,6 +12,7 @@ import {
 } from "@nextui-org/react";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -91,9 +92,22 @@ export default function Login() {
                 />
                 <Input
                   isRequired
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibility}
+                    >
+                      {isVisible ? (
+                        <Eye className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <EyeOff className="text-2xl text-default-400 pointer-events-none" />
+                      )}
+                    </button>
+                  }
                   label="Password"
                   placeholder="Enter your password"
-                  type="password"
+                  type={isVisible ? "text" : "password"}
                   {...loginRegister("password")}
                   errorMessage={loginErrors.password?.message}
                   isInvalid={!!loginErrors.password}
@@ -135,18 +149,44 @@ export default function Login() {
                 />
                 <Input
                   isRequired
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibility}
+                    >
+                      {isVisible ? (
+                        <Eye className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <EyeOff className="text-2xl text-default-400 pointer-events-none" />
+                      )}
+                    </button>
+                  }
                   label="Password"
                   placeholder="Enter your password"
-                  type="password"
                   {...registerRegister("password")}
                   errorMessage={registerErrors.password?.message}
                   isInvalid={!!registerErrors.password}
+                  type={isVisible ? "text" : "password"}
                 />
                 <Input
                   isRequired
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibility}
+                    >
+                      {isVisible ? (
+                        <Eye className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <EyeOff className="text-2xl text-default-400 pointer-events-none" />
+                      )}
+                    </button>
+                  }
                   label="Confirm Password"
                   placeholder="Confirm your password"
-                  type="password"
+                  type={isVisible ? "text" : "password"}
                   {...registerRegister("passwordConfirm")}
                   errorMessage={registerErrors.passwordConfirm?.message}
                   isInvalid={!!registerErrors.passwordConfirm}
