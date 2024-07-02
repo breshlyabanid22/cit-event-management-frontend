@@ -1,6 +1,6 @@
-import { Button } from "@nextui-org/button";
 import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
+import { Link as RouterLink } from "react-router-dom";
 import { Input } from "@nextui-org/input";
 import {
   Navbar as NextUINavbar,
@@ -11,6 +11,7 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
+import { Button } from "@nextui-org/button";
 import { link as linkStyles } from "@nextui-org/theme";
 import clsx from "clsx";
 
@@ -97,14 +98,10 @@ export const Navbar = () => {
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         <NavbarItem className="hidden md:flex">
           <Button
-            isExternal
-            as={Link}
             className="text-sm font-normal text-default-600 bg-default-100"
-            href={siteConfig.links.sponsor}
-            startContent={<HeartFilledIcon className="text-danger" />}
             variant="flat"
           >
-            Sponsor
+            <RouterLink to="/login">Login</RouterLink>
           </Button>
         </NavbarItem>
       </NavbarContent>
