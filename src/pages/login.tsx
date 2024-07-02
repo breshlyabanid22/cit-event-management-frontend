@@ -11,26 +11,21 @@ import {
   CardBody,
 } from "@nextui-org/react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters long",
-  }),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
 const registerSchema = z
   .object({
-    email: z.string().email(),
-    password: z.string().min(8, {
-      message: "Password must be at least 8 characters long",
-    }),
-    passwordConfirm: z.string().min(8, {
-      message: "Password must be at least 8 characters long",
-    }),
-    name: z.string().min(3, {
-      message: "Username must be at least 3 characters long",
-    }),
+    name: z.string().min(3, "Username must be at least 3 characters long"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters long"),
+    passwordConfirm: z
+      .string()
+      .min(8, "Password must be at least 8 characters long"),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     message: "Passwords don't match",
@@ -39,29 +34,39 @@ const registerSchema = z
 
 export default function Login() {
   const [selected, setSelected] = useState("login");
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const loginForm = useForm<z.infer<typeof loginSchema>>({
+  const {
+    register: loginRegister,
+    handleSubmit: handleLoginSubmit,
+    formState: { errors: loginErrors },
+  } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
   });
 
-  const registerForm = useForm<z.infer<typeof registerSchema>>({
+  const {
+    register: registerRegister,
+    handleSubmit: handleRegisterSubmit,
+    formState: { errors: registerErrors },
+  } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof loginSchema>) => {};
+  const onLoginSubmit = async (data: z.infer<typeof loginSchema>) => {
+    console.log("Login data:", data);
+    // Handle login logic here
+  };
 
-  //const { toast } = useToast();
   const onRegisterSubmit = async (data: z.infer<typeof registerSchema>) => {
-    toast({
-      title: "Account created",
-      description: "Account created successfully",
-    });
+    console.log("Register data:", data);
+    // Handle registration logic here
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      {/* <Toaster /> */}
-      <Card className="max-w-full w-[340px] h-[400px]">
+    <div className="relative flex justify-center items-center h-screen overflow-hidden">
+      <GradientBackground />
+      <Card className="max-w-full w-[340px]">
         <CardBody className="overflow-hidden">
           <Tabs
             fullWidth
@@ -71,18 +76,27 @@ export default function Login() {
             onSelectionChange={setSelected}
           >
             <Tab key="login" title="Login">
-              <form className="flex flex-col gap-4">
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={handleLoginSubmit(onLoginSubmit)}
+              >
                 <Input
                   isRequired
                   label="Email"
                   placeholder="Enter your email"
                   type="email"
+                  {...loginRegister("email")}
+                  errorMessage={loginErrors.email?.message}
+                  isInvalid={!!loginErrors.email}
                 />
                 <Input
                   isRequired
                   label="Password"
                   placeholder="Enter your password"
                   type="password"
+                  {...loginRegister("password")}
+                  errorMessage={loginErrors.password?.message}
+                  isInvalid={!!loginErrors.password}
                 />
                 <p className="text-center text-small">
                   Need to create an account?{" "}
@@ -91,31 +105,51 @@ export default function Login() {
                   </Link>
                 </p>
                 <div className="flex gap-2 justify-end">
-                  <Button fullWidth color="primary">
+                  <Button fullWidth color="primary" type="submit">
                     Login
                   </Button>
                 </div>
               </form>
             </Tab>
             <Tab key="sign-up" title="Sign up">
-              <form className="flex flex-col gap-4 h-[300px]">
+              <form
+                className="flex flex-col gap-4 h-full"
+                onSubmit={handleRegisterSubmit(onRegisterSubmit)}
+              >
                 <Input
                   isRequired
                   label="Name"
                   placeholder="Enter your name"
-                  type="password"
+                  {...registerRegister("name")}
+                  errorMessage={registerErrors.name?.message}
+                  isInvalid={!!registerErrors.name}
                 />
                 <Input
                   isRequired
                   label="Email"
                   placeholder="Enter your email"
                   type="email"
+                  {...registerRegister("email")}
+                  errorMessage={registerErrors.email?.message}
+                  isInvalid={!!registerErrors.email}
                 />
                 <Input
                   isRequired
                   label="Password"
                   placeholder="Enter your password"
                   type="password"
+                  {...registerRegister("password")}
+                  errorMessage={registerErrors.password?.message}
+                  isInvalid={!!registerErrors.password}
+                />
+                <Input
+                  isRequired
+                  label="Confirm Password"
+                  placeholder="Confirm your password"
+                  type="password"
+                  {...registerRegister("passwordConfirm")}
+                  errorMessage={registerErrors.passwordConfirm?.message}
+                  isInvalid={!!registerErrors.passwordConfirm}
                 />
                 <p className="text-center text-small">
                   Already have an account?{" "}
@@ -124,7 +158,7 @@ export default function Login() {
                   </Link>
                 </p>
                 <div className="flex gap-2 justify-end">
-                  <Button fullWidth color="primary">
+                  <Button fullWidth color="primary" type="submit">
                     Sign up
                   </Button>
                 </div>
@@ -136,3 +170,27 @@ export default function Login() {
     </div>
   );
 }
+
+const GradientBackground = () => {
+  return (
+    <motion.div
+      animate={{
+        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+      }}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: "linear-gradient(45deg, #2c0052, #000066, #006666)",
+        backgroundSize: "400% 400%",
+      }}
+      transition={{
+        duration: 15,
+        ease: "easeInOut",
+        repeat: Infinity,
+      }}
+    />
+  );
+};
