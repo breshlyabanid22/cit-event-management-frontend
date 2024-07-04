@@ -13,6 +13,8 @@ import {
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
+import { useQueryClient } from "react-query";
+import { Register } from "@/spring/utils";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -37,6 +39,8 @@ export default function Login() {
   const [selected, setSelected] = useState("login");
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const queryClient = useQueryClient()
+
 
   const {
     register: loginRegister,
@@ -55,13 +59,11 @@ export default function Login() {
   });
 
   const onLoginSubmit = async (data: z.infer<typeof loginSchema>) => {
-    console.log("Login data:", data);
-    // Handle login logic here
+    await Login(data)
   };
 
   const onRegisterSubmit = async (data: z.infer<typeof registerSchema>) => {
-    console.log("Register data:", data);
-    // Handle registration logic here
+    await Register(data)
   };
 
   return (

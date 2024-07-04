@@ -1,0 +1,70 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+	"organizeImports": { "enabled": true },
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": false,
+			"a11y": {
+				"noAccessKey": "error",
+				"noAriaUnsupportedElements": "error",
+				"noAutofocus": "error",
+				"noBlankTarget": "error",
+				"noDistractingElements": "error",
+				"noHeaderScope": "error",
+				"noInteractiveElementToNoninteractiveRole": "error",
+				"noNoninteractiveElementToInteractiveRole": "error",
+				"noNoninteractiveTabindex": "error",
+				"noPositiveTabindex": "error",
+				"noRedundantAlt": "error",
+				"noRedundantRoles": "error",
+				"useAltText": "error",
+				"useAnchorContent": "error",
+				"useAriaActivedescendantWithTabindex": "error",
+				"useAriaPropsForRole": "error",
+				"useHeadingContent": "error",
+				"useHtmlLang": "error",
+				"useIframeTitle": "error",
+				"useKeyWithClickEvents": "warn",
+				"useKeyWithMouseEvents": "error",
+				"useMediaCaption": "error",
+				"useValidAnchor": "error",
+				"useValidAriaProps": "error",
+				"useValidAriaRole": "error",
+				"useValidAriaValues": "error"
+			},
+			"complexity": { "useArrowFunction": "off" },
+			"correctness": {
+				"noChildrenProp": "error",
+				"noUnusedImports": "warn",
+				"noUnusedVariables": "warn",
+				"useExhaustiveDependencies": "off",
+				"useHookAtTopLevel": "error",
+				"useJsxKeyInIterable": "error"
+			},
+			"security": { "noDangerouslySetInnerHtmlWithChildren": "error" },
+			"style": { "useBlockStatements": "off" },
+			"suspicious": {
+				"noCommentText": "error",
+				"noConsoleLog": "warn",
+				"noDuplicateJsxProps": "error"
+			}
+		},
+		"ignore": [
+			".now/*",
+			"**/*.css",
+			"**/.changeset",
+			"**/dist",
+			"esm/*",
+			"public/*",
+			"tests/*",
+			"scripts/*",
+			"**/*.config.js",
+			"**/.DS_Store",
+			"**/node_modules",
+			"**/coverage",
+			"**/.next",
+			"**/build"
+		]
+	}
+}
