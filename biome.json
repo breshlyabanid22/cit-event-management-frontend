@@ -39,7 +39,6 @@
 				"noUnusedImports": "warn",
 				"noUnusedVariables": "warn",
 				"useExhaustiveDependencies": "off",
-				"useHookAtTopLevel": "error",
 				"useJsxKeyInIterable": "error"
 			},
 			"security": { "noDangerouslySetInnerHtmlWithChildren": "error" },

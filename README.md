@@ -2,11 +2,13 @@
 
 ## Technologies Used
 
+- [TypeScript](https://www.typescriptlang.org)
+- [React](https://reactjs.org)
+- [React Router](https://reactrouter.com)
 - [Vite](https://vitejs.dev/guide/)
 - [NextUI](https://nextui.org)
 - [Tailwind CSS](https://tailwindcss.com)
 - [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org)
 - [Framer Motion](https://www.framer.com/motion)
 
 ## How to Use
