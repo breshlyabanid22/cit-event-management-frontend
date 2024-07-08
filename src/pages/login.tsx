@@ -11,9 +11,10 @@ import {
 	CardBody,
 } from "@nextui-org/react";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
 import { useQueryClient } from "react-query";
 import { Register } from "@/spring/utils";
+import ViewEventIcon from "@/components/icons/ViewEventIcon";
+import EyeOffIcon from "@/components/icons/EyeOffIcon";
 
 const loginSchema = z.object({
 	username: z.string().min(3, "Username must be at least 3 characters long"),
@@ -104,9 +105,9 @@ export default function Login() {
 											onClick={toggleVisibility}
 										>
 											{isVisible ? (
-												<Eye className="text-2xl text-default-400 pointer-events-none" />
+												<ViewEventIcon className="text-2xl text-default-400 pointer-events-none" />
 											) : (
-												<EyeOff className="text-2xl text-default-400 pointer-events-none" />
+												<EyeOffIcon className="text-2xl text-default-400 pointer-events-none" />
 											)}
 										</button>
 									}
@@ -188,9 +189,9 @@ export default function Login() {
 											onClick={toggleVisibility}
 										>
 											{isVisible ? (
-												<Eye className="text-2xl text-default-400 pointer-events-none" />
+												<ViewEventIcon className="text-2xl text-default-400 pointer-events-none" />
 											) : (
-												<EyeOff className="text-2xl text-default-400 pointer-events-none" />
+												<EyeOffIcon className="text-2xl text-default-400 pointer-events-none" />
 											)}
 										</button>
 									}
@@ -210,9 +211,9 @@ export default function Login() {
 											onClick={toggleVisibility}
 										>
 											{isVisible ? (
-												<Eye className="text-2xl text-default-400 pointer-events-none" />
+												<ViewEventIcon className="text-2xl text-default-400 pointer-events-none" />
 											) : (
-												<EyeOff className="text-2xl text-default-400 pointer-events-none" />
+												<EyeOffIcon className="text-2xl text-default-400 pointer-events-none" />
 											)}
 										</button>
 									}

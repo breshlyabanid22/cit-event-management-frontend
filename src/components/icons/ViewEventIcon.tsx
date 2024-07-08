@@ -1,4 +1,4 @@
-export default function ViewEventIcon() {
+export default function ViewEventIcon(props: React.SVGProps<SVGSVGElement>) {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
