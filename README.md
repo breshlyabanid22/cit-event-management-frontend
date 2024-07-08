@@ -16,7 +16,7 @@
 To clone the project, run the following command:
 
 ```bash
-git clone https://github.com/breshlyabanid22/cit-event-management-system.git
+git clone https://github.com/breshlyabanid22/cit-event-management-frontend.git
 ```
 
 ```bash

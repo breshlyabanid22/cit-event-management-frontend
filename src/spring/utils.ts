@@ -7,6 +7,7 @@ export const Register = async (userData: accountRegister) => {
 		const response =  axios.post("http://localhost:8080/register", userData, {
       headers: {
         "Content-Type": "application/json",
+		"withCredentials": true,
       },
     });
     return response;
