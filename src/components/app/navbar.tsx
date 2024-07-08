@@ -27,9 +27,6 @@ export default function AppNavBar() {
 					aria-label={isMenuOpen ? "Close menu" : "Open menu"}
 					className="sm:hidden"
 				/>
-				<NavbarBrand>
-					<p className="font-bold text-inherit">Home</p>
-				</NavbarBrand>
 			</NavbarContent>
 
 			<NavbarContent className="hidden sm:flex gap-4" justify="center">

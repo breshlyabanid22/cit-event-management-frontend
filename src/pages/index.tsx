@@ -12,7 +12,7 @@ export default function IndexPage() {
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="inline-block max-w-lg text-center justify-center">
           <h1 className={title()}>Your&nbsp;</h1>
-          <h1 className={title({ color: "violet" })}>All-in-one&nbsp;</h1>
+          <h1 className={title({ color: "yellow" })}>All-in-one&nbsp;</h1>
           <br />
           <h1 className={title()}>Event Management Solution</h1>
           <h4 className={subtitle({ class: "mt-4" })}>

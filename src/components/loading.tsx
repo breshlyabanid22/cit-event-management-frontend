@@ -1,4 +1,3 @@
-import DefaultLayout from "@/layouts/default";
 import { motion } from "framer-motion";
 
 const LoadingDot = {

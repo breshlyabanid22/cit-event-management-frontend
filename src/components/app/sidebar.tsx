@@ -1,4 +1,4 @@
-import { Listbox, ListboxItem, ListboxSection, User } from "@nextui-org/react";
+import { Link, Listbox, ListboxItem, ListboxSection, User } from "@nextui-org/react";
 import HomeIcon from "../icons/HomeIcon";
 import LogoutIcon from "../icons/LogoutIcon";
 import LogoIcon from "../icons/LogoIcon";
@@ -16,7 +16,7 @@ export default function AppSidebar() {
 				<Listbox variant="bordered" aria-label="Listbox menu with sections">
 					<ListboxSection title="Navigate">
 						<ListboxItem key="Home" startContent={<HomeIcon />}>
-							Home
+            <Link color="foreground" href="/app">Home</Link>
 						</ListboxItem>
 					</ListboxSection>
 					<ListboxSection title="Account">

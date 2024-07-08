@@ -1,5 +1,6 @@
 import { accountRegister } from "@/types";
 import axios from "axios";
+import { redirect } from "react-router-dom";
 
 export const Register = async (userData: accountRegister) => {
 	try {
@@ -27,5 +28,6 @@ export const Login = async (data: any) => {
 		throw new Error("Network response was not ok");
 	}
 
+	redirect("/app")
 	return response.json();
 };

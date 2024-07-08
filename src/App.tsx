@@ -5,6 +5,7 @@ import IndexPage from "@/pages/index";
 import DefaultLayout from "./layouts";
 import Loader from "./components/loading";
 import UserLayout from "./layouts/user";
+import ErrorPage from "./pages/error";
 const AboutPage = lazy(() => import("@/pages/about"));
 const Login = lazy(() => import("@/pages/login"));
 const Home = lazy(() => import("@/pages/app/home"));
@@ -63,6 +64,9 @@ function App() {
 					}
 				/>
 			</Route>
+
+
+			<Route path="*" element={<ErrorPage />} />
 
 		</Routes>
 	);

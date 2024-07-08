@@ -72,7 +72,7 @@ export default function Login() {
 
 	return (
 		<div className="relative flex justify-center items-center h-screen overflow-hidden">
-			<Card className="max-w-full w-[340px]">
+			<Card className="max-w-full">
 				<CardBody className="overflow-hidden">
 					<Tabs
 						fullWidth
@@ -83,7 +83,7 @@ export default function Login() {
 					>
 						<Tab key="login" title="Login">
 							<form
-								className="flex flex-col gap-4"
+								className="flex flex-col gap-4 w-[340px]"
 								onSubmit={handleLoginSubmit(onLoginSubmit)}
 							>
 								<Input
@@ -132,7 +132,7 @@ export default function Login() {
 						</Tab>
 						<Tab key="sign-up" title="Sign up">
 							<form
-								className="flex flex-col gap-4 h-full"
+								className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 "
 								onSubmit={handleRegisterSubmit(onRegisterSubmit)}
 							>
 								<Input
@@ -162,21 +162,22 @@ export default function Login() {
 								/>
 								<Input
 									isRequired
-									label="Email"
-									placeholder="Enter your email"
-									type="email"
-									{...registerRegister("email")}
-									errorMessage={registerErrors.email?.message}
-									isInvalid={!!registerErrors.email}
-								/>
-								<Input
-									isRequired
 									label="School ID"
 									placeholder="Enter your school ID"
 									type="schoolId"
 									{...registerRegister("schoolId")}
 									errorMessage={registerErrors.schoolId?.message}
 									isInvalid={!!registerErrors.schoolId}
+								/>
+								<Input
+									className="col-span-2"
+									isRequired
+									label="Email"
+									placeholder="Enter your email"
+									type="email"
+									{...registerRegister("email")}
+									errorMessage={registerErrors.email?.message}
+									isInvalid={!!registerErrors.email}
 								/>
 								<Input
 									isRequired
@@ -222,13 +223,13 @@ export default function Login() {
 									errorMessage={registerErrors.passwordConfirm?.message}
 									isInvalid={!!registerErrors.passwordConfirm}
 								/>
-								<p className="text-center text-small">
+								<p className="col-span-2 text-center text-small">
 									Already have an account?{" "}
 									<Link size="sm" onPress={() => setSelected("login")}>
 										Login
 									</Link>
 								</p>
-								<div className="flex gap-2 justify-end">
+								<div className="flex gap-2 justify-end col-span-2">
 									<Button fullWidth color="primary" type="submit">
 										Sign up
 									</Button>
