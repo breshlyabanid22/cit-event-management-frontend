@@ -12,9 +12,11 @@ import {
 } from "@nextui-org/react";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
-import { Register } from "@/spring/utils";
 import ViewEventIcon from "@/components/icons/ViewEventIcon";
 import EyeOffIcon from "@/components/icons/EyeOffIcon";
+import { accountRegister, accountLogin } from "@/types";
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const loginSchema = z.object({
 	username: z.string().min(3, "Username must be at least 3 characters long"),
@@ -29,7 +31,7 @@ const registerSchema = z
 		lastName: z.string().min(1, "Last Name must be at least 1 character long"),
 		username: z.string().min(3, "Username must be at least 3 characters long"),
 		email: z.string().email("Invalid email address"),
-		schoolId: z.string().min(6, "School ID must be at least 6 character long"),
+		schoolID: z.string().min(6, "School ID must be at least 6 character long"),
 		password: z.string().min(8, "Password must be at least 8 characters long"),
 		passwordConfirm: z
 			.string()
@@ -40,11 +42,12 @@ const registerSchema = z
 		path: ["passwordConfirm"],
 	});
 
-export default function Login() {
+export default function Login(loginData: accountLogin) {
 	const [selected, setSelected] = useState("login");
 	const [isVisible, setIsVisible] = useState(false);
 	const toggleVisibility = () => setIsVisible(!isVisible);
 	const queryClient = useQueryClient();
+	const navigate = useNavigate();
 
 	const {
 		register: loginRegister,
@@ -63,16 +66,87 @@ export default function Login() {
 	});
 
 	const onLoginSubmit = async (data: z.infer<typeof loginSchema>) => {
-		await Login(data);
+		try {
+			const loginData: accountLogin = {
+				username: data.username,
+				password: data.password,
+			};
+
+			const response = await fetch("http://localhost:8080/users/login", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(loginData),
+				credentials: "include",
+			});
+
+			if (response.ok) {
+				navigate("/app");
+			} else {
+				const errorData = await response.json();
+				throw new Error(errorData.message || "Login failed");
+			}
+
+			return response;
+		} catch (error) {
+			console.error("Login failed:", error);
+			throw error; 
+		}
 	};
 
 	const onRegisterSubmit = async (data: z.infer<typeof registerSchema>) => {
-		console.log(data);
-		await Register(data);
+		try {
+			const registerData: accountRegister = {
+				firstName: data.firstName,
+				lastName: data.lastName,
+				username: data.username,
+				email: data.email,
+				schoolID: data.schoolID,
+				password: data.password,
+			};
+
+			const response = await fetch("http://localhost:8080/users/register", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(registerData),
+				credentials: "include", 
+			});
+
+			if (response.ok) {
+				toast.success("Registration successful!");
+			} else {
+				const errorData = await response.json();
+				throw new Error(errorData.message || "Registration failed");
+			}
+
+			return response;
+		} catch (error) {
+			console.error("Registration failed:", error);
+			throw error; 
+		}
 	};
 
 	return (
 		<div className="relative flex justify-center items-center h-screen overflow-hidden">
+			<Toaster
+				position="bottom-right"
+				reverseOrder={false}
+				gutter={8}
+				containerClassName=""
+				containerStyle={{}}
+				toastOptions={{
+					// Define default options
+					className: "",
+					duration: 5000,
+					style: {
+						background: "#800000",
+						color: "#fff",
+					},
+				}}
+			/>
 			<Card className="max-w-full">
 				<CardBody className="overflow-hidden">
 					<Tabs
@@ -166,9 +240,9 @@ export default function Login() {
 									label="School ID"
 									placeholder="Enter your school ID"
 									type="schoolId"
-									{...registerRegister("schoolId")}
-									errorMessage={registerErrors.schoolId?.message}
-									isInvalid={!!registerErrors.schoolId}
+									{...registerRegister("schoolID")}
+									errorMessage={registerErrors.schoolID?.message}
+									isInvalid={!!registerErrors.schoolID}
 								/>
 								<Input
 									className="col-span-2"

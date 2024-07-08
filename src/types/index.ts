@@ -9,9 +9,13 @@ export type accountRegister = {
   lastName: string;
   username: string;
   email: string;
-  schoolId: string;
+  schoolID: string;
   password: string;
-  passwordConfirm: string;
+};
+
+export type accountLogin = {
+  username: string;
+  password: string;
 };
 
 export type User = {
