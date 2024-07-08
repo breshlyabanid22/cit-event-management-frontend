@@ -4,8 +4,10 @@ import { lazy, Suspense } from "react";
 import IndexPage from "@/pages/index";
 import DefaultLayout from "./layouts";
 import Loader from "./components/loading";
+import UserLayout from "./layouts/user";
 const AboutPage = lazy(() => import("@/pages/about"));
 const Login = lazy(() => import("@/pages/login"));
+const Home = lazy(() => import("@/pages/app/home"));
 
 function App() {
 	return (
@@ -44,6 +46,24 @@ function App() {
 					</Suspense>
 				}
 			/>
+
+			<Route
+				element={
+					<Suspense fallback={<Loader></Loader>}>
+						<UserLayout />
+					</Suspense>
+				}
+			>
+				<Route
+					path="/app"
+					element={
+						<Suspense fallback={<Loader></Loader>}>
+							<Home />
+						</Suspense>
+					}
+				/>
+			</Route>
+
 		</Routes>
 	);
 }

@@ -1,16 +1,20 @@
-import { Navbar } from "@/components/navbar";
+import AppNavBar from "@/components/app/navbar";
+import AppSidebar from "@/components/app/sidebar";
+import { Outlet } from "react-router-dom";
 
-export default function UserLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="relative flex flex-col h-screen">
-      <Navbar />
-      <main className="container mx-auto max-w-7xl px-6 flex-grow pt-16">
-        {children}
+export default function UserLayout() {
+	return (
+    <div className="flex h-screen overflow-hidden">
+      <AppSidebar />
+    <div className="flex-1 relative flex h-full w-full flex-col overflow-y-auto overflow-x-hidden">
+      <AppNavBar />
+      <main>
+        <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+          <Outlet></Outlet>
+        </div>
       </main>
+      </div>
     </div>
-  );
+	);
 }
+
