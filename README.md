@@ -19,10 +19,6 @@ To clone the project, run the following command:
 git clone https://github.com/breshlyabanid22/cit-event-management-frontend.git
 ```
 
-```bash
-git checkout nextui
-```
-
 ### Install dependencies
 
 You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
