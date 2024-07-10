@@ -25,3 +25,16 @@ export type User = {
   avatar: string;
   role: string;
 };
+
+export const Department = [
+	{ value: "Elementary", label: "Elementary" },
+	{ value: "Junior High", label: "Junior High" },
+	{ value: "Senior High", label: "Senior High" },
+	{ value: "College", label: "College" },
+];
+
+export const Roles = [
+	{ value: "participant", label: "Participant" },
+	{ value: "organizer", label: "Organizer" },
+	{ value: "venueManager", label: "Venue Manager" },
+];

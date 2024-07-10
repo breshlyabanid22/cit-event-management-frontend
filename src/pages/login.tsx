@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { object, z } from "zod";
 import {
 	Tabs,
 	Tab,
@@ -8,13 +8,18 @@ import {
 	Link,
 	Button,
 	Card,
+	Radio,
+	RadioGroup,
 	CardBody,
+	Select,
+	SelectItem,
+	Checkbox,
 } from "@nextui-org/react";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
 import ViewEventIcon from "@/components/icons/ViewEventIcon";
 import EyeOffIcon from "@/components/icons/EyeOffIcon";
-import { accountRegister, accountLogin } from "@/types";
+import { accountRegister, accountLogin, Roles, Department } from "@/types";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -33,6 +38,8 @@ const registerSchema = z
 		email: z.string().email("Invalid email address"),
 		schoolID: z.string().min(6, "School ID must be at least 6 character long"),
 		password: z.string().min(8, "Password must be at least 8 characters long"),
+		role: z.string().min(1, "Role must be selected"),
+		department: z.string().optional(),
 		passwordConfirm: z
 			.string()
 			.min(8, "Password must be at least 8 characters long"),
@@ -42,12 +49,16 @@ const registerSchema = z
 		path: ["passwordConfirm"],
 	});
 
-export default function Login(loginData: accountLogin) {
+export default function Login() {
 	const [selected, setSelected] = useState("login");
 	const [isVisible, setIsVisible] = useState(false);
 	const toggleVisibility = () => setIsVisible(!isVisible);
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
+	const [selectedRole, setSelectedRole] = useState("");
+	const handleRoleChange = (value) => {
+		setSelectedRole(value.currentKey);
+	};
 
 	const {
 		register: loginRegister,
@@ -91,7 +102,7 @@ export default function Login(loginData: accountLogin) {
 			return response;
 		} catch (error) {
 			console.error("Login failed:", error);
-			throw error; 
+			throw error;
 		}
 	};
 
@@ -112,7 +123,7 @@ export default function Login(loginData: accountLogin) {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify(registerData),
-				credentials: "include", 
+				credentials: "include",
 			});
 
 			if (response.ok) {
@@ -125,7 +136,7 @@ export default function Login(loginData: accountLogin) {
 			return response;
 		} catch (error) {
 			console.error("Registration failed:", error);
-			throw error; 
+			throw error;
 		}
 	};
 
@@ -162,7 +173,6 @@ export default function Login(loginData: accountLogin) {
 								onSubmit={handleLoginSubmit(onLoginSubmit)}
 							>
 								<Input
-									isRequired
 									label="Username"
 									placeholder="Enter your username"
 									type="username"
@@ -171,7 +181,6 @@ export default function Login(loginData: accountLogin) {
 									isInvalid={!!loginErrors.username}
 								/>
 								<Input
-									isRequired
 									endContent={
 										<button
 											className="focus:outline-none"
@@ -211,7 +220,6 @@ export default function Login(loginData: accountLogin) {
 								onSubmit={handleRegisterSubmit(onRegisterSubmit)}
 							>
 								<Input
-									isRequired
 									label="First Name"
 									placeholder="Enter your first name"
 									{...registerRegister("firstName")}
@@ -219,7 +227,6 @@ export default function Login(loginData: accountLogin) {
 									isInvalid={!!registerErrors.firstName}
 								/>
 								<Input
-									isRequired
 									label="Last Name"
 									placeholder="Enter your last name"
 									{...registerRegister("lastName")}
@@ -227,7 +234,6 @@ export default function Login(loginData: accountLogin) {
 									isInvalid={!!registerErrors.lastName}
 								/>
 								<Input
-									isRequired
 									label="Username"
 									placeholder="Enter your username"
 									type="username"
@@ -236,7 +242,6 @@ export default function Login(loginData: accountLogin) {
 									isInvalid={!!registerErrors.username}
 								/>
 								<Input
-									isRequired
 									label="School ID"
 									placeholder="Enter your school ID"
 									type="schoolId"
@@ -245,8 +250,6 @@ export default function Login(loginData: accountLogin) {
 									isInvalid={!!registerErrors.schoolID}
 								/>
 								<Input
-									className="col-span-2"
-									isRequired
 									label="Email"
 									placeholder="Enter your email"
 									type="email"
@@ -254,8 +257,39 @@ export default function Login(loginData: accountLogin) {
 									errorMessage={registerErrors.email?.message}
 									isInvalid={!!registerErrors.email}
 								/>
+								<Select
+									label="Role"
+									placeholder="Select a role"
+									className="max-w-xs"
+									{...registerRegister("role")}
+									errorMessage={registerErrors.role?.message}
+									isInvalid={!!registerErrors.role}
+									onSelectionChange={handleRoleChange}
+								>
+									{Roles.map((items) => (
+										<SelectItem key={items.value} value={items.value}>
+											{items.label}
+										</SelectItem>
+									))}
+								</Select>
+								{selectedRole === "participant" && (
+									<Select
+										label="Department"
+										placeholder="Select a department"
+										className="col-span-2 w-full"
+										{...registerRegister("department")}
+										errorMessage={registerErrors.department?.message}
+										isInvalid={!!registerErrors.department}
+									>
+										{Department.map((items) => (
+											<SelectItem key={items.value} value={items.value}>
+												{items.label}
+											</SelectItem>
+										))}
+									</Select>
+								)}
+
 								<Input
-									isRequired
 									endContent={
 										<button
 											className="focus:outline-none"
@@ -277,7 +311,6 @@ export default function Login(loginData: accountLogin) {
 									type={isVisible ? "text" : "password"}
 								/>
 								<Input
-									isRequired
 									endContent={
 										<button
 											className="focus:outline-none"
@@ -298,6 +331,14 @@ export default function Login(loginData: accountLogin) {
 									errorMessage={registerErrors.passwordConfirm?.message}
 									isInvalid={!!registerErrors.passwordConfirm}
 								/>
+								<div className="grid col-span-2">
+									<Checkbox>
+										{" "}
+										<p className="text-small">
+											I agree to the Terms and Conditions and Privacy Policy
+										</p>
+									</Checkbox>
+								</div>
 								<p className="col-span-2 text-center text-small">
 									Already have an account?{" "}
 									<Link size="sm" onPress={() => setSelected("login")}>
