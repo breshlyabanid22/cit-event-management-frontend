@@ -9,6 +9,7 @@ import ErrorPage from "./pages/error";
 const AboutPage = lazy(() => import("@/pages/about"));
 const Login = lazy(() => import("@/pages/login"));
 const Home = lazy(() => import("@/pages/app/home"));
+const Settings = lazy(() => import("@/pages/app/settings"));
 
 function App() {
 	return (
@@ -48,6 +49,7 @@ function App() {
 				}
 			/>
 
+			{/* User Layout */}
 			<Route
 				element={
 					<Suspense fallback={<Loader></Loader>}>
@@ -63,11 +65,17 @@ function App() {
 						</Suspense>
 					}
 				/>
+				<Route
+					path="/settings"
+					element={
+						<Suspense fallback={<Loader></Loader>}>
+							<Settings />
+						</Suspense>
+					}
+				/>
 			</Route>
 
-
 			<Route path="*" element={<ErrorPage />} />
-
 		</Routes>
 	);
 }
