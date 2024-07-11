@@ -9,9 +9,46 @@ import {
 	Select,
 	SelectItem,
 } from "@nextui-org/react";
-import { Course, Department, Year } from "@/types";
+import {
+	Course,
+	Department,
+	ElementaryYear,
+	JuniorHighYear,
+	SeniorHighYear,
+	Year,
+} from "@/types";
+import { useState } from "react";
+import clsx from "clsx";
+import { z } from "zod";
+
+const settingsSchema = z
+	.object({
+		firstName: z
+			.string()
+			.min(1, "First Name must be at least 1 character long"),
+		lastName: z.string().min(1, "Last Name must be at least 1 character long"),
+		username: z.string().min(3, "Username must be at least 3 characters long"),
+		email: z.string().email("Invalid email address"),
+		schoolID: z.string().min(6, "School ID must be at least 6 character long"),
+		password: z.string().min(8, "Password must be at least 8 characters long"),
+		userType: z.string().min(1, "Type must be selected"),
+		department: z.string().min(1, "Department must be selected"),
+		year: z.string().optional(),
+		course: z.string().optional(),
+		passwordConfirm: z
+			.string()
+			.min(8, "Password must be at least 8 characters long"),
+	})
+	.refine((data) => data.password === data.passwordConfirm, {
+		message: "Passwords don't match",
+		path: ["passwordConfirm"],
+	});
 
 export default function Settings() {
+	const [selectedDepartment, setSelectedDepartment] = useState("");
+	const handleDepartmentChange = (value) => {
+		setSelectedDepartment(value.currentKey);
+	};
 	return (
 		<div>
 			<header className="mb-6 flex w-full items-center justify-between">
@@ -108,32 +145,94 @@ export default function Settings() {
 									radius="lg"
 									placeholder="Email"
 								/>
-
-								<h3 className="mt-4 text-lg font-bold">Department</h3>
-								<p className="text-default-500">Your Department in your account.</p>
-									<Select placeholder="Select a Department" className="mt-2 w-full">
-										{Department.map((items) => (
-											<SelectItem key={items.value} value={items.value}>
-												{items.label}
-											</SelectItem>
-										))}
-									</Select>
-								<h3 className="mt-4 text-lg font-bold">Course</h3>
-								<p className="text-default-500">Your course in your account.</p>
+								<h3 className="mt-4 text-lg font-bold">Password</h3>
+								<p className="text-default-500">Change your password.</p>
 								<div className="grid grid-cols-2 gap-4">
-									<Select placeholder="Select a course" className="mt-2 w-full">
-										{Course.map((items) => (
-											<SelectItem key={items.value} value={items.value}>
-												{items.label}
-											</SelectItem>
-										))}
-									</Select>
-									<Select placeholder="Select a Year" className="mt-2 w-full">
-										{Year.map((items) => (
-											<SelectItem key={items.value} value={items.value}>
-												{items.label}
-											</SelectItem>
-										))}
+									<Input
+										type="text"
+										className="mt-2"
+										size="md"
+										radius="lg"
+										placeholder="Password"
+									/>
+									<Input
+										type="text"
+										className="mt-2"
+										size="md"
+										radius="lg"
+										placeholder="Confirm Password"
+									/>
+								</div>
+								<h3 className="mt-4 text-lg font-bold">Department</h3>
+								<p className="text-default-500">
+									Your Department in your account.
+								</p>
+								<Select
+									placeholder="Select a Department"
+									className="mt-2 w-full"
+									onSelectionChange={handleDepartmentChange}
+								>
+									{Department.map((items) => (
+										<SelectItem key={items.value} value={items.value}>
+											{items.label}
+										</SelectItem>
+									))}
+								</Select>
+								<h3 className="mt-4 text-lg font-bold">Course / Year</h3>
+								<p className="text-default-500">
+									Your academic level in your account.
+								</p>
+								<div className="grid grid-cols-2 gap-4">
+									{selectedDepartment === "College" && (
+										<Select
+											placeholder="Select a course"
+											className="w-full mt-2"
+										>
+											{Course.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))}
+										</Select>
+									)}
+									<Select
+										isDisabled={selectedDepartment === ""}
+										placeholder="Select a Year"
+										className={clsx(
+											"mt-2 w-full",
+											{'col-span-2':selectedDepartment !== "College"}
+										)}
+									>
+										{selectedDepartment === "Elementary" ? (
+											ElementaryYear.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))
+										) : selectedDepartment === "Junior High" ? (
+											JuniorHighYear.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))
+										) : selectedDepartment === "Senior High" ? (
+											SeniorHighYear.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))
+										) : selectedDepartment === "College" ? (
+											Year.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))
+										) : (
+											<SelectItem
+												key="Undefined"
+												value="Undefined"
+											></SelectItem>
+										)}
 									</Select>
 								</div>
 							</div>
