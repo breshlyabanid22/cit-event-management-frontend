@@ -293,6 +293,7 @@ export default function Login() {
 									))}
 								</Select>
 								<Select
+									isDisabled={selectedType === ""}
 									label="Department"
 									placeholder="Select a department"
 									className="w-full"
@@ -316,6 +317,7 @@ export default function Login() {
 
 								{selectedType === "student" && (
 									<Select
+										isDisabled={selectedDepartment === ""}
 										label="Year"
 										placeholder="Select a Year"
 										className="w-full col-span-2"
