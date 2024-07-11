@@ -22,9 +22,13 @@ import EyeOffIcon from "@/components/icons/EyeOffIcon";
 import {
 	accountRegister,
 	accountLogin,
-	Department,
 	Type,
 	Year,
+	Department,
+	SchoolDepartment,
+	ElementaryYear,
+	JuniorHighYear,
+	SeniorHighYear,
 } from "@/types";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
@@ -46,9 +50,9 @@ const registerSchema = z
 		password: z.string().min(8, "Password must be at least 8 characters long"),
 		userType: z.string().min(1, "Type must be selected"),
 		department: z.string().min(1, "Department must be selected"),
-		year: z.string().min(1, "Year must be selected"),
+		year: z.string().optional(),
 		course: z.string().optional(),
-		
+
 		passwordConfirm: z
 			.string()
 			.min(8, "Password must be at least 8 characters long"),
@@ -64,9 +68,15 @@ export default function Login() {
 	const toggleVisibility = () => setIsVisible(!isVisible);
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
-	const [selectedRole, setSelectedRole] = useState("");
-	const handleRoleChange = (value) => {
-		setSelectedRole(value.currentKey);
+
+	const [selectedDepartment, setSelectedDepartment] = useState("");
+	const handleDepartmentChange = (value) => {
+		setSelectedDepartment(value.currentKey);
+	};
+
+	const [selectedType, setSelectedType] = useState("");
+	const handleTypeChange = (value) => {
+		setSelectedType(value.currentKey);
 	};
 
 	const {
@@ -262,6 +272,7 @@ export default function Login() {
 									label="Email"
 									placeholder="Enter your email"
 									type="email"
+									className="col-span-2"
 									{...registerRegister("email")}
 									errorMessage={registerErrors.email?.message}
 									isInvalid={!!registerErrors.email}
@@ -269,11 +280,11 @@ export default function Login() {
 								<Select
 									label="Type"
 									placeholder="Select a Type"
-									className="max-w-xs"
+									className="w-full"
 									{...registerRegister("userType")}
 									errorMessage={registerErrors.userType?.message}
 									isInvalid={!!registerErrors.userType}
-									onSelectionChange={handleRoleChange}
+									onSelectionChange={handleTypeChange}
 								>
 									{Type.map((items) => (
 										<SelectItem key={items.value} value={items.value}>
@@ -288,28 +299,62 @@ export default function Login() {
 									{...registerRegister("department")}
 									errorMessage={registerErrors.department?.message}
 									isInvalid={!!registerErrors.department}
+									onSelectionChange={handleDepartmentChange}
 								>
-									{Department.map((items) => (
-										<SelectItem key={items.value} value={items.value}>
-											{items.label}
-										</SelectItem>
-									))}
+									{selectedType === "student"
+										? Department.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))
+										: SchoolDepartment.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))}
 								</Select>
-								
-								<Select
-									label="Year"
-									placeholder="Select a Year"
-									className="w-full"
-									{...registerRegister("year")}
-									errorMessage={registerErrors.year?.message}
-									isInvalid={!!registerErrors.year}
-								>
-									{Year.map((items) => (
-										<SelectItem key={items.value} value={items.value}>
-											{items.label}
-										</SelectItem>
-									))}
-								</Select>
+
+								{selectedType === "student" && (
+									<Select
+										label="Year"
+										placeholder="Select a Year"
+										className="w-full col-span-2"
+										{...registerRegister("year")}
+										errorMessage={registerErrors.year?.message}
+										isInvalid={!!registerErrors.year}
+									>
+										{selectedDepartment === "Elementary" ? (
+											ElementaryYear.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))
+										) : selectedDepartment === "Junior High" ? (
+											JuniorHighYear.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))
+										) : selectedDepartment === "Senior High" ? (
+											SeniorHighYear.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))
+										) : selectedDepartment === "College" ? (
+											Year.map((items) => (
+												<SelectItem key={items.value} value={items.value}>
+													{items.label}
+												</SelectItem>
+											))
+										) : (
+											<SelectItem
+												key="Undefined"
+												value="Undefined"
+											></SelectItem>
+										)}
+									</Select>
+								)}
 								<Input
 									endContent={
 										<button
