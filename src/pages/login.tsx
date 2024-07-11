@@ -19,7 +19,13 @@ import { useState } from "react";
 import { useQueryClient } from "react-query";
 import ViewEventIcon from "@/components/icons/ViewEventIcon";
 import EyeOffIcon from "@/components/icons/EyeOffIcon";
-import { accountRegister, accountLogin, Roles, Department } from "@/types";
+import {
+	accountRegister,
+	accountLogin,
+	Department,
+	Type,
+	Year,
+} from "@/types";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -38,8 +44,11 @@ const registerSchema = z
 		email: z.string().email("Invalid email address"),
 		schoolID: z.string().min(6, "School ID must be at least 6 character long"),
 		password: z.string().min(8, "Password must be at least 8 characters long"),
-		role: z.string().min(1, "Role must be selected"),
-		department: z.string().optional(),
+		userType: z.string().min(1, "Type must be selected"),
+		department: z.string().min(1, "Department must be selected"),
+		year: z.string().min(1, "Year must be selected"),
+		course: z.string().optional(),
+		
 		passwordConfirm: z
 			.string()
 			.min(8, "Password must be at least 8 characters long"),
@@ -258,37 +267,49 @@ export default function Login() {
 									isInvalid={!!registerErrors.email}
 								/>
 								<Select
-									label="Role"
-									placeholder="Select a role"
+									label="Type"
+									placeholder="Select a Type"
 									className="max-w-xs"
-									{...registerRegister("role")}
-									errorMessage={registerErrors.role?.message}
-									isInvalid={!!registerErrors.role}
+									{...registerRegister("userType")}
+									errorMessage={registerErrors.userType?.message}
+									isInvalid={!!registerErrors.userType}
 									onSelectionChange={handleRoleChange}
 								>
-									{Roles.map((items) => (
+									{Type.map((items) => (
 										<SelectItem key={items.value} value={items.value}>
 											{items.label}
 										</SelectItem>
 									))}
 								</Select>
-								{selectedRole === "participant" && (
-									<Select
-										label="Department"
-										placeholder="Select a department"
-										className="col-span-2 w-full"
-										{...registerRegister("department")}
-										errorMessage={registerErrors.department?.message}
-										isInvalid={!!registerErrors.department}
-									>
-										{Department.map((items) => (
-											<SelectItem key={items.value} value={items.value}>
-												{items.label}
-											</SelectItem>
-										))}
-									</Select>
-								)}
-
+								<Select
+									label="Department"
+									placeholder="Select a department"
+									className="w-full"
+									{...registerRegister("department")}
+									errorMessage={registerErrors.department?.message}
+									isInvalid={!!registerErrors.department}
+								>
+									{Department.map((items) => (
+										<SelectItem key={items.value} value={items.value}>
+											{items.label}
+										</SelectItem>
+									))}
+								</Select>
+								
+								<Select
+									label="Year"
+									placeholder="Select a Year"
+									className="w-full"
+									{...registerRegister("year")}
+									errorMessage={registerErrors.year?.message}
+									isInvalid={!!registerErrors.year}
+								>
+									{Year.map((items) => (
+										<SelectItem key={items.value} value={items.value}>
+											{items.label}
+										</SelectItem>
+									))}
+								</Select>
 								<Input
 									endContent={
 										<button

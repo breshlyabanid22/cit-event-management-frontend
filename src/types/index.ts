@@ -38,3 +38,22 @@ export const Roles = [
 	{ value: "organizer", label: "Organizer" },
 	{ value: "venueManager", label: "Venue Manager" },
 ];
+
+export const Type = [
+  { value: "student", label: "Student" },
+  { value: "employee", label: "Employee" },
+];
+
+export const Course = [
+	{ value: "BSIT", label: "Course 1" },
+	{ value: "course2", label: "Course 2" },
+	{ value: "course3", label: "Course 3" },
+];
+
+export const Year = [
+	{ value: "1st Year", label: "1st Year" },
+	{ value: "2nd Year", label: "2nd Year" },
+	{ value: "3rd Year", label: "3rd Year" },
+  { value: "4th Year", label: "4th Year" },
+  { value: "5th Year", label: "5th Year" },
+];

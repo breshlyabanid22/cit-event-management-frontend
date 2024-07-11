@@ -6,7 +6,10 @@ import {
 	Image,
 	Chip,
 	Input,
+	Select,
+	SelectItem,
 } from "@nextui-org/react";
+import { Course, Department, Year } from "@/types";
 
 export default function Settings() {
 	return (
@@ -105,6 +108,34 @@ export default function Settings() {
 									radius="lg"
 									placeholder="Email"
 								/>
+
+								<h3 className="mt-4 text-lg font-bold">Department</h3>
+								<p className="text-default-500">Your Department in your account.</p>
+									<Select placeholder="Select a Department" className="mt-2 w-full">
+										{Department.map((items) => (
+											<SelectItem key={items.value} value={items.value}>
+												{items.label}
+											</SelectItem>
+										))}
+									</Select>
+								<h3 className="mt-4 text-lg font-bold">Course</h3>
+								<p className="text-default-500">Your course in your account.</p>
+								<div className="grid grid-cols-2 gap-4">
+									<Select placeholder="Select a course" className="mt-2 w-full">
+										{Course.map((items) => (
+											<SelectItem key={items.value} value={items.value}>
+												{items.label}
+											</SelectItem>
+										))}
+									</Select>
+									<Select placeholder="Select a Year" className="mt-2 w-full">
+										{Year.map((items) => (
+											<SelectItem key={items.value} value={items.value}>
+												{items.label}
+											</SelectItem>
+										))}
+									</Select>
+								</div>
 							</div>
 						</Tab>
 						<Tab key="notifications" title="Notifications">
