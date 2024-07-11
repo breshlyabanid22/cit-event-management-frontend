@@ -1,5 +1,5 @@
-import AddEvent from "@/components/app/addEvent";
-import DeleteEvent from "@/components/app/deleteEvent";
+import AddEvent from "@/components/app/organizer/addEvent";
+import DeleteEvent from "@/components/app/organizer/deleteEvent";
 import EditEventIcon from "@/components/icons/EditEventIcon";
 import ViewEventIcon from "@/components/icons/ViewEventIcon";
 import EventImage from "@/assets/event.jpg";

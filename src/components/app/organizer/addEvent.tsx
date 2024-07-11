@@ -10,7 +10,7 @@ import {
 	TimeInput,
 	useDisclosure,
 } from "@nextui-org/react";
-import AddEventIcon from "../icons/AddEventIcon";
+import AddEventIcon from "../../icons/AddEventIcon";
 
 export default function AddEvent() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();

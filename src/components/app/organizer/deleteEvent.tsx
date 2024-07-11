@@ -7,7 +7,7 @@ import {
 	Button,
 	useDisclosure,
 } from "@nextui-org/react";
-import DeleteEventIcon from "../icons/DeleteEventIcon";
+import DeleteEventIcon from "../../icons/DeleteEventIcon";
 
 export default function DeleteEvent() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();

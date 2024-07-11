@@ -1,8 +1,8 @@
 import AppNavBar from "@/components/app/navbar";
-import AppSidebar from "@/components/app/sidebar";
+import AppSidebar from "@/components/app/organizer/sidebar";
 import { Outlet } from "react-router-dom";
 
-export default function UserLayout() {
+export default function OrganizerLayout() {
 	return (
     <div className="flex h-screen overflow-hidden">
       <AppSidebar />
