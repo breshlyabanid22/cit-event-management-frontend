@@ -15,6 +15,9 @@ export default function EventRegistration() {
 					<p className="text-3xl font-bold">Event Registration</p>
 					<p className="text-md font-light">Manage your participants</p>
 				</div>
+				<Button size="md" color="primary" radius="lg">
+					Manage Waitlist
+				</Button>
 			</header>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 				<Card className="">
@@ -35,11 +38,7 @@ export default function EventRegistration() {
 						<h4 className="font-bold text-large">Event Name</h4>
 						<small className="text-default-500">Location</small>
 					</CardFooter>
-					<Button
-						size="sm"
-						color="primary"
-						radius="lg"
-					>
+					<Button size="sm" color="primary" radius="lg">
 						View Registration
 					</Button>
 				</Card>
