@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
+    "@internationalized/date": "^3.5.4",
     "@nextui-org/button": "2.0.34",
     "@nextui-org/code": "2.0.29",
     "@nextui-org/input": "2.2.2",
@@ -22,6 +23,7 @@
     "@nextui-org/switch": "2.0.31",
     "@nextui-org/system": "2.2.1",
     "@nextui-org/theme": "2.2.5",
+    "@react-aria/i18n": "^3.11.1",
     "@react-aria/visually-hidden": "3.8.12",
     "@tabler/icons": "^3.9.0",
     "axios": "^1.7.2",
