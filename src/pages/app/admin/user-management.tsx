@@ -1,3 +1,5 @@
+import UserManagementTable from "@/components/app/admin/UserManagementTable";
+
 export default function UserManagement() {
   return (
     <div>
@@ -8,7 +10,7 @@ export default function UserManagement() {
         </div>
       </header>
       <body className="grid grid-cols-1 gap-4">
-        <div className="col-span-1 flex flex-col gap-4"></div>
+        <UserManagementTable />
       </body>
     </div>
   );
