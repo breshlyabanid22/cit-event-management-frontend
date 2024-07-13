@@ -21,8 +21,8 @@ export default function AppSidebar() {
           <ListboxItem key="Home" startContent={<HomeIcon />}>
             <Tooltip color="foreground" content="Home" delay={500}>
               <Link
-                color={pathname === "/app" ? "primary" : "foreground"}
-                href="/app"
+                color={pathname === "/organizer" ? "primary" : "foreground"}
+                href="/organizer"
               >
                 Home
               </Link>
@@ -39,9 +39,11 @@ export default function AppSidebar() {
             >
               <Link
                 color={
-                  pathname === "/event-registration" ? "primary" : "foreground"
+                  pathname === "/organizer/event-registration"
+                    ? "primary"
+                    : "foreground"
                 }
-                href="/event-registration"
+                href="/organizer/event-registration"
               >
                 Event Registration
               </Link>
@@ -54,9 +56,11 @@ export default function AppSidebar() {
             <Tooltip color="foreground" content="Venue Management" delay={500}>
               <Link
                 color={
-                  pathname === "/venue-management" ? "primary" : "foreground"
+                  pathname === "/organizer/venue-management"
+                    ? "primary"
+                    : "foreground"
                 }
-                href="/venue-management"
+                href="/organizer/venue-management"
               >
                 Venue Management
               </Link>
@@ -65,8 +69,10 @@ export default function AppSidebar() {
           <ListboxItem key="Settings" startContent={<SettingsIcon />}>
             <Tooltip color="foreground" content="Settings" delay={500}>
               <Link
-                color={pathname === "/settings" ? "primary" : "foreground"}
-                href="/settings"
+                color={
+                  pathname === "/organizer/settings" ? "primary" : "foreground"
+                }
+                href="/organizer/settings"
               >
                 Settings
               </Link>
@@ -92,7 +98,7 @@ export default function AppSidebar() {
           <Tooltip content="Profile" color="foreground" delay={500}>
             <User
               as={Link}
-              href="/settings"
+              href="/organizer/settings"
               name="Jane Doe"
               description="Organizer"
               avatarProps={{
