@@ -1,20 +1,32 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
-const IndexPage = lazy(() => import("@/pages/index"));
-const DefaultLayout = lazy(() => import("./layouts"));
 const Loader = lazy(() => import("@/components/loading"));
 const ErrorPage = lazy(() => import("@/pages/error"));
-const AdminLayout = lazy(() => import("@/layouts/admin"));
-const OrganizerLayout = lazy(() => import("@/layouts/organizer"));
+const DefaultLayout = lazy(() => import("./layouts"));
+const IndexPage = lazy(() => import("@/pages/index"));
 const AboutPage = lazy(() => import("@/pages/about"));
 const Login = lazy(() => import("@/pages/login"));
-const Home = lazy(() => import("@/pages/app/organizer/home"));
+const OrganizerLayout = lazy(() => import("@/layouts/organizer"));
+const OrganizerHome = lazy(() => import("@/pages/app/organizer/home"));
 const Settings = lazy(() => import("@/pages/app/settings"));
 const EventRegistration = lazy(
   () => import("@/pages/app/organizer/eventRegistration"),
 );
 const VenueManagement = lazy(() => import("@/pages/app/organizer/venue"));
+
+const AdminLayout = lazy(() => import("@/layouts/admin"));
+const AdminHome = lazy(() => import("@/pages/app/admin/home"));
+const AdminUserManagement = lazy(
+  () => import("@/pages/app/admin/user-management"),
+);
+const AdminVenueManagement = lazy(
+  () => import("@/pages/app/admin/venue-management"),
+);
+const AdminResourceManagement = lazy(
+  () => import("@/pages/app/admin/resource-management"),
+);
+
 function App() {
   return (
     <Routes>
@@ -66,7 +78,7 @@ function App() {
           index
           element={
             <Suspense fallback={<Loader />}>
-              <Home />
+              <OrganizerHome />
             </Suspense>
           }
         />
@@ -113,16 +125,26 @@ function App() {
           index
           element={
             <Suspense fallback={<Loader />}>
-              <Home />
+              <AdminHome />
             </Suspense>
           }
         />
-        <Route path="event-registration">
+        <Route path="user-management">
           <Route
             index
             element={
               <Suspense fallback={<Loader />}>
-                <EventRegistration />
+                <AdminUserManagement />
+              </Suspense>
+            }
+          />
+        </Route>
+        <Route path="resource-management">
+          <Route
+            index
+            element={
+              <Suspense fallback={<Loader />}>
+                <AdminResourceManagement />
               </Suspense>
             }
           />
@@ -132,7 +154,7 @@ function App() {
             index
             element={
               <Suspense fallback={<Loader />}>
-                <VenueManagement />
+                <AdminVenueManagement />
               </Suspense>
             }
           />
