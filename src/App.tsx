@@ -29,7 +29,15 @@ const AdminResourceManagement = lazy(
 
 const ParticipantLayout = lazy(() => import("@/layouts/participant"));
 const ParticipantHome = lazy(() => import("@/pages/app/participant/home"));
-
+const ParticipantScheduled = lazy(
+  () => import("@/pages/app/participant/scheduled-list"),
+);
+const ParticipantUpcoming = lazy(
+  () => import("@/pages/app/participant/upcoming-events"),
+);
+const ParticipantFeedback = lazy(
+  () => import("@/pages/app/participant/feedback"),
+);
 function App() {
   return (
     <Routes>
@@ -196,22 +204,32 @@ function App() {
             </Suspense>
           }
         />
-        <Route path="event-registration">
+        <Route path="scheduled-list">
           <Route
             index
             element={
               <Suspense fallback={<Loader />}>
-                <EventRegistration />
+                <ParticipantScheduled />
               </Suspense>
             }
           />
         </Route>
-        <Route path="venue-management">
+        <Route path="upcoming-event">
           <Route
             index
             element={
               <Suspense fallback={<Loader />}>
-                <VenueManagement />
+                <ParticipantUpcoming />
+              </Suspense>
+            }
+          />
+        </Route>
+        <Route path="feedback">
+          <Route
+            index
+            element={
+              <Suspense fallback={<Loader />}>
+                <ParticipantFeedback />
               </Suspense>
             }
           />

@@ -1,9 +1,11 @@
 import AppNavBar from "@/components/app/navbar";
+import ParticipantSidebar from "@/components/app/participant/sidebar";
 import { Outlet } from "react-router-dom";
 
 export default function ParticipantLayout() {
   return (
     <div className="flex h-screen overflow-hidden">
+      <ParticipantSidebar />
       <div className="flex-1 relative flex h-full w-full flex-col overflow-y-auto overflow-x-hidden">
         <AppNavBar />
         <main>
