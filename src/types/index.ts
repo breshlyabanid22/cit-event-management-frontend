@@ -19,11 +19,21 @@ export type accountLogin = {
 };
 
 export type User = {
-	id: string;
-	name: string;
+	userID: number;
+	username: string;
+	password: string;
 	email: string;
-	avatar: string;
+	schoolID: number | null;
+	firstName: string;
+	lastName: string;
+	userType: string | null;
 	role: string;
+	year: number | null;
+	course: number | null;
+	department: number | null;
+	createdAt: string;
+	updatedAt: number | null;
+	active: boolean;
 };
 
 export const Department = [

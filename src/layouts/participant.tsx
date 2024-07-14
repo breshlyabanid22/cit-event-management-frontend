@@ -1,10 +1,9 @@
 import AppNavBar from "@/components/app/navbar";
 import { Outlet } from "react-router-dom";
-import AdminSideBar from "@/components/app/admin/AdminSideBar";
-export default function AdminLayout() {
+
+export default function ParticipantLayout() {
   return (
     <div className="flex h-screen overflow-hidden">
-      <AdminSideBar />
       <div className="flex-1 relative flex h-full w-full flex-col overflow-y-auto overflow-x-hidden">
         <AppNavBar />
         <main>

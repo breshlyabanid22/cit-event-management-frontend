@@ -1,4 +1,11 @@
-import { Link, Listbox, ListboxItem, Tooltip, User } from "@nextui-org/react";
+import {
+	Link,
+	Listbox,
+	ListboxItem,
+	Tooltip,
+	User,
+	Button,
+} from "@nextui-org/react";
 import HomeIcon from "../../icons/HomeIcon";
 import LogoutIcon from "../../icons/LogoutIcon";
 import LogoIcon from "../../icons/LogoIcon";
@@ -6,8 +13,9 @@ import SettingsIcon from "../../icons/SettingsIcon";
 import EventRegistrationIcon from "@/components/icons/EventRegistrationIcon";
 import VenueIcon from "@/components/icons/VenueIcon";
 import { useLocation } from "react-router-dom";
-
+import useAuthStore from "@/provider/auth";
 export default function AppSidebar() {
+	const { logout } = useAuthStore();
 	const pathname = useLocation().pathname;
 	return (
 		<div className="flex h-screen flex-col justify-between border-r dark:border-gray-800 border-gray-200">
@@ -81,11 +89,10 @@ export default function AppSidebar() {
 						className="text-danger"
 						color="danger"
 						startContent={<LogoutIcon />}
+						onPress={logout}
 					>
 						<Tooltip color="foreground" content="Logout" delay={500}>
-							<Link color="foreground" href="/logout">
-								Logout
-							</Link>
+							Logout
 						</Tooltip>
 					</ListboxItem>
 				</Listbox>

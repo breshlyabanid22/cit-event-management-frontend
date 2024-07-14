@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
-
+const ProtectedRoute = lazy(() => import("@/provider/ProtectedRoute"));
 const Loader = lazy(() => import("@/components/loading"));
 const ErrorPage = lazy(() => import("@/pages/error"));
 const DefaultLayout = lazy(() => import("./layouts"));
@@ -26,6 +26,9 @@ const AdminVenueManagement = lazy(
 const AdminResourceManagement = lazy(
   () => import("@/pages/app/admin/resource-management"),
 );
+
+const ParticipantLayout = lazy(() => import("@/layouts/participant"));
+const ParticipantHome = lazy(() => import("@/pages/app/participant/home"));
 
 function App() {
   return (
@@ -68,12 +71,15 @@ function App() {
       {/* Organizer routes */}
       <Route
         path="organizer"
-        element={
-          <Suspense fallback={<Loader />}>
-            <OrganizerLayout />
-          </Suspense>
-        }
+        element={<ProtectedRoute isAllowed="ORGANIZER" />}
       >
+        <Route
+          element={
+            <Suspense fallback={<Loader />}>
+              <OrganizerLayout />
+            </Suspense>
+          }
+        />
         <Route
           index
           element={
@@ -116,9 +122,11 @@ function App() {
       <Route
         path="admin"
         element={
-          <Suspense fallback={<Loader />}>
-            <AdminLayout />
-          </Suspense>
+          <ProtectedRoute isAllowed="ADMIN">
+            <Suspense fallback={<Loader />}>
+              <AdminLayout />
+            </Suspense>
+          </ProtectedRoute>
         }
       >
         <Route
@@ -155,6 +163,55 @@ function App() {
             element={
               <Suspense fallback={<Loader />}>
                 <AdminVenueManagement />
+              </Suspense>
+            }
+          />
+        </Route>
+        <Route
+          path="settings"
+          element={
+            <Suspense fallback={<Loader />}>
+              <Settings />
+            </Suspense>
+          }
+        />
+      </Route>
+
+      {/* Participant routes */}
+      <Route
+        path="participant"
+        element={
+          <ProtectedRoute isAllowed="PARTICIPANT">
+            <Suspense fallback={<Loader />}>
+              <ParticipantLayout />
+            </Suspense>
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={
+            <Suspense fallback={<Loader />}>
+              <ParticipantHome />
+            </Suspense>
+          }
+        />
+        <Route path="event-registration">
+          <Route
+            index
+            element={
+              <Suspense fallback={<Loader />}>
+                <EventRegistration />
+              </Suspense>
+            }
+          />
+        </Route>
+        <Route path="venue-management">
+          <Route
+            index
+            element={
+              <Suspense fallback={<Loader />}>
+                <VenueManagement />
               </Suspense>
             }
           />
