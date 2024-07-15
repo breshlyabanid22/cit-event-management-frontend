@@ -1,7 +1,6 @@
 import AddEvent from "@/components/app/organizer/addEvent";
 import EventCard from "@/components/app/organizer/eventCard";
 
-
 export default function Home() {
 	return (
 		<div>
@@ -14,7 +13,7 @@ export default function Home() {
 			</header>
 			<body className="grid grid-cols-1 gap-4">
 				<div className="col-span-1 flex flex-col gap-4">
-				<EventCard />	
+					<EventCard />
 				</div>
 			</body>
 		</div>

@@ -41,16 +41,10 @@ export default function AppSidebar() {
 						key="Event Registration"
 						startContent={<EventRegistrationIcon />}
 					>
-						<Tooltip
-							color="foreground"
-							content="Event Registration"
-							delay={500}
-						>
+						<Tooltip color="foreground" content="Event Registration" delay={500}>
 							<Link
 								color={
-									pathname === "/organizer/event-registration"
-										? "primary"
-										: "foreground"
+									pathname === "/organizer/event-registration" ? "primary" : "foreground"
 								}
 								href="/organizer/event-registration"
 							>
@@ -62,9 +56,7 @@ export default function AppSidebar() {
 						<Tooltip color="foreground" content="Venue Management" delay={500}>
 							<Link
 								color={
-									pathname === "/organizer/venue-management"
-										? "primary"
-										: "foreground"
+									pathname === "/organizer/venue-management" ? "primary" : "foreground"
 								}
 								href="/organizer/venue-management"
 							>
@@ -75,9 +67,7 @@ export default function AppSidebar() {
 					<ListboxItem key="Settings" startContent={<SettingsIcon />}>
 						<Tooltip color="foreground" content="Settings" delay={500}>
 							<Link
-								color={
-									pathname === "/organizer/settings" ? "primary" : "foreground"
-								}
+								color={pathname === "/organizer/settings" ? "primary" : "foreground"}
 								href="/organizer/settings"
 							>
 								Settings

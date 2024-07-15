@@ -3,7 +3,7 @@ export default function VenueCard() {
 	return (
 		<Card isFooterBlurred radius="lg" className="border-none">
 			<Image
-                isZoomed
+				isZoomed
 				alt="Venue Image"
 				className="object-cover"
 				width={500}

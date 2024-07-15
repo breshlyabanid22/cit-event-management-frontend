@@ -23,9 +23,7 @@ import { z } from "zod";
 
 const settingsSchema = z
 	.object({
-		firstName: z
-			.string()
-			.min(1, "First Name must be at least 1 character long"),
+		firstName: z.string().min(1, "First Name must be at least 1 character long"),
 		lastName: z.string().min(1, "Last Name must be at least 1 character long"),
 		username: z.string().min(3, "Username must be at least 3 characters long"),
 		email: z.string().email("Invalid email address"),
@@ -81,19 +79,12 @@ export default function Settings() {
 										<div className="items-center justify-center">
 											<p className="text-sm font-medium text-default-600">
 												Jane Doe{" "}
-												<Chip
-													className="ml-2"
-													size="sm"
-													radius="full"
-													color="primary"
-												>
+												<Chip className="ml-2" size="sm" radius="full" color="primary">
 													Organizer
 												</Chip>
 											</p>
 											<p className="text-xs text-default-400">19-3160-312</p>
-											<p className="text-xs text-default-400">
-												email@example.com
-											</p>
+											<p className="text-xs text-default-400">email@example.com</p>
 										</div>
 									</CardBody>
 								</Card>
@@ -102,9 +93,7 @@ export default function Settings() {
 						<Tab key="account" title="Account">
 							<div className="sm:w-full md:w-[400px] lg:w-[600px]">
 								<h3 className="text-lg font-bold">Full Name</h3>
-								<p className="text-default-500">
-									Your full name in your account.
-								</p>
+								<p className="text-default-500">Your full name in your account.</p>
 								<div className="grid grid-cols-2 gap-4">
 									<Input
 										type="text"
@@ -123,9 +112,7 @@ export default function Settings() {
 								</div>
 
 								<h3 className="mt-4 text-lg font-bold">Username</h3>
-								<p className="text-default-500">
-									Your login username in your account.
-								</p>
+								<p className="text-default-500">Your login username in your account.</p>
 								<Input
 									type="text"
 									className="mt-2"
@@ -164,9 +151,7 @@ export default function Settings() {
 									/>
 								</div>
 								<h3 className="mt-4 text-lg font-bold">Department</h3>
-								<p className="text-default-500">
-									Your Department in your account.
-								</p>
+								<p className="text-default-500">Your Department in your account.</p>
 								<Select
 									placeholder="Select a Department"
 									className="mt-2 w-full"
@@ -179,15 +164,10 @@ export default function Settings() {
 									))}
 								</Select>
 								<h3 className="mt-4 text-lg font-bold">Course / Year</h3>
-								<p className="text-default-500">
-									Your academic level in your account.
-								</p>
+								<p className="text-default-500">Your academic level in your account.</p>
 								<div className="grid grid-cols-2 gap-4">
 									{selectedDepartment === "College" && (
-										<Select
-											placeholder="Select a course"
-											className="w-full mt-2"
-										>
+										<Select placeholder="Select a course" className="w-full mt-2">
 											{Course.map((items) => (
 												<SelectItem key={items.value} value={items.value}>
 													{items.label}
@@ -198,10 +178,9 @@ export default function Settings() {
 									<Select
 										isDisabled={selectedDepartment === ""}
 										placeholder="Select a Year"
-										className={clsx(
-											"mt-2 w-full",
-											{'col-span-2':selectedDepartment !== "College"}
-										)}
+										className={clsx("mt-2 w-full", {
+											"col-span-2": selectedDepartment !== "College",
+										})}
 									>
 										{selectedDepartment === "Elementary" ? (
 											ElementaryYear.map((items) => (
@@ -228,10 +207,7 @@ export default function Settings() {
 												</SelectItem>
 											))
 										) : (
-											<SelectItem
-												key="Undefined"
-												value="Undefined"
-											></SelectItem>
+											<SelectItem key="Undefined" value="Undefined"></SelectItem>
 										)}
 									</Select>
 								</div>
@@ -241,8 +217,8 @@ export default function Settings() {
 							<div className="sm:w-full md:w-[400px] lg:w-[600px]">
 								<Card>
 									<CardBody>
-										Excepteur sint occaecat cupidatat non proident, sunt in
-										culpa qui officia deserunt mollit anim id est laborum.
+										Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+										officia deserunt mollit anim id est laborum.
 									</CardBody>
 								</Card>
 							</div>

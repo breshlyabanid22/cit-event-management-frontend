@@ -22,11 +22,10 @@ export default function EventCard() {
 			</CardHeader>
 			<CardBody className="overflow-visible py-2 items-start justify-center">
 				<p className="text-default-500">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-					eiusmod tempor incididunt ut labore et dolore magna aliqua. Massa sed
-					elementum tempus egestas sed sed. Condimentum vitae sapien
-					pellentesque habitant morbi. Risus viverra adipiscing at in tellus
-					integer.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Massa sed elementum
+					tempus egestas sed sed. Condimentum vitae sapien pellentesque habitant
+					morbi. Risus viverra adipiscing at in tellus integer.
 				</p>
 			</CardBody>
 			<CardBody className="pb-0 pt-2 px-4 flex-col items-end justify-center gap-4">

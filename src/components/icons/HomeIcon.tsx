@@ -18,4 +18,4 @@ export default function HomeIcon() {
 			<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
 		</svg>
 	);
-}   
+}

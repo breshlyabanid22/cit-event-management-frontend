@@ -13,14 +13,14 @@ export default function ErrorPage() {
 
 				<p className="mt-4 text-gray-500">We can't find that page.</p>
 
-					<Button
-						href="/"
-						as={Link}
-						className="mt-4 text-sm font-normal bg-primary text-white"
-						variant="flat"
-					>
-					Go Back Home	
-					</Button>
+				<Button
+					href="/"
+					as={Link}
+					className="mt-4 text-sm font-normal bg-primary text-white"
+					variant="flat"
+				>
+					Go Back Home
+				</Button>
 			</div>
 		</div>
 	);

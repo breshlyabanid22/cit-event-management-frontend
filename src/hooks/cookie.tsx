@@ -1,57 +1,57 @@
 interface CookieOptions {
-  name: string;
-  value: string;
-  expiresIn?: number;
-  path?: string;
-  domain?: string;
-  secure?: boolean;
-  httpOnly?: boolean;
+	name: string;
+	value: string;
+	expiresIn?: number;
+	path?: string;
+	domain?: string;
+	secure?: boolean;
+	httpOnly?: boolean;
 }
 
 export const setCookie = (options: CookieOptions) => {
-  const { name, value, expiresIn, path, domain, secure, httpOnly } = options;
+	const { name, value, expiresIn, path, domain, secure, httpOnly } = options;
 
-  let cookie = `${name}=${value};`;
+	let cookie = `${name}=${value};`;
 
-  if (expiresIn) {
-    cookie += `expires=${new Date(Date.now() + expiresIn * 1000)};`;
-  }
+	if (expiresIn) {
+		cookie += `expires=${new Date(Date.now() + expiresIn * 1000)};`;
+	}
 
-  if (path) {
-    cookie += `path=${path};`;
-  }
+	if (path) {
+		cookie += `path=${path};`;
+	}
 
-  if (domain) {
-    cookie += `domain=${domain};`;
-  }
+	if (domain) {
+		cookie += `domain=${domain};`;
+	}
 
-  if (secure) {
-    cookie += "secure;";
-  }
+	if (secure) {
+		cookie += "secure;";
+	}
 
-  if (httpOnly) {
-    cookie += "httpOnly;";
-  }
+	if (httpOnly) {
+		cookie += "httpOnly;";
+	}
 
-  document.cookie = cookie;
+	document.cookie = cookie;
 };
 
 export const getCookie = (name: string) => {
-  const cookies = document.cookie.split(";");
+	const cookies = document.cookie.split(";");
 
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].trim();
+	for (let i = 0; i < cookies.length; i++) {
+		const cookie = cookies[i].trim();
 
-    if (cookie.startsWith(`${name}=`)) {
-      return cookie.substring(name.length + 1);
-    }
-  }
+		if (cookie.startsWith(`${name}=`)) {
+			return cookie.substring(name.length + 1);
+		}
+	}
 };
 
 export const removeCookie = (name: string) => {
-  setCookie({
-    name,
-    value: "",
-    expiresIn: -1,
-  });
+	setCookie({
+		name,
+		value: "",
+		expiresIn: -1,
+	});
 };

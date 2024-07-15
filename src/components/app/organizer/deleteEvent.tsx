@@ -20,7 +20,7 @@ export default function DeleteEvent() {
 				variant="flat"
 				endContent={<DeleteEventIcon />}
 			>
-                Delete
+				Delete
 			</Button>
 			<Modal
 				isOpen={isOpen}
@@ -31,20 +31,16 @@ export default function DeleteEvent() {
 				<ModalContent>
 					{(onClose) => (
 						<>
-							<ModalHeader className="flex flex-col gap-1">
-                                Delete Event
-							</ModalHeader>
+							<ModalHeader className="flex flex-col gap-1">Delete Event</ModalHeader>
 							<ModalBody>
-								<p>
-                                    Are you sure you want to delete this event?
-								</p>
+								<p>Are you sure you want to delete this event?</p>
 							</ModalBody>
 							<ModalFooter>
 								<Button color="danger" variant="light" onPress={onClose}>
 									Close
 								</Button>
 								<Button color="primary" onPress={onClose}>
-                                    Delete
+									Delete
 								</Button>
 							</ModalFooter>
 						</>

@@ -36,16 +36,14 @@ export default function AddVenue() {
 	return (
 		<div>
 			<Button onPress={onOpen} color="primary" startContent={<AddVenueIcon />}>
-				Add Venue 
+				Add Venue
 			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<form onSubmit={handleSubmit(submitEvent)}>
 					<ModalContent>
 						{(onClose) => (
 							<>
-								<ModalHeader className="flex flex-col gap-1">
-									Add Venue 
-								</ModalHeader>
+								<ModalHeader className="flex flex-col gap-1">Add Venue</ModalHeader>
 								<ModalBody>
 									<form className="flex flex-col gap-4">
 										<div className="flex flex-col gap-2">

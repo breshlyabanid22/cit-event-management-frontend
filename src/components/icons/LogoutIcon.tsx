@@ -18,4 +18,4 @@ export default function LogoutIcon() {
 			<path d="M18 15l3 -3" />
 		</svg>
 	);
-}   
+}

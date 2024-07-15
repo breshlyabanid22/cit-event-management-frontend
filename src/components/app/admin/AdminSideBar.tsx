@@ -38,17 +38,10 @@ export default function AdminSideBar() {
 							</Link>
 						</Tooltip>
 					</ListboxItem>
-					<ListboxItem
-						key="User Management"
-						startContent={<UserManagementIcon />}
-					>
+					<ListboxItem key="User Management" startContent={<UserManagementIcon />}>
 						<Tooltip color="foreground" content="User Management" delay={500}>
 							<Link
-								color={
-									pathname === "/admin/user-management"
-										? "primary"
-										: "foreground"
-								}
+								color={pathname === "/admin/user-management" ? "primary" : "foreground"}
 								href="/admin/user-management"
 							>
 								User Management
@@ -59,16 +52,10 @@ export default function AdminSideBar() {
 						key="Resource Management"
 						startContent={<ResourceManagementIcon />}
 					>
-						<Tooltip
-							color="foreground"
-							content="Resource Management"
-							delay={500}
-						>
+						<Tooltip color="foreground" content="Resource Management" delay={500}>
 							<Link
 								color={
-									pathname === "/admin/resource-management"
-										? "primary"
-										: "foreground"
+									pathname === "/admin/resource-management" ? "primary" : "foreground"
 								}
 								href="/admin/resource-management"
 							>
@@ -80,9 +67,7 @@ export default function AdminSideBar() {
 						<Tooltip color="foreground" content="Venue Management" delay={500}>
 							<Link
 								color={
-									pathname === "/admin/venue-management"
-										? "primary"
-										: "foreground"
+									pathname === "/admin/venue-management" ? "primary" : "foreground"
 								}
 								href="/admin/venue-management"
 							>
@@ -93,9 +78,7 @@ export default function AdminSideBar() {
 					<ListboxItem key="Settings" startContent={<SettingsIcon />}>
 						<Tooltip color="foreground" content="Settings" delay={500}>
 							<Link
-								color={
-									pathname === "/admin/settings" ? "primary" : "foreground"
-								}
+								color={pathname === "/admin/settings" ? "primary" : "foreground"}
 								href="/admin/settings"
 							>
 								Settings
