@@ -1,8 +1,7 @@
 import DeleteEvent from "@/components/app/organizer/deleteEvent";
-import EditEventIcon from "@/components/icons/EditEventIcon";
-import ViewEventIcon from "@/components/icons/ViewEventIcon";
 import EventImage from "@/assets/event.jpg";
 import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
+import { IconEdit, IconEye } from "@tabler/icons-react";
 export default function EventCard() {
   return (
     <Card className="p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
@@ -30,10 +29,10 @@ export default function EventCard() {
         </p>
       </CardBody>
       <CardBody className="pb-0 pt-2 px-4 flex-col items-end justify-center gap-4">
-        <Button color="secondary" variant="flat" endContent={<ViewEventIcon />}>
+        <Button color="secondary" variant="flat" endContent={<IconEye />}>
           View
         </Button>
-        <Button color="warning" variant="flat" endContent={<EditEventIcon />}>
+        <Button color="warning" variant="flat" endContent={<IconEdit />}>
           Edit
         </Button>
         <DeleteEvent />

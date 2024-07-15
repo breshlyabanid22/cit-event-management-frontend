@@ -11,43 +11,38 @@ import {
   SelectItem,
   Textarea,
   useDisclosure,
-  CheckboxGroup, Checkbox
+  CheckboxGroup,
+  Checkbox,
 } from "@nextui-org/react";
-<<<<<<< HEAD
 import {
   getLocalTimeZone,
   today,
   parseDate,
   DateValue,
-  now
+  now,
 } from "@internationalized/date";
-=======
-import { getLocalTimeZone, now, today } from "@internationalized/date";
->>>>>>> db406f5 (feat: update settings menu & use tabler's react icons instead)
 import z from "zod";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
-import { formatISO } from 'date-fns';
+import { formatISO } from "date-fns";
 import { IconCalendarPlus } from "@tabler/icons-react";
-=======
->>>>>>> db406f5 (feat: update settings menu & use tabler's react icons instead)
 
-const eventSchema = z.object({
-  name: z.string().min(3, "Event name must be at least 3 characters long"),
-  description: z.string().max(300, "Maximum of 300 characters only"),
-  venueId: z.coerce.number(),
-  resourceId: z.array(z.coerce.number()),
-  image: z.instanceof(File).optional(),
-  startTime: z.date(),
-  endTime: z.date(),
-}).refine(data => data.startTime <= data.endTime, {
-  message: "Start date must be before end date",
-  path: ["endTime"],
-});
+const eventSchema = z
+  .object({
+    name: z.string().min(3, "Event name must be at least 3 characters long"),
+    description: z.string().max(300, "Maximum of 300 characters only"),
+    venueId: z.coerce.number(),
+    resourceId: z.array(z.coerce.number()),
+    image: z.instanceof(File).optional(),
+    startTime: z.date(),
+    endTime: z.date(),
+  })
+  .refine((data) => data.startTime <= data.endTime, {
+    message: "Start date must be before end date",
+    path: ["endTime"],
+  });
 
-<<<<<<< HEAD
 type Venue = {
   id: number;
   name: string;
@@ -55,18 +50,17 @@ type Venue = {
   maxCapacity: number;
   events: String[];
   venueManagers: String[];
-}
+};
 type Resource = {
   id: number;
   name: string;
   type: string;
   description: string;
   availability: boolean;
-}
+};
 
 export default function AddEvent() {
-
-  type FormField = z.infer<typeof eventSchema>
+  type FormField = z.infer<typeof eventSchema>;
   const {
     control,
     register,
@@ -87,8 +81,8 @@ export default function AddEvent() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const formattedData = {
         ...data,
-        startTime: formatISO(data.startTime, { representation: 'complete' }),
-        endTime: formatISO(data.endTime, { representation: 'complete' }),
+        startTime: formatISO(data.startTime, { representation: "complete" }),
+        endTime: formatISO(data.endTime, { representation: "complete" }),
       };
       console.log(formattedData);
     } catch (error) {
@@ -104,7 +98,6 @@ export default function AddEvent() {
   }, []);
 
   const fetchVenues = async () => {
-
     try {
       const response = await fetch("http://localhost:8080/venues", {
         method: "GET",
@@ -114,14 +107,14 @@ export default function AddEvent() {
         credentials: "include",
       });
       if (!response.ok) {
-        throw new Error('Network Error');
+        throw new Error("Network Error");
       }
       const venueData: Venue[] = await response.json();
       setVenues(venueData);
     } catch (error) {
-      console.error('Error fetching venues:', error);
+      console.error("Error fetching venues:", error);
     }
-  }
+  };
   const fetchResources = async () => {
     try {
       const response = await fetch("http://localhost:8080/resources", {
@@ -132,25 +125,26 @@ export default function AddEvent() {
         credentials: "include",
       });
       if (!response.ok) {
-        throw new Error('Network Error');
+        throw new Error("Network Error");
       }
       const resourceData: Resource[] = await response.json();
       setResources(resourceData);
-    } catch (error) {
-
-    }
-
-  }
+    } catch (error) {}
+  };
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setValue('image', file);
+      setValue("image", file);
     }
   };
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <div>
-      <Button onPress={onOpen} color="primary" startContent={<IconCalendarPlus />}>
+      <Button
+        onPress={onOpen}
+        color="primary"
+        startContent={<IconCalendarPlus />}
+      >
         Create an event
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -200,8 +194,7 @@ export default function AddEvent() {
                         isInvalid={!!errors.venueId}
                       >
                         {venues.map((venue) => (
-                          <SelectItem
-                            key={venue.id} value={venue.id}>
+                          <SelectItem key={venue.id} value={venue.id}>
                             {venue.name + " | " + venue.location}
                           </SelectItem>
                         ))}
@@ -224,7 +217,10 @@ export default function AddEvent() {
                           onBlur={onBlur}
                         >
                           {resources.map((resource) => (
-                            <Checkbox key={resource.id} value={String(resource.id)}>
+                            <Checkbox
+                              key={resource.id}
+                              value={String(resource.id)}
+                            >
                               {resource.name}
                             </Checkbox>
                           ))}
@@ -245,11 +241,23 @@ export default function AddEvent() {
                                 showMonthAndYearPickers
                                 errorMessage={errors.startTime?.message}
                                 isInvalid={!!errors.startTime}
-                                value={field.value ? parseDate((field.value as Date).toISOString().substring(0, 10)) : null}
-                                onChange={(date: DateValue) => field.onChange(date.toDate(getLocalTimeZone()))}
+                                value={
+                                  field.value
+                                    ? parseDate(
+                                        (field.value as Date)
+                                          .toISOString()
+                                          .substring(0, 10),
+                                      )
+                                    : null
+                                }
+                                onChange={(date: DateValue) =>
+                                  field.onChange(
+                                    date.toDate(getLocalTimeZone()),
+                                  )
+                                }
                                 label="Start Date"
                               />
-                            )
+                            );
                           }}
                         />
                         <Controller
@@ -262,17 +270,25 @@ export default function AddEvent() {
                                 minValue={today(getLocalTimeZone())}
                                 errorMessage={errors.endTime?.message}
                                 isInvalid={!!errors.endTime}
-                                value={field.value ? parseDate((field.value as Date).toISOString().substring(0, 10)) : now(getLocalTimeZone())}
+                                value={
+                                  field.value
+                                    ? parseDate(
+                                        (field.value as Date)
+                                          .toISOString()
+                                          .substring(0, 10),
+                                      )
+                                    : now(getLocalTimeZone())
+                                }
                                 onChange={(date) => {
-                                  const localDate = date.toDate(getLocalTimeZone());
+                                  const localDate =
+                                    date.toDate(getLocalTimeZone());
                                   field.onChange(localDate);
                                 }}
                                 label="End Date"
                               />
-                            )
+                            );
                           }}
                         />
-
                       </div>
                     </div>
                   </div>
@@ -281,7 +297,11 @@ export default function AddEvent() {
                   <Button color="danger" variant="light" onPress={onClose}>
                     Close
                   </Button>
-                  <Button color="primary" type="submit" isDisabled={isSubmitting}>
+                  <Button
+                    color="primary"
+                    type="submit"
+                    isDisabled={isSubmitting}
+                  >
                     {isSubmitting ? "Loading" : "Submit"}
                   </Button>
                 </ModalFooter>
@@ -292,85 +312,4 @@ export default function AddEvent() {
       </Modal>
     </div>
   );
-=======
-export default function AddEvent() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<z.infer<typeof eventSchema>>({
-    resolver: zodResolver(eventSchema),
-  });
-
-  const submitEvent = async (data: z.infer<typeof eventSchema>) => {
-    console.log(data);
-  };
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  return (
-    <div>
-      <Button
-        onPress={onOpen}
-        color="primary"
-        startContent={<IconCalendarPlus />}
-      >
-        Add Event
-      </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <form onSubmit={handleSubmit(submitEvent)}>
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">
-                  Add Event
-                </ModalHeader>
-                <ModalBody>
-                  <form className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-2">
-                      <Input
-                        type="text"
-                        label="Event Name"
-                        isClearable
-                        {...register("name")}
-                        errorMessage={errors.name?.message}
-                        isInvalid={!!errors.name}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Input
-                        type="text"
-                        label="Event Location"
-                        isClearable
-                        {...register("location")}
-                        errorMessage={errors.location?.message}
-                        isInvalid={!!errors.location}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <DatePicker
-                        minValue={today(getLocalTimeZone())}
-                        defaultValue={now(getLocalTimeZone())}
-                        hideTimeZone
-                        showMonthAndYearPickers
-                        label="Event Date"
-                      />
-                    </div>
-                  </form>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button color="primary" type="submit">
-                    Submit
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </form>
-      </Modal>
-    </div>
-  );
->>>>>>> db406f5 (feat: update settings menu & use tabler's react icons instead)
 }
