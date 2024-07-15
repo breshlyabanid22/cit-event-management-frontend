@@ -24,7 +24,7 @@ import {
 import z from "zod";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { formatISO } from "date-fns";
 import { IconCalendarPlus } from "@tabler/icons-react";
 
@@ -60,6 +60,12 @@ type Resource = {
 };
 
 export default function AddEvent() {
+  const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef();
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
   type FormField = z.infer<typeof eventSchema>;
   const {
     control,
@@ -134,6 +140,7 @@ export default function AddEvent() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setFileName(file.name);
       setValue("image", file);
     }
   };
@@ -158,11 +165,20 @@ export default function AddEvent() {
                 <ModalBody>
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
-                      <Input
+                      <input
                         type="file"
-                        accept="image/*"
+                        ref={fileInputRef}
                         onChange={handleFileChange}
+                        style={{ display: "none" }}
                       />
+                      <Button variant="flat" onClick={handleButtonClick}>
+                        Upload File
+                      </Button>
+                      {fileName && (
+                        <p className="text-default-500">
+                          Selected file: {fileName}
+                        </p>
+                      )}
                     </div>
                     <div className="flex flex-col gap-2">
                       <Input
