@@ -1,6 +1,8 @@
 {
 	"$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-	"organizeImports": { "enabled": true },
+	"organizeImports": {
+		"enabled": true
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {
@@ -33,7 +35,9 @@
 				"useValidAriaRole": "error",
 				"useValidAriaValues": "error"
 			},
-			"complexity": { "useArrowFunction": "off" },
+			"complexity": {
+				"useArrowFunction": "off"
+			},
 			"correctness": {
 				"noChildrenProp": "error",
 				"noUnusedImports": "warn",
@@ -41,8 +45,12 @@
 				"useExhaustiveDependencies": "off",
 				"useJsxKeyInIterable": "error"
 			},
-			"security": { "noDangerouslySetInnerHtmlWithChildren": "error" },
-			"style": { "useBlockStatements": "off" },
+			"security": {
+				"noDangerouslySetInnerHtmlWithChildren": "error"
+			},
+			"style": {
+				"useBlockStatements": "off"
+			},
 			"suspicious": {
 				"noCommentText": "error",
 				"noConsoleLog": "warn",
@@ -72,8 +80,8 @@
 		"ignore": [],
 		"attributePosition": "auto",
 		"indentStyle": "tab",
-		"indentWidth": 2,
-		"lineWidth": 80,
+		"indentWidth": 1,
+		"lineWidth": 4,
 		"lineEnding": "lf"
 	},
 	"javascript": {
