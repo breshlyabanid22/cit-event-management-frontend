@@ -113,20 +113,58 @@ function capitalize(str) {
 }
 
 const columns = [
-  { name: "ID", uid: "id", sortable: true },
-  { name: "NAME", uid: "name", sortable: true },
-  { name: "AGE", uid: "age", sortable: true },
-  { name: "ROLE", uid: "role", sortable: true },
-  { name: "TEAM", uid: "team" },
-  { name: "EMAIL", uid: "email" },
-  { name: "STATUS", uid: "status", sortable: true },
-  { name: "ACTIONS", uid: "actions" },
+  {
+    name: "ID",
+    uid: "id",
+    sortable: true,
+  },
+  {
+    name: "NAME",
+    uid: "name",
+    sortable: true,
+  },
+  {
+    name: "AGE",
+    uid: "age",
+    sortable: true,
+  },
+  {
+    name: "ROLE",
+    uid: "role",
+    sortable: true,
+  },
+  {
+    name: "TEAM",
+    uid: "team",
+  },
+  {
+    name: "EMAIL",
+    uid: "email",
+  },
+  {
+    name: "STATUS",
+    uid: "status",
+    sortable: true,
+  },
+  {
+    name: "ACTIONS",
+    uid: "actions",
+  },
 ];
 
 const statusOptions = [
-  { name: "Active", uid: "active" },
-  { name: "Paused", uid: "paused" },
-  { name: "Vacation", uid: "vacation" },
+  {
+    name: "Active",
+    uid: "active",
+  },
+  {
+    name: "Paused",
+    uid: "paused",
+  },
+  {
+    name: "Vacation",
+    uid: "vacation",
+  },
 ];
 
 const users = [
@@ -312,7 +350,10 @@ export default function UserManagementTable() {
       case "name":
         return (
           <User
-            avatarProps={{ radius: "lg", src: user.avatar }}
+            avatarProps={{
+              radius: "lg",
+              src: user.avatar,
+            }}
             description={user.email}
             name={cellValue}
           >
@@ -351,8 +392,8 @@ export default function UserManagementTable() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>Accept</DropdownItem>
-                <DropdownItem>Decline</DropdownItem>
+                <DropdownItem>Edit</DropdownItem>
+                <DropdownItem>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -555,9 +596,7 @@ export default function UserManagementTable() {
       <TableBody emptyContent={"No users found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
+            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
           </TableRow>
         )}
       </TableBody>
