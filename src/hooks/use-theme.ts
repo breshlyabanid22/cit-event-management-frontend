@@ -46,5 +46,12 @@ export const useTheme = (defaultTheme?: Theme) => {
     _setTheme(theme);
   });
 
-  return { theme, isDark, isLight, setLightTheme, setDarkTheme, toggleTheme };
+  return {
+    theme,
+    isDark,
+    isLight,
+    setLightTheme,
+    setDarkTheme,
+    toggleTheme,
+  };
 };

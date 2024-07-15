@@ -1,4 +1,4 @@
-export default function HomeIcon() {
+export default function ResourceManagementIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,12 +10,12 @@ export default function HomeIcon() {
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
-      className="icon icon-tabler icons-tabler-outline icon-tabler-home"
+      className="icon icon-tabler icons-tabler-outline icon-tabler-building-warehouse"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
-      <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-      <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+      <path d="M3 21v-13l9 -4l9 4v13" />
+      <path d="M13 13h4v8h-10v-6h6" />
+      <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
     </svg>
   );
 }

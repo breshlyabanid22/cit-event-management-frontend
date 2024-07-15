@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { object, z } from "zod";
+import { z } from "zod";
 import {
   Tabs,
   Tab,
@@ -8,20 +8,17 @@ import {
   Link,
   Button,
   Card,
-  Radio,
-  RadioGroup,
   CardBody,
-  Select,
-  SelectItem,
   Checkbox,
 } from "@nextui-org/react";
 import { useState } from "react";
-import { useQueryClient } from "react-query";
 import ViewEventIcon from "@/components/icons/ViewEventIcon";
 import EyeOffIcon from "@/components/icons/EyeOffIcon";
 import { accountRegister, accountLogin } from "@/types";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import useAuthStore from "@/provider/auth";
+import { useEffect } from "react";
 
 const loginSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters long"),
@@ -51,8 +48,28 @@ export default function Login() {
   const [selected, setSelected] = useState("login");
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { user, isAuthenticated, login, refreshUserData } = useAuthStore();
+
+  useEffect(() => {
+    refreshUserData();
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated && user !== null) {
+      switch (user.role) {
+        case "ADMIN":
+          navigate("/admin");
+          break;
+        case "ORGANIZER":
+          navigate("/organizer");
+          break;
+        case "PARTICIPANT":
+          navigate("/participant");
+          break;
+      }
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const {
     register: loginRegister,
@@ -71,33 +88,11 @@ export default function Login() {
   });
 
   const onLoginSubmit = async (data: z.infer<typeof loginSchema>) => {
-    try {
-      const loginData: accountLogin = {
-        username: data.username,
-        password: data.password,
-      };
-
-      const response = await fetch("http://localhost:8080/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginData),
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        navigate("/app");
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
-      }
-
-      return response;
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
-    }
+    const loginData: accountLogin = {
+      username: data.username,
+      password: data.password,
+    };
+    await login(loginData);
   };
 
   const onRegisterSubmit = async (data: z.infer<typeof registerSchema>) => {

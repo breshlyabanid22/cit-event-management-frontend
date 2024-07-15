@@ -14,7 +14,8 @@ import EventRegistrationIcon from "@/components/icons/EventRegistrationIcon";
 import VenueIcon from "@/components/icons/VenueIcon";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "@/provider/auth";
-export default function AppSidebar() {
+import FeedbackIcon from "@/components/icons/FeedbackIcon";
+export default function ParticipantSidebar() {
   const { logout } = useAuthStore();
   const pathname = useLocation().pathname;
   return (
@@ -35,45 +36,55 @@ export default function AppSidebar() {
           <ListboxItem key="Home" startContent={<HomeIcon />}>
             <Tooltip color="foreground" content="Home" delay={500}>
               <Link
-                color={pathname === "/organizer" ? "primary" : "foreground"}
-                href="/organizer"
+                color={pathname === "/participant" ? "primary" : "foreground"}
+                href="/participant"
               >
                 Home
               </Link>
             </Tooltip>
           </ListboxItem>
           <ListboxItem
-            key="Event Registration"
+            key="Scheduled List"
             startContent={<EventRegistrationIcon />}
           >
-            <Tooltip
-              color="foreground"
-              content="Event Registration"
-              delay={500}
-            >
+            <Tooltip color="foreground" content="Scheduled List" delay={500}>
               <Link
                 color={
-                  pathname === "/organizer/event-registration"
+                  pathname === "/participant/scheduled-list"
                     ? "primary"
                     : "foreground"
                 }
-                href="/organizer/event-registration"
+                href="/participant/scheduled-list"
               >
-                Event Registration
+                Scheduled List
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem key="Venue Management" startContent={<VenueIcon />}>
-            <Tooltip color="foreground" content="Venue Management" delay={500}>
+          <ListboxItem key="Upcoming Event" startContent={<VenueIcon />}>
+            <Tooltip color="foreground" content="Upcoming Event" delay={500}>
               <Link
                 color={
-                  pathname === "/organizer/venue-management"
+                  pathname === "/participant/upcoming-event"
                     ? "primary"
                     : "foreground"
                 }
-                href="/organizer/venue-management"
+                href="/participant/upcoming-event"
               >
-                Venue Management
+                Upcoming Event
+              </Link>
+            </Tooltip>
+          </ListboxItem>
+          <ListboxItem key="Feedback" startContent={<FeedbackIcon />}>
+            <Tooltip color="foreground" content="Feedback" delay={500}>
+              <Link
+                color={
+                  pathname === "/participant/feedback"
+                    ? "primary"
+                    : "foreground"
+                }
+                href="/participant/feedback"
+              >
+                Feedback
               </Link>
             </Tooltip>
           </ListboxItem>
@@ -81,9 +92,11 @@ export default function AppSidebar() {
             <Tooltip color="foreground" content="Settings" delay={500}>
               <Link
                 color={
-                  pathname === "/organizer/settings" ? "primary" : "foreground"
+                  pathname === "/participant/settings"
+                    ? "primary"
+                    : "foreground"
                 }
-                href="/organizer/settings"
+                href="/participant/settings"
               >
                 Settings
               </Link>
@@ -108,9 +121,9 @@ export default function AppSidebar() {
           <Tooltip content="Profile" color="foreground" delay={500}>
             <User
               as={Link}
-              href="/organizer/settings"
+              href="/participant/settings"
               name="Jane Doe"
-              description="Organizer"
+              description="participant"
               avatarProps={{
                 src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
               }}

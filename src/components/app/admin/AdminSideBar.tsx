@@ -10,11 +10,12 @@ import HomeIcon from "../../icons/HomeIcon";
 import LogoutIcon from "../../icons/LogoutIcon";
 import LogoIcon from "../../icons/LogoIcon";
 import SettingsIcon from "../../icons/SettingsIcon";
-import EventRegistrationIcon from "@/components/icons/EventRegistrationIcon";
+import UserManagementIcon from "@/components/icons/UserManagementIcon";
+import ResourceManagementIcon from "@/components/icons/ResourceManagementIcon";
 import VenueIcon from "@/components/icons/VenueIcon";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "@/provider/auth";
-export default function AppSidebar() {
+export default function AdminSideBar() {
   const { logout } = useAuthStore();
   const pathname = useLocation().pathname;
   return (
@@ -35,31 +36,48 @@ export default function AppSidebar() {
           <ListboxItem key="Home" startContent={<HomeIcon />}>
             <Tooltip color="foreground" content="Home" delay={500}>
               <Link
-                color={pathname === "/organizer" ? "primary" : "foreground"}
-                href="/organizer"
+                color={pathname === "/admin" ? "primary" : "foreground"}
+                href="/admin"
               >
                 Home
               </Link>
             </Tooltip>
           </ListboxItem>
           <ListboxItem
-            key="Event Registration"
-            startContent={<EventRegistrationIcon />}
+            key="User Management"
+            startContent={<UserManagementIcon />}
+          >
+            <Tooltip color="foreground" content="User Management" delay={500}>
+              <Link
+                color={
+                  pathname === "/admin/user-management"
+                    ? "primary"
+                    : "foreground"
+                }
+                href="/admin/user-management"
+              >
+                User Management
+              </Link>
+            </Tooltip>
+          </ListboxItem>
+          <ListboxItem
+            key="Resource Management"
+            startContent={<ResourceManagementIcon />}
           >
             <Tooltip
               color="foreground"
-              content="Event Registration"
+              content="Resource Management"
               delay={500}
             >
               <Link
                 color={
-                  pathname === "/organizer/event-registration"
+                  pathname === "/admin/resource-management"
                     ? "primary"
                     : "foreground"
                 }
-                href="/organizer/event-registration"
+                href="/admin/resource-management"
               >
-                Event Registration
+                Resource Management
               </Link>
             </Tooltip>
           </ListboxItem>
@@ -67,11 +85,11 @@ export default function AppSidebar() {
             <Tooltip color="foreground" content="Venue Management" delay={500}>
               <Link
                 color={
-                  pathname === "/organizer/venue-management"
+                  pathname === "/admin/venue-management"
                     ? "primary"
                     : "foreground"
                 }
-                href="/organizer/venue-management"
+                href="/admin/venue-management"
               >
                 Venue Management
               </Link>
@@ -81,9 +99,9 @@ export default function AppSidebar() {
             <Tooltip color="foreground" content="Settings" delay={500}>
               <Link
                 color={
-                  pathname === "/organizer/settings" ? "primary" : "foreground"
+                  pathname === "/admin/settings" ? "primary" : "foreground"
                 }
-                href="/organizer/settings"
+                href="/admin/settings"
               >
                 Settings
               </Link>
@@ -108,9 +126,9 @@ export default function AppSidebar() {
           <Tooltip content="Profile" color="foreground" delay={500}>
             <User
               as={Link}
-              href="/organizer/settings"
+              href="/admin/settings"
               name="Jane Doe"
-              description="Organizer"
+              description="Admin"
               avatarProps={{
                 src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
               }}
