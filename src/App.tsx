@@ -79,15 +79,14 @@ function App() {
       {/* Organizer routes */}
       <Route
         path="organizer"
-        element={<ProtectedRoute isAllowed="ORGANIZER" />}
-      >
-        <Route
-          element={
+        element={
+          <ProtectedRoute isAllowed="ORGANIZER">
             <Suspense fallback={<Loader />}>
               <OrganizerLayout />
             </Suspense>
-          }
-        />
+          </ProtectedRoute>
+        }
+      >
         <Route
           index
           element={
