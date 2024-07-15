@@ -1,21 +1,16 @@
-import {
-  Link,
-  Listbox,
-  ListboxItem,
-  Tooltip,
-  User,
-  Button,
-} from "@nextui-org/react";
-import HomeIcon from "../../icons/HomeIcon";
-import LogoutIcon from "../../icons/LogoutIcon";
-import LogoIcon from "../../icons/LogoIcon";
-import SettingsIcon from "../../icons/SettingsIcon";
-import EventRegistrationIcon from "@/components/icons/EventRegistrationIcon";
-import VenueIcon from "@/components/icons/VenueIcon";
+import { Link, Listbox, ListboxItem, Tooltip, User } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "@/provider/auth";
+import {
+  IconBuilding,
+  IconCalendar,
+  IconHome,
+  IconLogout2,
+  IconSettings,
+} from "@tabler/icons-react";
+import LogoIcon from "@/components/icons/LogoIcon";
 export default function AppSidebar() {
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
   const pathname = useLocation().pathname;
   return (
     <div className="flex h-screen flex-col justify-between border-r dark:border-gray-800 border-gray-200">
@@ -32,7 +27,7 @@ export default function AppSidebar() {
             list: "gap-4",
           }}
         >
-          <ListboxItem key="Home" startContent={<HomeIcon />}>
+          <ListboxItem key="Home" startContent={<IconHome />}>
             <Tooltip color="foreground" content="Home" delay={500}>
               <Link
                 color={pathname === "/organizer" ? "primary" : "foreground"}
@@ -42,10 +37,7 @@ export default function AppSidebar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem
-            key="Event Registration"
-            startContent={<EventRegistrationIcon />}
-          >
+          <ListboxItem key="Event Registration" startContent={<IconCalendar />}>
             <Tooltip
               color="foreground"
               content="Event Registration"
@@ -63,7 +55,7 @@ export default function AppSidebar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem key="Venue Management" startContent={<VenueIcon />}>
+          <ListboxItem key="Venue Management" startContent={<IconBuilding />}>
             <Tooltip color="foreground" content="Venue Management" delay={500}>
               <Link
                 color={
@@ -77,7 +69,7 @@ export default function AppSidebar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem key="Settings" startContent={<SettingsIcon />}>
+          <ListboxItem key="Settings" startContent={<IconSettings />}>
             <Tooltip color="foreground" content="Settings" delay={500}>
               <Link
                 color={
@@ -93,7 +85,7 @@ export default function AppSidebar() {
             key="logout"
             className="text-danger"
             color="danger"
-            startContent={<LogoutIcon />}
+            startContent={<IconLogout2 />}
             onPress={logout}
           >
             <Tooltip color="foreground" content="Logout" delay={500}>
@@ -109,8 +101,8 @@ export default function AppSidebar() {
             <User
               as={Link}
               href="/organizer/settings"
-              name="Jane Doe"
-              description="Organizer"
+              name={user?.firstName + " " + user?.lastName}
+              description={user?.role}
               avatarProps={{
                 src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
               }}

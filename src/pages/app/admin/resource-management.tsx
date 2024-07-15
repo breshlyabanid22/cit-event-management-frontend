@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/react";
-import AddEventIcon from "@/components/icons/AddEventIcon";
+import { IconCalendarPlus } from "@tabler/icons-react";
 export default function ResourceManagement() {
   return (
     <div>
@@ -8,7 +8,7 @@ export default function ResourceManagement() {
           <p className="text-3xl font-bold">Resource Management</p>
           <p className="text-md font-light">Management of Resources</p>
         </div>
-        <Button color="primary" endContent={<AddEventIcon />}>
+        <Button color="primary" endContent={<IconCalendarPlus />}>
           Add new
         </Button>
       </header>

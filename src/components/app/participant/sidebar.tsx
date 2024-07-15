@@ -6,17 +6,19 @@ import {
   User,
   Button,
 } from "@nextui-org/react";
-import HomeIcon from "../../icons/HomeIcon";
-import LogoutIcon from "../../icons/LogoutIcon";
-import LogoIcon from "../../icons/LogoIcon";
-import SettingsIcon from "../../icons/SettingsIcon";
-import EventRegistrationIcon from "@/components/icons/EventRegistrationIcon";
-import VenueIcon from "@/components/icons/VenueIcon";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "@/provider/auth";
-import FeedbackIcon from "@/components/icons/FeedbackIcon";
+import LogoIcon from "@/components/icons/LogoIcon";
+import {
+  IconBuildings,
+  IconCalendar,
+  IconHome,
+  IconLogout2,
+  IconMessage,
+  IconSettings,
+} from "@tabler/icons-react";
 export default function ParticipantSidebar() {
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
   const pathname = useLocation().pathname;
   return (
     <div className="flex h-screen flex-col justify-between border-r dark:border-gray-800 border-gray-200">
@@ -33,7 +35,7 @@ export default function ParticipantSidebar() {
             list: "gap-4",
           }}
         >
-          <ListboxItem key="Home" startContent={<HomeIcon />}>
+          <ListboxItem key="Home" startContent={<IconHome />}>
             <Tooltip color="foreground" content="Home" delay={500}>
               <Link
                 color={pathname === "/participant" ? "primary" : "foreground"}
@@ -43,10 +45,7 @@ export default function ParticipantSidebar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem
-            key="Scheduled List"
-            startContent={<EventRegistrationIcon />}
-          >
+          <ListboxItem key="Scheduled List" startContent={<IconCalendar />}>
             <Tooltip color="foreground" content="Scheduled List" delay={500}>
               <Link
                 color={
@@ -60,7 +59,7 @@ export default function ParticipantSidebar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem key="Upcoming Event" startContent={<VenueIcon />}>
+          <ListboxItem key="Upcoming Event" startContent={<IconBuildings />}>
             <Tooltip color="foreground" content="Upcoming Event" delay={500}>
               <Link
                 color={
@@ -74,7 +73,7 @@ export default function ParticipantSidebar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem key="Feedback" startContent={<FeedbackIcon />}>
+          <ListboxItem key="Feedback" startContent={<IconMessage />}>
             <Tooltip color="foreground" content="Feedback" delay={500}>
               <Link
                 color={
@@ -88,7 +87,7 @@ export default function ParticipantSidebar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem key="Settings" startContent={<SettingsIcon />}>
+          <ListboxItem key="Settings" startContent={<IconSettings />}>
             <Tooltip color="foreground" content="Settings" delay={500}>
               <Link
                 color={
@@ -106,7 +105,7 @@ export default function ParticipantSidebar() {
             key="logout"
             className="text-danger"
             color="danger"
-            startContent={<LogoutIcon />}
+            startContent={<IconLogout2 />}
             onPress={logout}
           >
             <Tooltip color="foreground" content="Logout" delay={500}>
@@ -121,9 +120,9 @@ export default function ParticipantSidebar() {
           <Tooltip content="Profile" color="foreground" delay={500}>
             <User
               as={Link}
-              href="/participant/settings"
-              name="Jane Doe"
-              description="participant"
+              href="/organizer/settings"
+              name={user?.firstName + " " + user?.lastName}
+              description={user?.role}
               avatarProps={{
                 src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
               }}
