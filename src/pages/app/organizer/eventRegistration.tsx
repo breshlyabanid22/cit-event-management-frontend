@@ -1,5 +1,5 @@
 import EventRegistrationCard from "@/components/app/organizer/eventRegistrationCard";
-import { Button } from "@nextui-org/react";
+import ManageWaitlist from "@/components/app/organizer/ManageWaitlist";
 
 export default function EventRegistration() {
   return (
@@ -9,9 +9,7 @@ export default function EventRegistration() {
           <p className="text-3xl font-bold">Event Registration</p>
           <p className="text-md font-light">Manage your participants</p>
         </div>
-        <Button size="md" color="primary" radius="lg">
-          Manage Waitlist
-        </Button>
+        <ManageWaitlist />
       </header>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <EventRegistrationCard />
