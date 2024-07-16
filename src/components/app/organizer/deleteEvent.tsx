@@ -7,7 +7,7 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import DeleteEventIcon from "../../icons/DeleteEventIcon";
+import { IconTrash } from "@tabler/icons-react";
 
 export default function DeleteEvent() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -18,7 +18,7 @@ export default function DeleteEvent() {
         onPress={onOpen}
         color="danger"
         variant="flat"
-        endContent={<DeleteEventIcon />}
+        endContent={<IconTrash />}
       >
         Delete
       </Button>

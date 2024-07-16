@@ -20,6 +20,12 @@ import {
 import { useState } from "react";
 import clsx from "clsx";
 import { z } from "zod";
+import useAuth from "@/provider/auth";
+import {
+  UsernameCard,
+  PasswordCard,
+  EmailCard,
+} from "@/components/app/SecuritySettingsCard";
 
 const settingsSchema = z
   .object({
@@ -45,8 +51,9 @@ const settingsSchema = z
   });
 
 export default function Settings() {
+  const { user } = useAuth();
   const [selectedDepartment, setSelectedDepartment] = useState("");
-  const handleDepartmentChange = (value) => {
+  const handleDepartmentChange = (value: any) => {
     setSelectedDepartment(value.currentKey);
   };
   return (
@@ -80,20 +87,20 @@ export default function Settings() {
                     />
                     <div className="items-center justify-center">
                       <p className="text-sm font-medium text-default-600">
-                        Jane Doe{" "}
+                        {user?.firstName} {user?.lastName}{" "}
                         <Chip
                           className="ml-2"
                           size="sm"
                           radius="full"
                           color="primary"
                         >
-                          Organizer
+                          {user?.role}
                         </Chip>
                       </p>
-                      <p className="text-xs text-default-400">19-3160-312</p>
                       <p className="text-xs text-default-400">
-                        email@example.com
+                        {user?.schoolID}
                       </p>
+                      <p className="text-xs text-default-400">{user?.email}</p>
                     </div>
                   </CardBody>
                 </Card>
@@ -112,6 +119,7 @@ export default function Settings() {
                     size="md"
                     radius="lg"
                     placeholder="First Name"
+                    defaultValue={user?.firstName}
                   />
                   <Input
                     type="text"
@@ -119,50 +127,10 @@ export default function Settings() {
                     size="md"
                     radius="lg"
                     placeholder="Last Name"
+                    defaultValue={user?.lastName}
                   />
                 </div>
 
-                <h3 className="mt-4 text-lg font-bold">Username</h3>
-                <p className="text-default-500">
-                  Your login username in your account.
-                </p>
-                <Input
-                  type="text"
-                  className="mt-2"
-                  size="md"
-                  radius="lg"
-                  placeholder="Username"
-                />
-
-                <h3 className="mt-4 text-lg font-bold">Email Address</h3>
-                <p className="text-default-500">
-                  The email address associated with your account.
-                </p>
-                <Input
-                  type="email"
-                  className="mt-2"
-                  size="md"
-                  radius="lg"
-                  placeholder="Email"
-                />
-                <h3 className="mt-4 text-lg font-bold">Password</h3>
-                <p className="text-default-500">Change your password.</p>
-                <div className="grid grid-cols-2 gap-4">
-                  <Input
-                    type="text"
-                    className="mt-2"
-                    size="md"
-                    radius="lg"
-                    placeholder="Password"
-                  />
-                  <Input
-                    type="text"
-                    className="mt-2"
-                    size="md"
-                    radius="lg"
-                    placeholder="Confirm Password"
-                  />
-                </div>
                 <h3 className="mt-4 text-lg font-bold">Department</h3>
                 <p className="text-default-500">
                   Your Department in your account.
@@ -236,6 +204,21 @@ export default function Settings() {
                 </div>
               </div>
             </Tab>
+            <Tab key="security" title="Security">
+              <div className="sm:w-full md:w-[400px] lg:w-[600px]">
+                {" "}
+                <div>
+                  <UsernameCard username={user?.username} />
+                </div>
+                <div className="mt-4">
+                  <PasswordCard />
+                </div>
+                <div className="mt-4">
+                  <EmailCard email={user?.email} />
+                </div>
+              </div>
+            </Tab>
+
             <Tab key="notifications" title="Notifications">
               <div className="sm:w-full md:w-[400px] lg:w-[600px]">
                 <Card>

@@ -1,8 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
-const queryClient = new QueryClient();
 
 import App from "./App.tsx";
 import { Provider } from "./provider.tsx";
@@ -18,9 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       }}
     >
       <Provider>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
+        <App />
       </Provider>
     </BrowserRouter>
   </React.StrictMode>,

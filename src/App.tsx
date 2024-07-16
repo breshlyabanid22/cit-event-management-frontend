@@ -1,5 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 const ProtectedRoute = lazy(() => import("@/provider/ProtectedRoute"));
 const Loader = lazy(() => import("@/components/loading"));
 const ErrorPage = lazy(() => import("@/pages/error"));
@@ -40,211 +43,213 @@ const ParticipantFeedback = lazy(
 );
 function App() {
   return (
-    <Routes>
-      {/* Landing Page */}
-      <Route
-        element={
-          <Suspense fallback={<Loader></Loader>}>
-            <DefaultLayout />
-          </Suspense>
-        }
-      >
+    <QueryClientProvider client={queryClient}>
+      <Routes>
+        {/* Landing Page */}
         <Route
-          path="/"
           element={
             <Suspense fallback={<Loader></Loader>}>
-              <IndexPage />
+              <DefaultLayout />
             </Suspense>
           }
-        />
+        >
+          <Route
+            path="/"
+            element={
+              <Suspense fallback={<Loader></Loader>}>
+                <IndexPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <Suspense fallback={<Loader></Loader>}>
+                <AboutPage />
+              </Suspense>
+            }
+          />
+        </Route>
+        {/* Login Page */}
         <Route
-          path="/about"
+          path="/login"
           element={
             <Suspense fallback={<Loader></Loader>}>
-              <AboutPage />
+              <Login />
             </Suspense>
           }
         />
-      </Route>
-      {/* Login Page */}
-      <Route
-        path="/login"
-        element={
-          <Suspense fallback={<Loader></Loader>}>
-            <Login />
-          </Suspense>
-        }
-      />
 
-      {/* Organizer routes */}
-      <Route
-        path="organizer"
-        element={
-          <ProtectedRoute isAllowed="ORGANIZER">
-            <Suspense fallback={<Loader />}>
-              <OrganizerLayout />
-            </Suspense>
-          </ProtectedRoute>
-        }
-      >
+        {/* Organizer routes */}
         <Route
-          index
+          path="organizer"
           element={
-            <Suspense fallback={<Loader />}>
-              <OrganizerHome />
-            </Suspense>
+            <ProtectedRoute isAllowed="ORGANIZER">
+              <Suspense fallback={<Loader />}>
+                <OrganizerLayout />
+              </Suspense>
+            </ProtectedRoute>
           }
-        />
-        <Route path="event-registration">
+        >
           <Route
             index
             element={
               <Suspense fallback={<Loader />}>
-                <EventRegistration />
+                <OrganizerHome />
               </Suspense>
             }
           />
-        </Route>
-        <Route path="venue-management">
+          <Route path="event-registration">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <EventRegistration />
+                </Suspense>
+              }
+            />
+          </Route>
+          <Route path="venue-management">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <VenueManagement />
+                </Suspense>
+              }
+            />
+          </Route>
           <Route
-            index
+            path="settings"
             element={
               <Suspense fallback={<Loader />}>
-                <VenueManagement />
+                <Settings />
               </Suspense>
             }
           />
         </Route>
-        <Route
-          path="settings"
-          element={
-            <Suspense fallback={<Loader />}>
-              <Settings />
-            </Suspense>
-          }
-        />
-      </Route>
 
-      {/* Admin routes */}
-      <Route
-        path="admin"
-        element={
-          <ProtectedRoute isAllowed="ADMIN">
-            <Suspense fallback={<Loader />}>
-              <AdminLayout />
-            </Suspense>
-          </ProtectedRoute>
-        }
-      >
+        {/* Admin routes */}
         <Route
-          index
+          path="admin"
           element={
-            <Suspense fallback={<Loader />}>
-              <AdminHome />
-            </Suspense>
+            <ProtectedRoute isAllowed="ADMIN">
+              <Suspense fallback={<Loader />}>
+                <AdminLayout />
+              </Suspense>
+            </ProtectedRoute>
           }
-        />
-        <Route path="user-management">
+        >
           <Route
             index
             element={
               <Suspense fallback={<Loader />}>
-                <AdminUserManagement />
+                <AdminHome />
               </Suspense>
             }
           />
-        </Route>
-        <Route path="resource-management">
+          <Route path="user-management">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <AdminUserManagement />
+                </Suspense>
+              }
+            />
+          </Route>
+          <Route path="resource-management">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <AdminResourceManagement />
+                </Suspense>
+              }
+            />
+          </Route>
+          <Route path="venue-management">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <AdminVenueManagement />
+                </Suspense>
+              }
+            />
+          </Route>
           <Route
-            index
+            path="settings"
             element={
               <Suspense fallback={<Loader />}>
-                <AdminResourceManagement />
+                <Settings />
               </Suspense>
             }
           />
         </Route>
-        <Route path="venue-management">
-          <Route
-            index
-            element={
-              <Suspense fallback={<Loader />}>
-                <AdminVenueManagement />
-              </Suspense>
-            }
-          />
-        </Route>
-        <Route
-          path="settings"
-          element={
-            <Suspense fallback={<Loader />}>
-              <Settings />
-            </Suspense>
-          }
-        />
-      </Route>
 
-      {/* Participant routes */}
-      <Route
-        path="participant"
-        element={
-          <ProtectedRoute isAllowed="PARTICIPANT">
-            <Suspense fallback={<Loader />}>
-              <ParticipantLayout />
-            </Suspense>
-          </ProtectedRoute>
-        }
-      >
+        {/* Participant routes */}
         <Route
-          index
+          path="participant"
           element={
-            <Suspense fallback={<Loader />}>
-              <ParticipantHome />
-            </Suspense>
+            <ProtectedRoute isAllowed="PARTICIPANT">
+              <Suspense fallback={<Loader />}>
+                <ParticipantLayout />
+              </Suspense>
+            </ProtectedRoute>
           }
-        />
-        <Route path="scheduled-list">
+        >
           <Route
             index
             element={
               <Suspense fallback={<Loader />}>
-                <ParticipantScheduled />
+                <ParticipantHome />
               </Suspense>
             }
           />
-        </Route>
-        <Route path="upcoming-event">
+          <Route path="scheduled-list">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <ParticipantScheduled />
+                </Suspense>
+              }
+            />
+          </Route>
+          <Route path="upcoming-event">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <ParticipantUpcoming />
+                </Suspense>
+              }
+            />
+          </Route>
+          <Route path="feedback">
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loader />}>
+                  <ParticipantFeedback />
+                </Suspense>
+              }
+            />
+          </Route>
           <Route
-            index
+            path="settings"
             element={
               <Suspense fallback={<Loader />}>
-                <ParticipantUpcoming />
+                <Settings />
               </Suspense>
             }
           />
         </Route>
-        <Route path="feedback">
-          <Route
-            index
-            element={
-              <Suspense fallback={<Loader />}>
-                <ParticipantFeedback />
-              </Suspense>
-            }
-          />
-        </Route>
-        <Route
-          path="settings"
-          element={
-            <Suspense fallback={<Loader />}>
-              <Settings />
-            </Suspense>
-          }
-        />
-      </Route>
 
-      <Route path="*" element={<ErrorPage />} />
-    </Routes>
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    </QueryClientProvider>
   );
 }
 

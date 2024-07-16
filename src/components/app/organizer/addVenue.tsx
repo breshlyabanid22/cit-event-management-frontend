@@ -1,4 +1,3 @@
-import AddVenueIcon from "@/components/icons/addVenueIcon";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
@@ -10,6 +9,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
+import { IconHomePlus } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -35,7 +35,7 @@ export default function AddVenue() {
   };
   return (
     <div>
-      <Button onPress={onOpen} color="primary" startContent={<AddVenueIcon />}>
+      <Button onPress={onOpen} color="primary" startContent={<IconHomePlus />}>
         Add Venue
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
