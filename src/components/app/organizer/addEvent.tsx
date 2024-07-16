@@ -16,11 +16,9 @@ import {
 import {
 	getLocalTimeZone,
 	today,
-	parseDate,
-	DateValue,
-	now
+	parseDateTime,
 } from "@internationalized/date";
-import AddEventIcon from "../../icons/AddEventIcon";
+import AddEventIcon from "@/components/icons/AddEventIcon";
 import z from "zod";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,9 +31,9 @@ const eventSchema = z.object({
 	venueId: z.coerce.number(),
 	resourceId: z.array(z.coerce.number()),
 	image: z.instanceof(File).optional(),
-	startTime: z.date(),
-	endTime: z.date(),
-}).refine(data => data.startTime <= data.endTime, {
+	startTime: z.string(),
+	endTime: z.string(),
+}).refine(data => new Date(data.startTime) < new Date(data.endTime), {
 	message: "Start date must be before end date",
 	path: ["endTime"],
 });
@@ -63,13 +61,12 @@ export default function AddEvent() {
 		control,
 		register,
 		handleSubmit,
-		setValue,
-		formState: { errors, isSubmitting },
+		setValue, 
+		reset,
+		formState: { errors, isSubmitting, isSubmitSuccessful, isDirty }
 	} = useForm<FormField>({
 		resolver: zodResolver(eventSchema),
 		defaultValues: {
-			startTime: new Date(),
-			endTime: new Date(),
 			resourceId: [],
 			image: undefined,
 		},
@@ -86,6 +83,7 @@ export default function AddEvent() {
 		} catch (error) {
 			console.error("error submitting", error);
 		}
+		
 	};
 	const [venues, setVenues] = useState<Venue[]>([]);
 	const [resources, setResources] = useState<Resource[]>([]);
@@ -93,7 +91,10 @@ export default function AddEvent() {
 	useEffect(() => {
 		fetchVenues();
 		fetchResources();
-	}, []);
+		if(isSubmitSuccessful){
+			reset();
+		}
+	},[isSubmitSuccessful, reset]);
 	
 	const fetchVenues = async () => {
 
@@ -233,15 +234,19 @@ export default function AddEvent() {
 													<DatePicker
 														{...field}
 														minValue={today(getLocalTimeZone())}
-														hideTimeZone	
+														hideTimeZone
 														showMonthAndYearPickers
 														errorMessage={errors.startTime?.message}	
 														isInvalid={!!errors.startTime}
-														value={field.value ? parseDate((field.value as Date).toISOString().substring(0, 18)) : null}
-														onChange={(date: DateValue) => field.onChange(date.toDate(getLocalTimeZone()))}
+														value={field.value ? parseDateTime(field.value) : null}
+														onChange={(date) => {
+															// const isoDate = ;
+															field.onChange(date.toString());
+															setValue('startTime', date.toString())
+														}}
 														label="Start Date"
 													/>
-													)
+													);
 												}}
 											/>
 											<Controller
@@ -252,12 +257,15 @@ export default function AddEvent() {
 													<DatePicker
 														{...field}
 														minValue={today(getLocalTimeZone())}
+														hideTimeZone
+														showMonthAndYearPickers
 														errorMessage={errors.endTime?.message}	
 														isInvalid={!!errors.endTime}
-														value={field.value ? parseDate((field.value as Date).toISOString().substring(0, 18)) : now(getLocalTimeZone())}
+														value={field.value ? parseDateTime(field.value) : null}
 														onChange={(date) => {
-															const localDate = date.toDate(getLocalTimeZone());
-															field.onChange(localDate);
+															// const isoDate = date.toString();
+															field.onChange(date.toString());
+															setValue('endTime', date.toString())
 														}}
 														label="End Date"
 													/>
@@ -273,7 +281,7 @@ export default function AddEvent() {
 								<Button color="danger" variant="light" onPress={onClose}>
 										Close
 									</Button>
-									<Button color="primary" type="submit" isDisabled={isSubmitting}>
+									<Button color="primary" type="submit" isDisabled={!isDirty || isSubmitting}>
 										{isSubmitting ? "Loading" :  "Submit"}
 									</Button>		
 								</ModalFooter>

@@ -6,17 +6,19 @@ import {
   User,
   Button,
 } from "@nextui-org/react";
-import HomeIcon from "../../icons/HomeIcon";
-import LogoutIcon from "../../icons/LogoutIcon";
+import {
+  IconHome,
+  IconUsers,
+  IconBuildingWarehouse,
+  IconBuildings,
+  IconSettings,
+  IconLogout2,
+} from "@tabler/icons-react";
 import LogoIcon from "../../icons/LogoIcon";
-import SettingsIcon from "../../icons/SettingsIcon";
-import UserManagementIcon from "@/components/icons/UserManagementIcon";
-import ResourceManagementIcon from "@/components/icons/ResourceManagementIcon";
-import VenueIcon from "@/components/icons/VenueIcon";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "@/provider/auth";
 export default function AdminSideBar() {
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
   const pathname = useLocation().pathname;
   return (
     <div className="flex h-screen flex-col justify-between border-r dark:border-gray-800 border-gray-200">
@@ -33,7 +35,7 @@ export default function AdminSideBar() {
             list: "gap-4",
           }}
         >
-          <ListboxItem key="Home" startContent={<HomeIcon />}>
+          <ListboxItem key="Home" startContent={<IconHome />}>
             <Tooltip color="foreground" content="Home" delay={500}>
               <Link
                 color={pathname === "/admin" ? "primary" : "foreground"}
@@ -43,10 +45,7 @@ export default function AdminSideBar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem
-            key="User Management"
-            startContent={<UserManagementIcon />}
-          >
+          <ListboxItem key="User Management" startContent={<IconUsers />}>
             <Tooltip color="foreground" content="User Management" delay={500}>
               <Link
                 color={
@@ -62,7 +61,7 @@ export default function AdminSideBar() {
           </ListboxItem>
           <ListboxItem
             key="Resource Management"
-            startContent={<ResourceManagementIcon />}
+            startContent={<IconBuildingWarehouse />}
           >
             <Tooltip
               color="foreground"
@@ -81,7 +80,7 @@ export default function AdminSideBar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem key="Venue Management" startContent={<VenueIcon />}>
+          <ListboxItem key="Venue Management" startContent={<IconBuildings />}>
             <Tooltip color="foreground" content="Venue Management" delay={500}>
               <Link
                 color={
@@ -95,7 +94,7 @@ export default function AdminSideBar() {
               </Link>
             </Tooltip>
           </ListboxItem>
-          <ListboxItem key="Settings" startContent={<SettingsIcon />}>
+          <ListboxItem key="Settings" startContent={<IconSettings />}>
             <Tooltip color="foreground" content="Settings" delay={500}>
               <Link
                 color={
@@ -111,7 +110,7 @@ export default function AdminSideBar() {
             key="logout"
             className="text-danger"
             color="danger"
-            startContent={<LogoutIcon />}
+            startContent={<IconLogout2 />}
             onPress={logout}
           >
             <Tooltip color="foreground" content="Logout" delay={500}>
@@ -127,8 +126,8 @@ export default function AdminSideBar() {
             <User
               as={Link}
               href="/admin/settings"
-              name="Jane Doe"
-              description="Admin"
+              name={user?.firstName + " " + user?.lastName}
+              description={user?.role}
               avatarProps={{
                 src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
               }}

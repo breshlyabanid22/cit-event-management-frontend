@@ -12,8 +12,7 @@ import {
   Checkbox,
 } from "@nextui-org/react";
 import { useState } from "react";
-import ViewEventIcon from "@/components/icons/ViewEventIcon";
-import EyeOffIcon from "@/components/icons/EyeOffIcon";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { accountRegister, accountLogin } from "@/types";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
@@ -177,9 +176,9 @@ export default function Login() {
                       onClick={toggleVisibility}
                     >
                       {isVisible ? (
-                        <ViewEventIcon className="text-2xl pointer-events-none text-default-400" />
+                        <IconEye className="text-2xl pointer-events-none text-default-400" />
                       ) : (
-                        <EyeOffIcon className="text-2xl pointer-events-none text-default-400" />
+                        <IconEyeOff className="text-2xl pointer-events-none text-default-400" />
                       )}
                     </button>
                   }
@@ -256,9 +255,9 @@ export default function Login() {
                       onClick={toggleVisibility}
                     >
                       {isVisible ? (
-                        <ViewEventIcon className="text-2xl pointer-events-none text-default-400" />
+                        <IconEye className="text-2xl pointer-events-none text-default-400" />
                       ) : (
-                        <EyeOffIcon className="text-2xl pointer-events-none text-default-400" />
+                        <IconEyeOff className="text-2xl pointer-events-none text-default-400" />
                       )}
                     </button>
                   }
@@ -277,9 +276,9 @@ export default function Login() {
                       onClick={toggleVisibility}
                     >
                       {isVisible ? (
-                        <ViewEventIcon className="text-2xl pointer-events-none text-default-400" />
+                        <IconEye className="text-2xl pointer-events-none text-default-400" />
                       ) : (
-                        <EyeOffIcon className="text-2xl pointer-events-none text-default-400" />
+                        <IconEyeOff className="text-2xl pointer-events-none text-default-400" />
                       )}
                     </button>
                   }
