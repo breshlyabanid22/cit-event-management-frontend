@@ -135,7 +135,7 @@ export default function AddEvent() {
       }
       const resourceData: Resource[] = await response.json();
       setResources(resourceData);
-    } catch (error) {}
+    } catch (error) { }
   };
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -260,10 +260,10 @@ export default function AddEvent() {
                                 value={
                                   field.value
                                     ? parseDate(
-                                        (field.value as Date)
-                                          .toISOString()
-                                          .substring(0, 10),
-                                      )
+                                      (field.value as Date)
+                                        .toISOString()
+                                        .substring(0, 10),
+                                    )
                                     : null
                                 }
                                 onChange={(date: DateValue) =>
@@ -289,15 +289,16 @@ export default function AddEvent() {
                                 value={
                                   field.value
                                     ? parseDate(
-                                        (field.value as Date)
-                                          .toISOString()
-                                          .substring(0, 10),
-                                      )
+                                      (field.value as Date)
+                                        .toISOString()
+                                        .substring(0, 10),
+                                    )
                                     : now(getLocalTimeZone())
                                 }
                                 onChange={(date) => {
-                                  const localDate =
-                                    date.toDate(getLocalTimeZone());
+                                  const localDate = date.toDate(
+                                    getLocalTimeZone(),
+                                  );
                                   field.onChange(localDate);
                                 }}
                                 label="End Date"

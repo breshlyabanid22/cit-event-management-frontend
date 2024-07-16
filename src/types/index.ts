@@ -202,3 +202,32 @@ export const SeniorHighYear = [
     label: "Grade 12",
   },
 ];
+
+export type Venue = {
+  name: string;
+  location: string;
+  maxCapacity: number;
+  image: File;
+};
+
+export type Event = {
+  id: number;
+  name: string;
+  description: string;
+  venueId: number;
+  resourceId: number[];
+  startTime: Date;
+  endTime: Date;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Resource = {
+  id: number;
+  name: string;
+  type: string;
+  description: string;
+  availability: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
