@@ -68,7 +68,7 @@ export default function AddEvent() {
 	} = useForm<FormField>({
 		resolver: zodResolver(eventSchema),
 		defaultValues: {
-			// startTime: new Date(),
+			startTime: new Date(),
 			endTime: new Date(),
 			resourceId: [],
 			image: undefined,
@@ -94,7 +94,7 @@ export default function AddEvent() {
 		fetchVenues();
 		fetchResources();
 	}, []);
-
+	
 	const fetchVenues = async () => {
 
 		try {
@@ -237,7 +237,7 @@ export default function AddEvent() {
 														showMonthAndYearPickers
 														errorMessage={errors.startTime?.message}	
 														isInvalid={!!errors.startTime}
-														value={field.value ? parseDate((field.value as Date).toISOString().substring(0, 10)) : null}
+														value={field.value ? parseDate((field.value as Date).toISOString().substring(0, 18)) : null}
 														onChange={(date: DateValue) => field.onChange(date.toDate(getLocalTimeZone()))}
 														label="Start Date"
 													/>
@@ -254,7 +254,7 @@ export default function AddEvent() {
 														minValue={today(getLocalTimeZone())}
 														errorMessage={errors.endTime?.message}	
 														isInvalid={!!errors.endTime}
-														value={field.value ? parseDate((field.value as Date).toISOString().substring(0, 10)) : now(getLocalTimeZone())}
+														value={field.value ? parseDate((field.value as Date).toISOString().substring(0, 18)) : now(getLocalTimeZone())}
 														onChange={(date) => {
 															const localDate = date.toDate(getLocalTimeZone());
 															field.onChange(localDate);

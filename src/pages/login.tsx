@@ -33,7 +33,7 @@ const registerSchema = z
     lastName: z.string().min(1, "Last Name must be at least 1 character long"),
     username: z.string().min(3, "Username must be at least 3 characters long"),
     email: z.string().email("Invalid email address"),
-    schoolID: z.string().min(6, "School ID must be at least 6 character long"),
+    schoolID: z.string().min(3, "School ID must be at least 3 character long"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
     passwordConfirm: z
       .string()
@@ -119,18 +119,18 @@ export default function Login() {
         toast.success("Registration successful!");
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
+        // throw new Error(errorData.message || "Registration failed");
+        toast.error(String(errorData.message));
       }
-
       return response;
     } catch (error) {
       console.error("Registration failed:", error);
-      throw error;
+      // toast.error(String(error));
     }
   };
 
   return (
-    <div className="relative flex justify-center items-center h-screen overflow-hidden">
+    <div className="relative flex items-center justify-center h-screen overflow-hidden">
       <Toaster
         position="bottom-right"
         reverseOrder={false}
@@ -177,9 +177,9 @@ export default function Login() {
                       onClick={toggleVisibility}
                     >
                       {isVisible ? (
-                        <ViewEventIcon className="text-2xl text-default-400 pointer-events-none" />
+                        <ViewEventIcon className="text-2xl pointer-events-none text-default-400" />
                       ) : (
-                        <EyeOffIcon className="text-2xl text-default-400 pointer-events-none" />
+                        <EyeOffIcon className="text-2xl pointer-events-none text-default-400" />
                       )}
                     </button>
                   }
@@ -196,7 +196,7 @@ export default function Login() {
                     Sign up
                   </Link>
                 </p>
-                <div className="flex gap-2 justify-end">
+                <div className="flex justify-end gap-2">
                   <Button fullWidth color="primary" type="submit">
                     Login
                   </Button>
@@ -205,7 +205,7 @@ export default function Login() {
             </Tab>
             <Tab key="sign-up" title="Sign up">
               <form
-                className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 "
+                className="grid gap-4 lg:grid-cols-2 sm:grid-cols-1 "
                 onSubmit={handleRegisterSubmit(onRegisterSubmit)}
               >
                 <Input
@@ -256,9 +256,9 @@ export default function Login() {
                       onClick={toggleVisibility}
                     >
                       {isVisible ? (
-                        <ViewEventIcon className="text-2xl text-default-400 pointer-events-none" />
+                        <ViewEventIcon className="text-2xl pointer-events-none text-default-400" />
                       ) : (
-                        <EyeOffIcon className="text-2xl text-default-400 pointer-events-none" />
+                        <EyeOffIcon className="text-2xl pointer-events-none text-default-400" />
                       )}
                     </button>
                   }
@@ -277,9 +277,9 @@ export default function Login() {
                       onClick={toggleVisibility}
                     >
                       {isVisible ? (
-                        <ViewEventIcon className="text-2xl text-default-400 pointer-events-none" />
+                        <ViewEventIcon className="text-2xl pointer-events-none text-default-400" />
                       ) : (
-                        <EyeOffIcon className="text-2xl text-default-400 pointer-events-none" />
+                        <EyeOffIcon className="text-2xl pointer-events-none text-default-400" />
                       )}
                     </button>
                   }
@@ -304,7 +304,7 @@ export default function Login() {
                     Login
                   </Link>
                 </p>
-                <div className="flex gap-2 justify-end col-span-2">
+                <div className="flex justify-end col-span-2 gap-2">
                   <Button fullWidth color="primary" type="submit">
                     Sign up
                   </Button>
