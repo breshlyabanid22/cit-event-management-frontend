@@ -80,7 +80,7 @@
 		"ignore": [],
 		"attributePosition": "auto",
 		"indentStyle": "space",
-		"indentWidth": 2,
+		"indentWidth": 4,
 		"lineWidth": 80,
 		"lineEnding": "lf"
 	},
