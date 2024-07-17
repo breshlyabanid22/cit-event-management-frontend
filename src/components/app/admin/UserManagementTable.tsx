@@ -16,6 +16,15 @@ import {
     User,
     Pagination,
 } from "@nextui-org/react";
+import { getUsers } from "@/api/utils";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider,
+} from "@tanstack/react-query";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => (
     <svg
@@ -115,7 +124,7 @@ function capitalize(str) {
 const columns = [
     {
         name: "ID",
-        uid: "id",
+        uid: "schoolID",
         sortable: true,
     },
     {
@@ -124,31 +133,44 @@ const columns = [
         sortable: true,
     },
     {
-        name: "AGE",
-        uid: "age",
-        sortable: true,
-    },
-    {
         name: "ROLE",
         uid: "role",
         sortable: true,
     },
     {
-        name: "TEAM",
-        uid: "team",
-    },
-    {
         name: "EMAIL",
         uid: "email",
-    },
-    {
-        name: "STATUS",
-        uid: "status",
         sortable: true,
     },
     {
         name: "ACTIONS",
         uid: "actions",
+        sortable: true,
+    },
+    {
+        name: "COURSE",
+        uid: "course",
+        sortable: true,
+    },
+    {
+        name: "createdAt",
+        uid: "createdAt",
+        sortable: true,
+    },
+    {
+        name: "updatedAt",
+        uid: "updatedAt",
+        sortable: true,
+    },
+    {
+        name: "active",
+        uid: "active",
+        sortable: true,
+    },
+    {
+        name: "username",
+        uid: "username",
+        sortable: true,
     },
 ];
 
@@ -167,120 +189,22 @@ const statusOptions = [
     },
 ];
 
-const users = [
-    {
-        id: "192-414-11",
-        name: "Tony Reichert",
-        role: "Admin",
-        team: "Management",
-        status: "active",
-        age: "29",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-        email: "tony.reichert@example.com",
-    },
-    {
-        id: "192-414-12",
-        name: "Zoey Lang",
-        role: "Organizer",
-        team: "Events",
-        status: "paused",
-        age: "25",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704a",
-        email: "zoey.lang@example.com",
-    },
-    {
-        id: "192-414-13",
-        name: "Jane Fisher",
-        role: "Participant",
-        team: "Engineering",
-        status: "active",
-        age: "22",
-        avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-        email: "jane.fisher@example.com",
-    },
-    {
-        id: "192-414-14",
-        name: "William Howard",
-        role: "Admin",
-        team: "Management",
-        status: "vacation",
-        age: "35",
-        avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-        email: "william.howard@example.com",
-    },
-    {
-        id: "192-414-15",
-        name: "Kristen Copper",
-        role: "Organizer",
-        team: "Marketing",
-        status: "active",
-        age: "31",
-        avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-        email: "kristen.copper@example.com",
-    },
-    {
-        id: "192-414-16",
-        name: "Brian Kim",
-        role: "Participant",
-        team: "Design",
-        status: "active",
-        age: "20",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024e",
-        email: "brian.kim@example.com",
-    },
-    {
-        id: "192-414-17",
-        name: "Michael Hunt",
-        role: "Organizer",
-        team: "Events",
-        status: "active",
-        age: "28",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024f",
-        email: "michael.hunt@example.com",
-    },
-    {
-        id: "192-414-18",
-        name: "Samantha Brooks",
-        role: "Participant",
-        team: "Business",
-        status: "paused",
-        age: "23",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024g",
-        email: "samantha.brooks@example.com",
-    },
-    {
-        id: "192-414-19",
-        name: "Frank Harrison",
-        role: "Admin",
-        team: "Management",
-        status: "active",
-        age: "33",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024h",
-        email: "frank.harrison@example.com",
-    },
-    {
-        id: "192-414-20",
-        name: "Emma Watson",
-        role: "Organizer",
-        team: "Marketing",
-        status: "active",
-        age: "27",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024i",
-        email: "emma.watson@example.com",
-    },
-];
-
-export { columns, users, statusOptions };
+export { columns, statusOptions };
 
 const statusColorMap = {
-    Participant: "success",
-    Admin: "danger",
-    Organizer: "warning",
+    PARTICIPANT: "success",
+    ADMIN: "danger",
+    ORGANIZER: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "id", "role", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "schoolID", "role", "actions"];
 
 export default function UserManagementTable() {
+    const { isPending, isError, data, error } = useQuery({
+        queryKey: ["users"],
+        queryFn: getUsers,
+    });
+
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(
@@ -305,11 +229,17 @@ export default function UserManagementTable() {
     }, [visibleColumns]);
 
     const filteredItems = React.useMemo(() => {
-        let filteredUsers = [...users];
+        let filteredUsers = data || []; // Use data from React Query
 
         if (hasSearchFilter) {
-            filteredUsers = filteredUsers.filter((user) =>
-                user.name.toLowerCase().includes(filterValue.toLowerCase()),
+            filteredUsers = filteredUsers.filter(
+                (user) =>
+                    user.firstName
+                        .toLowerCase()
+                        .includes(filterValue.toLowerCase()) ||
+                    user.lastName
+                        .toLowerCase()
+                        .includes(filterValue.toLowerCase()),
             );
         }
         if (
@@ -317,14 +247,12 @@ export default function UserManagementTable() {
             Array.from(statusFilter).length !== statusOptions.length
         ) {
             filteredUsers = filteredUsers.filter((user) =>
-                Array.from(statusFilter).includes(user.status),
+                Array.from(statusFilter).includes(user.role),
             );
         }
 
         return filteredUsers;
-    }, [users, filterValue, statusFilter]);
-
-    const pages = Math.ceil(filteredItems.length / rowsPerPage);
+    }, [data, filterValue, statusFilter]);
 
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
@@ -352,10 +280,10 @@ export default function UserManagementTable() {
                     <User
                         avatarProps={{
                             radius: "lg",
-                            src: user.avatar,
+                            src: user.imagePath,
                         }}
                         description={user.email}
-                        name={cellValue}
+                        name={`${user.firstName} ${user.lastName}`}
                     >
                         {user.email}
                     </User>
@@ -368,18 +296,7 @@ export default function UserManagementTable() {
                         size="sm"
                         variant="flat"
                     >
-                        {cellValue}
-                    </Chip>
-                );
-            case "status":
-                return (
-                    <Chip
-                        className="capitalize"
-                        color={statusColorMap[user.status]}
-                        size="sm"
-                        variant="flat"
-                    >
-                        {cellValue}
+                        {user.role}
                     </Chip>
                 );
             case "actions":
@@ -388,7 +305,7 @@ export default function UserManagementTable() {
                         <Dropdown>
                             <DropdownTrigger>
                                 <Button isIconOnly size="sm" variant="light">
-                                    <VerticalDotsIcon className="text-default-300" />
+                                    <IconDotsVertical className="text-default-300" />
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu>
@@ -402,6 +319,10 @@ export default function UserManagementTable() {
                 return cellValue;
         }
     }, []);
+
+    const pages = React.useMemo(() => {
+        return Math.ceil((data?.length || 0) / rowsPerPage);
+    }, [data, rowsPerPage]);
 
     const onNextPage = React.useCallback(() => {
         if (page < pages) {
@@ -510,7 +431,7 @@ export default function UserManagementTable() {
                 </div>
                 <div className="flex justify-between items-center">
                     <span className="text-default-400 text-small">
-                        Total {users.length} users
+                        Total {data ? data.length : 0} users
                     </span>
                     <label className="flex items-center text-default-400 text-small">
                         Rows per page:
@@ -531,7 +452,7 @@ export default function UserManagementTable() {
         statusFilter,
         visibleColumns,
         onRowsPerPageChange,
-        users.length,
+        data?.length,
         onSearchChange,
         hasSearchFilter,
     ]);
@@ -603,9 +524,12 @@ export default function UserManagementTable() {
                     </TableColumn>
                 )}
             </TableHeader>
-            <TableBody emptyContent={"No users found"} items={sortedItems}>
+            <TableBody
+                emptyContent={"No users found"}
+                items={isPending ? [] : sortedItems}
+            >
                 {(item) => (
-                    <TableRow key={item.id}>
+                    <TableRow key={item.userID}>
                         {(columnKey) => (
                             <TableCell>{renderCell(item, columnKey)}</TableCell>
                         )}

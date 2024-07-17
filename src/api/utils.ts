@@ -43,3 +43,17 @@ export const addResource = async (resource: Resource) => {
     }
     return response.json();
 };
+
+export const getUsers = async () => {
+    const response = await fetch("http://localhost:8080/admin/users", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};

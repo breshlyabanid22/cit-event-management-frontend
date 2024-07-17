@@ -1,8 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
+
 const ProtectedRoute = lazy(() => import("@/provider/ProtectedRoute"));
 const Loader = lazy(() => import("@/components/loading"));
 const ErrorPage = lazy(() => import("@/pages/error"));
