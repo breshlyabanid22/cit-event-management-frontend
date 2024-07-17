@@ -1,3 +1,4 @@
+import VenueManagementTable from "@/components/app/admin/VenueManagementTable";
 export default function VenueManagement() {
     return (
         <div>
@@ -8,7 +9,9 @@ export default function VenueManagement() {
                 </div>
             </header>
             <body className="grid grid-cols-1 gap-4">
-                <div className="col-span-1 flex flex-col gap-4"></div>
+                <div className="col-span-1 flex flex-col gap-4">
+                    <VenueManagementTable />
+                </div>
             </body>
         </div>
     );
