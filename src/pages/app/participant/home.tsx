@@ -9,7 +9,7 @@ export default function ParticipantHome() {
           <p className="font-light text-md">Take a look at the events</p>
         </div>
         <body>
-          <AddEvent/>
+          <AddEvent />
         </body>
       </header>
       <body className="grid grid-cols-1 gap-4">
