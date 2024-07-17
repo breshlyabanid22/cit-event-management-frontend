@@ -1,5 +1,5 @@
-import { Button } from "@nextui-org/react";
-import { IconCalendarPlus } from "@tabler/icons-react";
+import ResourceManagementCard from "@/components/app/admin/ResourceManagementCard";
+import AddVenue from "@/components/app/admin/AddVenue";
 export default function ResourceManagement() {
   return (
     <div>
@@ -8,12 +8,12 @@ export default function ResourceManagement() {
           <p className="text-3xl font-bold">Resource Management</p>
           <p className="text-md font-light">Management of Resources</p>
         </div>
-        <Button color="primary" endContent={<IconCalendarPlus />}>
-          Add new
-        </Button>
+        <AddVenue />
       </header>
-      <body className="grid grid-cols-1 gap-4">
-        <div className="col-span-1 flex flex-col gap-4"></div>
+      <body className="grid grid-cols-3 gap-4">
+        <div className="col-span-1 flex flex-col gap-4">
+          <ResourceManagementCard />
+        </div>
       </body>
     </div>
   );

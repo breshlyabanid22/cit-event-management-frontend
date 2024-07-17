@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
   Input,
@@ -12,7 +13,6 @@ import { IconHomePlus } from "@tabler/icons-react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { useState, useRef } from "react";
-import { addVenue } from "@/api/utils";
 
 const venueSchema = z.object({
   image: z
@@ -44,7 +44,6 @@ export default function AddVenue() {
 
   const submitEvent = async (data: z.infer<typeof venueSchema>) => {
     console.log(data);
-    addVenue(data);
   };
   return (
     <div>
