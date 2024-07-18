@@ -16,19 +16,14 @@ import {
     User,
     Pagination,
 } from "@nextui-org/react";
+import { useState } from "react";
 import { getUsers } from "@/api/utils";
-import {
-    useQuery,
-    useMutation,
-    useQueryClient,
-    QueryClient,
-    QueryClientProvider,
-} from "@tanstack/react-query";
-import {
-    IconDotsVertical,
-    IconSearch,
-    IconChevronDown,
-} from "@tabler/icons-react";
+import EditUser from "@/components/app/admin/EditUser";
+import DeactivateUser from "@/components/app/admin/DeactivateUser";
+import ActivateUser from "@/components/app/admin/ActivateUser";
+import { useQuery } from "@tanstack/react-query";
+import { IconSearch, IconChevronDown } from "@tabler/icons-react";
+import { TypeUser } from "@/types";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -56,6 +51,11 @@ const columns = [
         sortable: true,
     },
     {
+        name: "Active",
+        uid: "active",
+        sortable: true,
+    },
+    {
         name: "Actions",
         uid: "actions",
         sortable: true,
@@ -75,11 +75,7 @@ const columns = [
         uid: "updatedAt",
         sortable: true,
     },
-    {
-        name: "Active",
-        uid: "active",
-        sortable: true,
-    },
+
     {
         name: "Username",
         uid: "username",
@@ -88,14 +84,8 @@ const columns = [
 ];
 
 const statusOptions = [
-    {
-        name: "Active",
-        uid: "active",
-    },
-    {
-        name: "Deactivated",
-        uid: "deactivated",
-    },
+    { name: "Active", uid: "true" },
+    { name: "Deactivated", uid: "false" },
 ];
 
 export { columns, statusOptions };
@@ -106,10 +96,21 @@ const statusColorMap = {
     ORGANIZER: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "schoolID", "role", "actions"];
+const activeColorMap = {
+    true: "success",
+    false: "danger",
+};
+
+const INITIAL_VISIBLE_COLUMNS = [
+    "name",
+    "schoolID",
+    "role",
+    "active",
+    "actions",
+];
 
 export default function UserManagementTable() {
-    const { isPending, isError, data, error } = useQuery({
+    const { isPending, isError, data, error } = useQuery<TypeUser[], Error>({
         queryKey: ["users"],
         queryFn: getUsers,
     });
@@ -119,7 +120,7 @@ export default function UserManagementTable() {
     const [visibleColumns, setVisibleColumns] = React.useState(
         new Set(INITIAL_VISIBLE_COLUMNS),
     );
-    const [statusFilter, setStatusFilter] = React.useState("all");
+    const [statusFilter, setStatusFilter] = React.useState(new Set());
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [sortDescriptor, setSortDescriptor] = React.useState({
         column: "age",
@@ -152,11 +153,11 @@ export default function UserManagementTable() {
             );
         }
         if (
-            statusFilter !== "all" &&
-            Array.from(statusFilter).length !== statusOptions.length
+            statusFilter.size > 0 &&
+            statusFilter.size !== statusOptions.length
         ) {
             filteredUsers = filteredUsers.filter((user) =>
-                Array.from(statusFilter).includes(user.role),
+                statusFilter.has(user.active.toString()),
             );
         }
 
@@ -208,20 +209,26 @@ export default function UserManagementTable() {
                         {user.role}
                     </Chip>
                 );
+            case "active":
+                return (
+                    <Chip
+                        className="capitalize"
+                        color={activeColorMap[user.active.toString()]}
+                        size="sm"
+                        variant="flat"
+                    >
+                        {user.active.toString()}
+                    </Chip>
+                );
             case "actions":
                 return (
-                    <div className="relative flex justify-end items-center gap-2">
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button isIconOnly size="sm" variant="light">
-                                    <IconDotsVertical className="text-default-300" />
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu>
-                                <DropdownItem>Edit</DropdownItem>
-                                <DropdownItem>Delete</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                    <div className="relative flex justify-end items-center gap-2 ">
+                        <EditUser user={user} />
+                        {user.active === false ? (
+                            <ActivateUser user={user} />
+                        ) : (
+                            <DeactivateUser user={user} />
+                        )}
                     </div>
                 );
             default:
@@ -295,14 +302,16 @@ export default function UserManagementTable() {
                                 closeOnSelect={false}
                                 selectedKeys={statusFilter}
                                 selectionMode="multiple"
-                                onSelectionChange={setStatusFilter}
+                                onSelectionChange={(keys) =>
+                                    setStatusFilter(new Set([...keys]))
+                                }
                             >
-                                {statusOptions.map((status) => (
+                                {statusOptions.map((active) => (
                                     <DropdownItem
-                                        key={status.uid}
+                                        key={active.uid}
                                         className="capitalize"
                                     >
-                                        {capitalize(status.name)}
+                                        {capitalize(active.name)}
                                     </DropdownItem>
                                 ))}
                             </DropdownMenu>

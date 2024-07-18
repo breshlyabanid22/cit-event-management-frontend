@@ -11,6 +11,7 @@ import {
 import { IconHomePlus } from "@tabler/icons-react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useRef } from "react";
 import { addVenue } from "@/api/utils";
 

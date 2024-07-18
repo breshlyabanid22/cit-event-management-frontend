@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { User, accountLogin } from "@/types";
+import { TypeUser, accountLogin } from "@/types";
 interface AuthState {
-    user: User | null;
+    user: TypeUser | null;
     isAuthenticated: boolean;
-    setUser: (user: User | null) => void;
+    setUser: (user: TypeUser | null) => void;
     login: (loginData: accountLogin) => Promise<void>;
     logout: () => Promise<void>;
     refreshUserData: () => Promise<void>;
