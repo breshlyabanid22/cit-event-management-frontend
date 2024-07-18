@@ -160,7 +160,7 @@ export default function AddEvent() {
 	return (
 		<div>
 		<Toaster
-        position="bottom-right"
+        position="top-right"
         reverseOrder={false}
         gutter={8}
         containerClassName=""
@@ -211,7 +211,7 @@ export default function AddEvent() {
 										<div className="flex flex-col gap-2">
 											<Textarea
 												type="text"
-												label="Description"
+												label="Description/Purpose"
 												{...register("description")}
 												errorMessage={errors.description?.message}
 												isInvalid={!!errors.description}
