@@ -15,22 +15,23 @@ import {
 } from "@nextui-org/react";
 import {
 	getLocalTimeZone,
-	today,
+	now,
 	parseDateTime,
 } from "@internationalized/date";
-import AddEventIcon from "@/components/icons/AddEventIcon";
+import LogoIcon from "@/components/icons/LogoIcon.tsx";
 import z from "zod";
+import { Venue, Resource, Event } from "@/types";
+import toast, { Toaster } from "react-hot-toast";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
-import { formatISO } from 'date-fns';
 
 const eventSchema = z.object({
 	name: z.string().min(3, "Event name must be at least 3 characters long"),
 	description: z.string().max(300, "Maximum of 300 characters only"),
 	venueId: z.coerce.number(),
 	resourceId: z.array(z.coerce.number()),
-	image: z.instanceof(File).optional(),
+	image: z.instanceof(File),
 	startTime: z.string(),
 	endTime: z.string(),
 }).refine(data => new Date(data.startTime) < new Date(data.endTime), {
@@ -38,21 +39,6 @@ const eventSchema = z.object({
 	path: ["endTime"],
 });
 
-type Venue = {
-	id: number;
-	name: string;
-	location: string;
-	maxCapacity: number;
-	events: String[];
-	venueManagers: String[];
-  }
-type Resource = {
-	id: number;
-	name: string;
-	type: string;
-	description: string;
-	availability: boolean;
-}
 
 export default function AddEvent() {
 
@@ -73,13 +59,41 @@ export default function AddEvent() {
 	});
 	const submitEvent: SubmitHandler<FormField> = async (data) => {
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			const formattedData = {
-				...data,
-				startTime: formatISO(data.startTime, { representation: 'complete' }),
-				endTime: formatISO(data.endTime, { representation: 'complete' }),
-			  };
-			console.log(formattedData);	
+			
+			const createEventData: Event = {
+				name: data.name,
+				description: data.description,
+				venueId: data.venueId,
+				resourceId: data.resourceId,
+				image: data.image,
+				startTime: data.startTime,
+				endTime: data.endTime,
+			}
+
+			const formData = new FormData();
+			formData.append("eventDTO", new Blob([JSON.stringify(createEventData)], { type: "application/json" }));
+			createEventData.resourceId.forEach((id) => {
+				formData.append("resourceId", id.toString());
+			});
+			if(createEventData.image){
+				formData.append("imageFile", createEventData.image);
+			}
+			await fetch("http://localhost:8080/events", {
+				method: "POST",
+				body: formData,
+				credentials: "include",
+			}).then(async (res) => {
+				const message = await res.text();
+				if(res.ok){
+					toast.success(message);
+				}else{
+					toast.error(message);
+				}
+			})
+			.catch((error) => {
+				console.error("Error creating event:", error);
+			})
+			console.log(createEventData);
 		} catch (error) {
 			console.error("error submitting", error);
 		}
@@ -143,7 +157,23 @@ export default function AddEvent() {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	return (
 		<div>
-			<Button onPress={onOpen} color="primary" startContent={<AddEventIcon />}>
+		<Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          // Define default options
+          className: "text-sm",
+          duration: 5000,
+          style: {
+            background: "#800000",
+            color: "#fff",
+          },
+        }}
+      />
+			<Button onPress={onOpen} color="primary" startContent={<LogoIcon />}>
 				Create an event
 			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -161,6 +191,8 @@ export default function AddEvent() {
 												type="file"
 												accept="image/*"
 												onChange={handleFileChange}
+												errorMessage={errors.image?.message}
+												isInvalid={!!errors.image}
 											/>
 										</div>
 										<div className="flex flex-col gap-2">
@@ -233,16 +265,16 @@ export default function AddEvent() {
 													return(
 													<DatePicker
 														{...field}
-														minValue={today(getLocalTimeZone())}
+														minValue={now(getLocalTimeZone())}
 														hideTimeZone
 														showMonthAndYearPickers
 														errorMessage={errors.startTime?.message}	
 														isInvalid={!!errors.startTime}
 														value={field.value ? parseDateTime(field.value) : null}
 														onChange={(date) => {
-															// const isoDate = ;
-															field.onChange(date.toString());
-															setValue('startTime', date.toString())
+															const isoDate = date != null ? date.toString() : "";
+															field.onChange(isoDate);
+															setValue('startTime', isoDate)
 														}}
 														label="Start Date"
 													/>
@@ -256,16 +288,16 @@ export default function AddEvent() {
 													return(
 													<DatePicker
 														{...field}
-														minValue={today(getLocalTimeZone())}
+														minValue={now(getLocalTimeZone())}
 														hideTimeZone
 														showMonthAndYearPickers
 														errorMessage={errors.endTime?.message}	
 														isInvalid={!!errors.endTime}
 														value={field.value ? parseDateTime(field.value) : null}
 														onChange={(date) => {
-															// const isoDate = date.toString();
-															field.onChange(date.toString());
-															setValue('endTime', date.toString())
+															const isoDate = date != null ? date.toString() : "";
+															field.onChange(isoDate);
+															setValue('endTime', isoDate)
 														}}
 														label="End Date"
 													/>

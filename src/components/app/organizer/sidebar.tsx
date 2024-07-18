@@ -8,18 +8,19 @@ import {
   IconLogout2,
   IconSettings,
 } from "@tabler/icons-react";
+
 import LogoIcon from "@/components/icons/LogoIcon";
 export default function AppSidebar() {
   const { logout, user } = useAuthStore();
   const pathname = useLocation().pathname;
   return (
-    <div className="flex h-screen flex-col justify-between border-r dark:border-gray-800 border-gray-200">
+    <div className="flex flex-col justify-between h-screen border-r border-gray-200 dark:border-gray-800">
       <div className="px-8 py-12">
         <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground">
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-foreground">
             <LogoIcon />
           </div>
-          <span className="text-small font-bold uppercase">BAYABAS</span>
+          <span className="font-bold uppercase text-small">BAYABAS</span>
         </div>
         <Listbox
           variant="light"

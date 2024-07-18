@@ -36,6 +36,8 @@ export type User = {
   active: boolean;
 };
 
+
+
 export const Department = [
   {
     value: "Elementary",
@@ -204,30 +206,28 @@ export const SeniorHighYear = [
 ];
 
 export type Venue = {
-  name: string;
-  location: string;
-  maxCapacity: number;
-  image: File;
-};
+  id: number;
+	name: string;
+	location: string;
+	maxCapacity: number;
+	events: String[];
+	venueManagers: String[];
+  }
 
 export type Event = {
-  id: number;
   name: string;
   description: string;
   venueId: number;
   resourceId: number[];
-  startTime: Date;
-  endTime: Date;
-  createdAt: string;
-  updatedAt: string;
+  image: File | undefined;
+  startTime: string;
+  endTime: string;
 };
 
 export type Resource = {
-  id: number;
-  name: string;
-  type: string;
-  description: string;
-  availability: boolean;
-  createdAt: string;
-  updatedAt: string;
-};
+	id: number;
+	name: string;
+	type: string;
+	description: string;
+	availability: boolean;
+}
