@@ -18,12 +18,12 @@ export type accountLogin = {
     password: string;
 };
 
-export type User = {
+export type TypeUser = {
     userID: number;
     username: string;
     password: string;
     email: string;
-    schoolID: number | null;
+    schoolID: string;
     firstName: string;
     lastName: string;
     userType: string | null;
@@ -35,8 +35,6 @@ export type User = {
     updatedAt: number | null;
     active: boolean;
 };
-
-
 
 export const Department = [
     {
@@ -206,28 +204,28 @@ export const SeniorHighYear = [
 ];
 
 export type Venue = {
-  id: number;
-	name: string;
-	location: string;
-	maxCapacity: number;
-	events: String[];
-	venueManagers: String[];
-  }
+    id: number;
+    name: string;
+    location: string;
+    maxCapacity: number;
+    events: String[];
+    venueManagers: String[];
+};
 
 export type Event = {
-  name: string;
-  description: string;
-  venueId: number;
-  resourceId: number[];
-  image: File | undefined;
-  startTime: string;
-  endTime: string;
+    name: string;
+    description: string;
+    venueId: number;
+    resourceId: number[];
+    image: File | undefined;
+    startTime: string;
+    endTime: string;
 };
 
 export type Resource = {
-	id: number;
-	name: string;
-	type: string;
-	description: string;
-	availability: boolean;
-}
+    id: number;
+    name: string;
+    type: string;
+    description: string;
+    availability: boolean;
+};

@@ -26,12 +26,9 @@
     "@react-aria/i18n": "^3.11.1",
     "@react-aria/visually-hidden": "3.8.12",
     "@tabler/icons": "^3.9.0",
-<<<<<<< HEAD
     "@tabler/icons-react": "^3.11.0",
-=======
     "@tabler/icons-react": "^3.10.0",
     "@tanstack/react-query": "^5.51.3",
->>>>>>> 0515c1c836709cdf68141ff0c63c3bb2d889c895
     "axios": "^1.7.2",
     "clsx": "2.1.1",
     "date-fns": "^3.6.0",
