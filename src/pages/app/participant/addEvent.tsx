@@ -59,6 +59,7 @@ export default function AddEvent() {
 	});
 	const submitEvent: SubmitHandler<FormField> = async (data) => {
 		try {
+			
 			const createEventData: Event = {
 				name: data.name,
 				description: data.description,
@@ -74,7 +75,6 @@ export default function AddEvent() {
 			createEventData.resourceId.forEach((id) => {
 				formData.append("resourceId", id.toString());
 			});
-
 			if(createEventData.image){
 				formData.append("imageFile", createEventData.image);
 			}
