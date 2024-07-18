@@ -1,18 +1,47 @@
 import { Event, Resource, Venue, TypeUser } from "@/types";
-export const addVenue = async (venue: Venue) => {
+
+export async function addVenue(data: {
+    userID: number;
+    venueManager: String[];
+    name: string;
+    location: string;
+    maxCapacity: number;
+    image: File;
+}) {
+    const createVenueData = {
+        userID: data.userID,
+        venueManager: data.venueManager,
+        name: data.name,
+        location: data.location,
+        maxCapacity: data.maxCapacity,
+    };
+
+    const formData = new FormData();
+
+    formData.append(
+        "venueDTO",
+        new Blob([JSON.stringify(createVenueData)], {
+            type: "application/json",
+        }),
+    );
+    createVenueData.venueManager.forEach((id) => {
+        formData.append("venueManager", id.toString());
+    });
+
+    formData.append("imageFile", data.image);
+
     const response = await fetch("http://localhost:8080/venues", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(venue),
+        body: formData,
         credentials: "include",
     });
+
     if (!response.ok) {
-        throw new Error("Network Error");
+        throw new Error("Failed to add venue");
     }
-    return response.json();
-};
+
+    return response.text();
+}
 
 export const addEvent = async (event: Event) => {
     const response = await fetch("http://localhost:8080/events", {

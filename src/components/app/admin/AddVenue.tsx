@@ -5,16 +5,23 @@ import {
     Modal,
     ModalBody,
     ModalContent,
+    Avatar,
     ModalFooter,
     ModalHeader,
     useDisclosure,
+    Autocomplete,
+    AutocompleteItem,
 } from "@nextui-org/react";
 import { IconHomePlus } from "@tabler/icons-react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { useState, useRef } from "react";
-
+import { addVenue } from "@/api/utils";
+import { TypeUser } from "@/types";
+import useAuthStore from "@/provider/auth";
+import toast, { Toaster } from "react-hot-toast";
 const venueSchema = z.object({
+    userID: z.number().min(1, "User ID must be at least 1 characters long"),
     image: z
         .instanceof(File)
         .refine((file) => file.size <= 5000000, `Max file size is 5MB.`)
@@ -28,9 +35,11 @@ const venueSchema = z.object({
         .string()
         .min(3, "Event location must be at least 3 characters long"),
     maxCapacity: z.number().min(1, "Capacity must be at least 1 people"),
+    venueManager: z.number().min(1, "Venue Manager must be at least 1 people"),
 });
 
-export default function AddVenue() {
+export default function AddVenue(data) {
+    const { user } = useAuthStore();
     const [fileName, setFileName] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -41,13 +50,41 @@ export default function AddVenue() {
         formState: { errors },
     } = useForm<z.infer<typeof venueSchema>>({
         resolver: zodResolver(venueSchema),
+        defaultValues: {
+            userID: user?.userID,
+        },
     });
 
     const submitEvent = async (data: z.infer<typeof venueSchema>) => {
-        console.log(data);
+        try {
+            console.log(data);
+            await addVenue(data);
+            toast.success("Venue added successfully");
+            isOpen ? onOpenChange() : null;
+        } catch (error) {
+            toast.error("Error adding venue:", error);
+        }
     };
+
+    const users = data.users;
     return (
         <div>
+            <Toaster
+                position="bottom-right"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                    // Define default options
+                    className: "text-sm",
+                    duration: 5000,
+                    style: {
+                        background: "#800000",
+                        color: "#fff",
+                    },
+                }}
+            />
             <Button
                 onPress={onOpen}
                 color="primary"
@@ -55,8 +92,11 @@ export default function AddVenue() {
             >
                 Add Venue
             </Button>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                <form onSubmit={handleSubmit(submitEvent)}>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
+                <form
+                    onSubmit={handleSubmit(submitEvent)}
+                    encType="multipart/form-data"
+                >
                     <ModalContent>
                         {(onClose) => (
                             <>
@@ -112,6 +152,81 @@ export default function AddVenue() {
                                                     Selected file: {fileName}
                                                 </p>
                                             )}
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <Controller
+                                                name="venueManager"
+                                                control={control}
+                                                rules={{
+                                                    required:
+                                                        "Venue manager is required",
+                                                }}
+                                                render={({ field }) => (
+                                                    <Autocomplete
+                                                        {...field}
+                                                        defaultItems={users}
+                                                        label="Assigned to"
+                                                        placeholder="Select a user"
+                                                        labelPlacement="inside"
+                                                        errorMessage={
+                                                            errors.venueManager
+                                                                ?.message
+                                                        }
+                                                        isInvalid={
+                                                            !!errors.venueManager
+                                                        }
+                                                        onSelectionChange={(
+                                                            userID,
+                                                        ) =>
+                                                            field.onChange(
+                                                                Number(userID),
+                                                            )
+                                                        }
+                                                    >
+                                                        {(user: TypeUser) => (
+                                                            <AutocompleteItem
+                                                                key={
+                                                                    user.userID
+                                                                }
+                                                                textValue={
+                                                                    user.email
+                                                                }
+                                                                value={
+                                                                    user.userID
+                                                                }
+                                                            >
+                                                                <div className="flex gap-2 items-center">
+                                                                    <Avatar
+                                                                        alt={
+                                                                            user.firstName
+                                                                        }
+                                                                        className="flex-shrink-0"
+                                                                        size="sm"
+                                                                        src={
+                                                                            user.imagePath
+                                                                        }
+                                                                    />
+                                                                    <div className="flex flex-col">
+                                                                        <span className="text-small">
+                                                                            {
+                                                                                user.firstName
+                                                                            }{" "}
+                                                                            {
+                                                                                user.lastName
+                                                                            }
+                                                                        </span>
+                                                                        <span className="text-tiny text-default-400">
+                                                                            {
+                                                                                user.email
+                                                                            }
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </AutocompleteItem>
+                                                        )}
+                                                    </Autocomplete>
+                                                )}
+                                            />{" "}
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <Input
