@@ -1,4 +1,4 @@
-import AddEvent from "./addEvent";
+import AddEvent from "../../../components/app/participant/addEvent";
 
 export default function ParticipantHome() {
     return (
