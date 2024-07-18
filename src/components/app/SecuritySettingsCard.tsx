@@ -8,15 +8,15 @@ import {
 import { IconEdit } from "@tabler/icons-react";
 export function UsernameCard(props: { username: string }) {
     return (
-        <Card className="grid sm:grid-cols-1 lg:grid-cols-3 p-2" radius="lg">
-            <CardHeader className=" flex-col items-start justify-center">
+        <Card className="grid p-2 sm:grid-cols-1 lg:grid-cols-3" radius="lg">
+            <CardHeader className="flex-col items-start justify-center ">
                 <h4 className="font-bold text-large">Username</h4>
                 <small className="text-default-500">
                     Your login username in your account.
                 </small>
             </CardHeader>
-            <CardBody className="items-center justify-center col-span-2 grid grid-cols-3">
-                <p className="text-warning col-span-2">{props.username}</p>
+            <CardBody className="grid items-center justify-center grid-cols-3 col-span-2">
+                <p className="col-span-2 text-warning">{props.username}</p>
                 <Button
                     color="default"
                     variant="bordered"
@@ -43,15 +43,15 @@ export function PasswordCard() {
 
 export function EmailCard(props: { email: string }) {
     return (
-        <Card className="grid sm:grid-cols-1 lg:grid-cols-3 p-2" radius="lg">
-            <CardHeader className=" flex-col items-start justify-center">
+        <Card className="grid p-2 sm:grid-cols-1 lg:grid-cols-3" radius="lg">
+            <CardHeader className="flex-col items-start justify-center ">
                 <h4 className="font-bold text-large">Email</h4>
                 <small className="text-default-500">
                     The email address associated with your account.
                 </small>
             </CardHeader>
-            <CardBody className="items-center justify-center col-span-2 grid grid-cols-3">
-                <p className="text-warning col-span-2">{props.email}</p>
+            <CardBody className="grid items-center justify-center grid-cols-3 col-span-2">
+                <p className="col-span-2 text-warning">{props.email}</p>
                 <Button color="default" variant="bordered" radius="full">
                     Edit
                 </Button>

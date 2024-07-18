@@ -229,3 +229,11 @@ export type Resource = {
     description: string;
     availability: boolean;
 };
+
+export type Notifications = {
+    id: number;
+    recipient: string;
+    message: string;
+    event: string;
+    createdAt: string;
+}

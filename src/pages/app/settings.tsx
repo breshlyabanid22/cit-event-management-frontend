@@ -8,23 +8,26 @@ import {
     Input,
     Select,
     SelectItem,
+    CardHeader,
+    CardFooter,
 } from "@nextui-org/react";
 import {
     Course,
     Department,
     ElementaryYear,
     JuniorHighYear,
+    Notifications,
     SeniorHighYear,
     Year,
 } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { z } from "zod";
 import useAuth from "@/provider/auth";
 import {
-    UsernameCard,
+    // UsernameCard,
     PasswordCard,
-    EmailCard,
+    // EmailCard,
 } from "@/components/app/SecuritySettingsCard";
 
 const settingsSchema = z
@@ -64,18 +67,43 @@ export default function Settings() {
     const handleDepartmentChange = (value: any) => {
         setSelectedDepartment(value.currentKey);
     };
+    const [notifications, setNotifications] = useState<Notifications[]>([]);
+
+    useEffect(() => {
+        fetchNotifications();
+    }, []);
+    const fetchNotifications = async () => {
+
+        try{
+            const response = await fetch(`http://localhost:8080/notifications/${user?.userID}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials:"include"
+            });
+            if(!response.ok){
+				throw new Error('Network Error');
+			}
+            const Notifs: Notifications[] =  await response.json();
+            setNotifications(Notifs);
+            console.log("Notifs: ", notifications);
+        }catch(error){
+            console.log("Error fetching notifications", error);
+        }
+    }
     return (
         <div>
-            <header className="mb-6 flex w-full items-center justify-between">
+            <header className="flex items-center justify-between w-full mb-6">
                 <div className="flex flex-col">
                     <p className="text-3xl font-bold">Settings</p>
-                    <p className="text-md font-light">
+                    <p className="font-light text-md">
                         Customize settings & manage your account
                     </p>
                 </div>
             </header>
             <body className="flex">
-                <div className="col-span-1 flex flex-col gap-4">
+                <div className="flex flex-col col-span-1 gap-4">
                     <Tabs radius="lg" size="lg" aria-label="Options">
                         <Tab key="profile" title="Profile">
                             <div className="sm:w-full md:w-[400px] lg:w-[600px]">
@@ -154,7 +182,7 @@ export default function Settings() {
                                 </p>
                                 <Select
                                     placeholder="Select a Department"
-                                    className="mt-2 w-full"
+                                    className="w-full mt-2"
                                     onSelectionChange={handleDepartmentChange}
                                 >
                                     {Department.map((items) => (
@@ -249,26 +277,28 @@ export default function Settings() {
                             <div className="sm:w-full md:w-[400px] lg:w-[600px]">
                                 {" "}
                                 <div>
-                                    <UsernameCard username={user?.username} />
+                                    {/* <UsernameCard username={user?.username} /> */}
                                 </div>
                                 <div className="mt-4">
                                     <PasswordCard />
                                 </div>
                                 <div className="mt-4">
-                                    <EmailCard email={user?.email} />
+                                    {/* <EmailCard email={user?.email} /> */}
                                 </div>
                             </div>
                         </Tab>
 
                         <Tab key="notifications" title="Notifications">
                             <div className="sm:w-full md:w-[400px] lg:w-[600px]">
-                                <Card>
-                                    <CardBody>
-                                        Excepteur sint occaecat cupidatat non
-                                        proident, sunt in culpa qui officia
-                                        deserunt mollit anim id est laborum.
-                                    </CardBody>
-                                </Card>
+                                {notifications.map((notification) => (
+                                    <Card key={notification.id}>
+                                        <CardHeader>{notification.recipient}</CardHeader>
+                                        <CardBody>
+                                        {notification.message}
+                                        </CardBody>
+                                        <CardFooter>{notification.createdAt}</CardFooter>
+                                    </Card>
+                                ))}
                             </div>
                         </Tab>
                     </Tabs>
