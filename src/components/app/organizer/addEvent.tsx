@@ -1,17 +1,18 @@
 import {
-	Button,
-	DatePicker,
-	Input,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	Select,
-	SelectItem,
-	Textarea,
-	useDisclosure,
-	CheckboxGroup, Checkbox
+    Button,
+    DatePicker,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    Select,
+    SelectItem,
+    Textarea,
+    useDisclosure,
+    CheckboxGroup,
+    Checkbox,
 } from "@nextui-org/react";
 import {
 	getLocalTimeZone,
@@ -41,22 +42,33 @@ const eventSchema = z.object({
 
 
 export default function AddEvent() {
+    type FormField = z.infer<typeof eventSchema>;
+    const {
+        control,
+        register,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: { errors, isSubmitting, isSubmitSuccessful, isDirty },
+    } = useForm<FormField>({
+        resolver: zodResolver(eventSchema),
+        defaultValues: {
+            resourceId: [],
+            image: undefined,
+        },
+    });
 
-	type FormField = z.infer<typeof eventSchema>
-	const {
-		control,
-		register,
-		handleSubmit,
-		setValue, 
-		reset,
-		formState: { errors, isSubmitting, isSubmitSuccessful, isDirty }
-	} = useForm<FormField>({
-		resolver: zodResolver(eventSchema),
-		defaultValues: {
-			resourceId: [],
-			image: undefined,
-		},
-	});
+    const [venues, setVenues] = useState<Venue[]>([]);
+    const [resources, setResources] = useState<Resource[]>([]);
+    const [isInvalid, setIsInvalid] = useState(true);
+    useEffect(() => {
+        fetchVenues();
+        fetchResources();
+        if (isSubmitSuccessful) {
+            reset();
+        }
+    }, [isSubmitSuccessful, reset]);
+
 	const submitEvent: SubmitHandler<FormField> = async (data) => {
 		try {
 			
@@ -99,16 +111,6 @@ export default function AddEvent() {
 		}
 		
 	};
-	const [venues, setVenues] = useState<Venue[]>([]);
-	const [resources, setResources] = useState<Resource[]>([]);
-	const [isInvalid, setIsInvalid] = useState(true);
-	useEffect(() => {
-		fetchVenues();
-		fetchResources();
-		if(isSubmitSuccessful){
-			reset();
-		}
-	},[isSubmitSuccessful, reset]);
 	
 	const fetchVenues = async () => {
 

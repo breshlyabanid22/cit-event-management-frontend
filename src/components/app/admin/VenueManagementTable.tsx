@@ -16,14 +16,8 @@ import {
     User,
     Pagination,
 } from "@nextui-org/react";
-import { getUsers } from "@/api/utils";
-import {
-    useQuery,
-    useMutation,
-    useQueryClient,
-    QueryClient,
-    QueryClientProvider,
-} from "@tanstack/react-query";
+import { getVenues } from "@/api/utils";
+import { useQuery } from "@tanstack/react-query";
 import {
     IconDotsVertical,
     IconSearch,
@@ -37,7 +31,7 @@ function capitalize(str) {
 const columns = [
     {
         name: "ID",
-        uid: "schoolID",
+        uid: "id",
         sortable: true,
     },
     {
@@ -46,55 +40,48 @@ const columns = [
         sortable: true,
     },
     {
-        name: "Role",
-        uid: "role",
+        name: "Location",
+        uid: "location",
         sortable: true,
     },
     {
-        name: "Email",
-        uid: "email",
+        name: "Capacity",
+        uid: "capacity",
+        sortable: true,
+    },
+    {
+        name: "Events",
+        uid: "events",
+        sortable: true,
+    },
+    {
+        name: "Venue Manager",
+        uid: "venuemanager",
+        sortable: true,
+    },
+    {
+        name: "Department",
+        uid: "department",
         sortable: true,
     },
     {
         name: "Actions",
         uid: "actions",
-        sortable: true,
-    },
-    {
-        name: "Course",
-        uid: "course",
-        sortable: true,
-    },
-    {
-        name: "Created At",
-        uid: "createdAt",
-        sortable: true,
-    },
-    {
-        name: "Updated At",
-        uid: "updatedAt",
-        sortable: true,
-    },
-    {
-        name: "Active",
-        uid: "active",
-        sortable: true,
-    },
-    {
-        name: "Username",
-        uid: "username",
-        sortable: true,
     },
 ];
 
 const statusOptions = [
     {
-        name: "Active",
-        uid: "active",
+        name: "Confirmed",
+        uid: "confirmed",
     },
     {
-        name: "Deactivated",
-        uid: "deactivated",
+        name: "Pending",
+        uid: "pending",
+    },
+    {
+        name: "Cancelled",
+        uid: "cancelled",
     },
 ];
 
@@ -106,12 +93,18 @@ const statusColorMap = {
     ORGANIZER: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "schoolID", "role", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+    "date",
+    "venue",
+    "department",
+    "capacity",
+    "actions",
+];
 
-export default function UserManagementTable() {
+export default function VenueManagementTable() {
     const { isPending, isError, data, error } = useQuery({
-        queryKey: ["users"],
-        queryFn: getUsers,
+        queryKey: ["venues"],
+        queryFn: getVenues,
     });
 
     const [filterValue, setFilterValue] = React.useState("");
@@ -138,29 +131,23 @@ export default function UserManagementTable() {
     }, [visibleColumns]);
 
     const filteredItems = React.useMemo(() => {
-        let filteredUsers = data || []; // Use data from React Query
+        let filteredVenues = data || []; // Use data from React Query
 
         if (hasSearchFilter) {
-            filteredUsers = filteredUsers.filter(
-                (user) =>
-                    user.firstName
-                        .toLowerCase()
-                        .includes(filterValue.toLowerCase()) ||
-                    user.lastName
-                        .toLowerCase()
-                        .includes(filterValue.toLowerCase()),
+            filteredVenues = filteredVenues.filter((venue) =>
+                venue.name.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
         if (
             statusFilter !== "all" &&
             Array.from(statusFilter).length !== statusOptions.length
         ) {
-            filteredUsers = filteredUsers.filter((user) =>
-                Array.from(statusFilter).includes(user.role),
+            filteredVenues = filteredVenues.filter((venue) =>
+                Array.from(statusFilter).includes(venue.status),
             );
         }
 
-        return filteredUsers;
+        return filteredVenues;
     }, [data, filterValue, statusFilter]);
 
     const items = React.useMemo(() => {
@@ -180,8 +167,8 @@ export default function UserManagementTable() {
         });
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((user, columnKey) => {
-        const cellValue = user[columnKey];
+    const renderCell = React.useCallback((venue, columnKey) => {
+        const cellValue = venue[columnKey];
 
         switch (columnKey) {
             case "name":
@@ -189,23 +176,20 @@ export default function UserManagementTable() {
                     <User
                         avatarProps={{
                             radius: "lg",
-                            src: user.imagePath,
+                            src: venue.imagePath,
                         }}
-                        description={user.email}
-                        name={`${user.firstName} ${user.lastName}`}
-                    >
-                        {user.email}
-                    </User>
+                        name={`${venue.name}`}
+                    ></User>
                 );
-            case "role":
+            case "department":
                 return (
                     <Chip
                         className="capitalize"
-                        color={statusColorMap[user.role]}
+                        color={statusColorMap[venue.department]}
                         size="sm"
                         variant="flat"
                     >
-                        {user.role}
+                        {venue.department}
                     </Chip>
                 );
             case "actions":
@@ -340,7 +324,7 @@ export default function UserManagementTable() {
                 </div>
                 <div className="flex justify-between items-center">
                     <span className="text-default-400 text-small">
-                        Total {data ? data.length : 0} users
+                        Total {data ? data.length : 0} venues
                     </span>
                     <label className="flex items-center text-default-400 text-small">
                         Rows per page:
@@ -434,11 +418,11 @@ export default function UserManagementTable() {
                 )}
             </TableHeader>
             <TableBody
-                emptyContent={"No users found"}
+                emptyContent={"No venues found"}
                 items={isPending ? [] : sortedItems}
             >
                 {(item) => (
-                    <TableRow key={item.userID}>
+                    <TableRow key={item.id}>
                         {(columnKey) => (
                             <TableCell>{renderCell(item, columnKey)}</TableCell>
                         )}

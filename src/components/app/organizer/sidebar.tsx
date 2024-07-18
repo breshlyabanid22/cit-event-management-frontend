@@ -2,11 +2,11 @@ import { Link, Listbox, ListboxItem, Tooltip, User } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "@/provider/auth";
 import {
-  IconBuilding,
-  IconCalendar,
-  IconHome,
-  IconLogout2,
-  IconSettings,
+    IconBuilding,
+    IconCalendar,
+    IconHome,
+    IconLogout2,
+    IconSettings,
 } from "@tabler/icons-react";
 
 import LogoIcon from "@/components/icons/LogoIcon";
@@ -96,21 +96,21 @@ export default function AppSidebar() {
         </Listbox>
       </div>
 
-      <div className="flex items-center justify-center gap-2 mb-4">
-        <div className="sticky inset-x-0 bottom-0">
-          <Tooltip content="Profile" color="foreground" delay={500}>
-            <User
-              as={Link}
-              href="/organizer/settings"
-              name={user?.firstName + " " + user?.lastName}
-              description={user?.role}
-              avatarProps={{
-                src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-              }}
-            />
-          </Tooltip>
+            <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="sticky inset-x-0 bottom-0">
+                    <Tooltip content="Profile" color="foreground" delay={500}>
+                        <User
+                            as={Link}
+                            href="/organizer/settings"
+                            name={user?.firstName + " " + user?.lastName}
+                            description={user?.role}
+                            avatarProps={{
+                                src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+                            }}
+                        />
+                    </Tooltip>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
