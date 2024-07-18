@@ -101,7 +101,13 @@ const activeColorMap = {
     false: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "schoolID", "role", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+    "name",
+    "schoolID",
+    "role",
+    "active",
+    "actions",
+];
 
 export default function UserManagementTable() {
     const { isPending, isError, data, error } = useQuery<TypeUser[], Error>({
