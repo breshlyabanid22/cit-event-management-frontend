@@ -1,4 +1,5 @@
 import UserManagementTable from "@/components/app/admin/UserManagementTable";
+import AddUser from "@/components/app/admin/AddUser";
 
 export default function UserManagement() {
     return (
@@ -8,6 +9,7 @@ export default function UserManagement() {
                     <p className="text-3xl font-bold">User Management</p>
                     <p className="text-md font-light">Manage your users</p>
                 </div>
+                <AddUser />
             </header>
             <body className="grid grid-cols-1 gap-4">
                 <UserManagementTable />

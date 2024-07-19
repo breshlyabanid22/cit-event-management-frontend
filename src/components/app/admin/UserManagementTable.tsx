@@ -140,11 +140,13 @@ export default function UserManagementTable() {
         );
     }, [visibleColumns]);
 
+    const usersWithoutCurrent = React.useMemo(() => {
+        if (!data) return [];
+        return data.filter((user) => user.userID !== currentUser?.userID);
+    }, [data, currentUser?.userID]);
+
     const filteredItems = React.useMemo(() => {
-        let filteredUsers = React.useMemo(() => {
-            if (!data) return [];
-            return data.filter((user) => user.userID !== currentUser?.userID);
-        }, [data, currentUser?.userID]);
+        let filteredUsers = usersWithoutCurrent;
 
         if (hasSearchFilter) {
             filteredUsers = filteredUsers.filter(
