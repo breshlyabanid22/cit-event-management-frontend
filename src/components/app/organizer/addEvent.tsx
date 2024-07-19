@@ -25,7 +25,7 @@ import { Venue, Resource, Event } from "@/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const eventSchema = z.object({
 	name: z.string().min(3, "Event name must be at least 3 characters long"),
@@ -46,6 +46,8 @@ export default function AddEvent() {
     const [venues, setVenues] = useState<Venue[]>([]);
     const [resources, setResources] = useState<Resource[]>([]);
     const [isInvalid, setIsInvalid] = useState(true);
+	const [thumbnail, setThumbnail] = useState<File | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
 	type FormField = z.infer<typeof eventSchema>
 	const {
@@ -150,17 +152,18 @@ export default function AddEvent() {
 		}
 
 	}
-	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		if (file) {
-		  setValue('image', file);
-		}
-	  };
+	// const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+	// 	const file = e.target.files?.[0];
+	// 	if (file) {
+	// 	  setValue('image', file);
+	// 	  setThumbnail(file);
+	// 	}
+	//   };
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	return (
 		<div>
 		<Toaster
-        position="top-right"
+        position="bottom-right"
         reverseOrder={false}
         gutter={8}
         containerClassName=""
@@ -178,24 +181,59 @@ export default function AddEvent() {
 			<Button onPress={onOpen} color="primary" startContent={<LogoIcon />}>
 				Create an event
 			</Button>
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-					<ModalContent className="w-auto md:min-w-[600px] 2xl:min-w[1000px] ">
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
+				<form onSubmit={handleSubmit(submitEvent)}>
+					<ModalContent>
 						{(onClose) => (
 							<>
-							<form onSubmit={handleSubmit(submitEvent)}>
 								<ModalHeader className="flex flex-col gap-1">
 									Add Event
 								</ModalHeader>
 								<ModalBody>
-									<div className="flex flex-col gap-4">
+									<form className="flex flex-col gap-4">
 										<div className="flex flex-col gap-2">
-											<Input
+											<Controller
+											name="image"
+											control={control}
+											render={({
+												field:{
+													onChange,
+													value,
+													ref,
+													...restField
+												},
+											}) => (
+												<input
 												type="file"
 												accept="image/*"
-												onChange={handleFileChange}
-												errorMessage={errors.image?.message}
-												isInvalid={!!errors.image}
+												className="hidden"
+												ref={fileInputRef}
+												onChange={(e) => {
+													const file = e.target.files?.[0];
+													if(file){
+														setValue('image', file);
+														setThumbnail(file);
+													}
+												}}
+												{...restField}
 											/>
+											)}
+											/>
+											 <Button
+                                                color="default"
+                                                variant="flat"
+                                                onPress={() =>
+                                                    fileInputRef.current?.click()
+                                                }
+                                            >
+                                                Choose Image
+                                            </Button>
+											{thumbnail && (
+                                              <img
+											  src={URL.createObjectURL(thumbnail)}
+											  className="object-cover rounded-md max-h-48 hover:object-contain"
+											/>
+                                            )}
 										</div>
 										<div className="flex flex-col gap-2">
 											<Input
@@ -309,7 +347,7 @@ export default function AddEvent() {
 									
 											</div>
 										</div>			
-								</div>
+									</form>
 								</ModalBody>
 								<ModalFooter>
 								<Button color="danger" variant="light" onPress={onClose}>
@@ -319,10 +357,10 @@ export default function AddEvent() {
 										{isSubmitting ? "Loading" :  "Submit"}
 									</Button>		
 								</ModalFooter>
-							</form>
 							</>
 						)}
 					</ModalContent>
+				</form>
 			</Modal>
 		</div>
 	);

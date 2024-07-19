@@ -40,7 +40,7 @@ const venueSchema = z.object({
 
 export default function AddVenue(data) {
     const { user } = useAuthStore();
-    const [fileName, setFileName] = useState<string | null>(null);
+    const [thumbnail, setThumbnail] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const {
@@ -62,7 +62,7 @@ export default function AddVenue(data) {
             toast.success("Venue added successfully");
             isOpen ? onOpenChange() : null;
         } catch (error) {
-            toast.error("Error adding venue:", error);
+            toast.error("Error adding venue:");
         }
     };
     const users = data.users.data;
@@ -128,8 +128,8 @@ export default function AddVenue(data) {
                                                                     .files?.[0];
                                                             if (file) {
                                                                 onChange(file);
-                                                                setFileName(
-                                                                    file.name,
+                                                                setThumbnail(
+                                                                    file
                                                                 );
                                                             }
                                                         }}
@@ -146,11 +146,11 @@ export default function AddVenue(data) {
                                             >
                                                 Choose Image
                                             </Button>
-                                            {fileName && (
-                                                <p className="text-warning-500">
-                                                    {" "}
-                                                    Selected file: {fileName}
-                                                </p>
+                                            {thumbnail && (
+                                            <img
+                                                src={URL.createObjectURL(thumbnail)}
+                                                className="object-cover rounded-md max-h-48 hover:object-contain"
+                                              />
                                             )}
                                         </div>
                                         <div className="flex flex-col gap-2">
