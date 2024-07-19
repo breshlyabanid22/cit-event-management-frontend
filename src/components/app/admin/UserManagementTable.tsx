@@ -24,6 +24,7 @@ import ActivateUser from "@/components/app/admin/ActivateUser";
 import { useQuery } from "@tanstack/react-query";
 import { IconSearch, IconChevronDown } from "@tabler/icons-react";
 import { TypeUser } from "@/types";
+import useAuth from "@/provider/auth";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -110,6 +111,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function UserManagementTable() {
+    const { user: currentUser } = useAuth();
     const { isPending, isError, data, error } = useQuery<TypeUser[], Error>({
         queryKey: ["users"],
         queryFn: getUsers,
@@ -139,7 +141,10 @@ export default function UserManagementTable() {
     }, [visibleColumns]);
 
     const filteredItems = React.useMemo(() => {
-        let filteredUsers = data || []; // Use data from React Query
+        let filteredUsers = React.useMemo(() => {
+            if (!data) return [];
+            return data.filter((user) => user.userID !== currentUser?.userID);
+        }, [data, currentUser?.userID]);
 
         if (hasSearchFilter) {
             filteredUsers = filteredUsers.filter(
