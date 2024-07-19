@@ -1,5 +1,5 @@
 import AppNavBar from "@/components/app/navbar";
-import AppSidebar from "@/components/app/organizer/sidebar";
+import AppSidebar from "@/components/app/sidebar";
 import { Outlet } from "react-router-dom";
 
 export default function OrganizerLayout() {
