@@ -30,6 +30,9 @@ const AdminVenueManagement = lazy(
 const AdminResourceManagement = lazy(
     () => import("@/pages/app/admin/resource-management"),
 );
+const AdminEventManagement = lazy(
+    () => import("@/pages/app/admin/event-management"),
+);
 
 const ParticipantLayout = lazy(() => import("@/layouts/participant"));
 const ParticipantHome = lazy(() => import("@/pages/app/participant/home"));
@@ -175,6 +178,16 @@ function App() {
                             element={
                                 <Suspense fallback={<Loader />}>
                                     <AdminVenueManagement />
+                                </Suspense>
+                            }
+                        />
+                    </Route>
+                    <Route path="event-management">
+                        <Route
+                            index
+                            element={
+                                <Suspense fallback={<Loader />}>
+                                    <AdminEventManagement />
                                 </Suspense>
                             }
                         />

@@ -13,6 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { useState, useRef } from "react";
 import { addVenue } from "@/api/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const venueSchema = z.object({
     image: z
