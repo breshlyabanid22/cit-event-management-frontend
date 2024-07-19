@@ -25,9 +25,9 @@ import clsx from "clsx";
 import { z } from "zod";
 import useAuth from "@/provider/auth";
 import {
-    // UsernameCard,
+    UsernameCard,
     PasswordCard,
-    // EmailCard,
+    EmailCard,
 } from "@/components/app/SecuritySettingsCard";
 
 const settingsSchema = z
@@ -73,25 +73,27 @@ export default function Settings() {
         fetchNotifications();
     }, []);
     const fetchNotifications = async () => {
-
-        try{
-            const response = await fetch(`http://localhost:8080/notifications/${user?.userID}`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
+        try {
+            const response = await fetch(
+                `http://localhost:8080/notifications/${user?.userID}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
                 },
-                credentials:"include"
-            });
-            if(!response.ok){
-				throw new Error('Network Error');
-			}
-            const Notifs: Notifications[] =  await response.json();
+            );
+            if (!response.ok) {
+                throw new Error("Network Error");
+            }
+            const Notifs: Notifications[] = await response.json();
             setNotifications(Notifs);
             console.log("Notifs: ", notifications);
-        }catch(error){
+        } catch (error) {
             console.log("Error fetching notifications", error);
         }
-    }
+    };
     return (
         <div>
             <header className="flex items-center justify-between w-full mb-6">
@@ -105,7 +107,7 @@ export default function Settings() {
             <body className="flex">
                 <div className="flex flex-col col-span-1 gap-4">
                     <Tabs radius="lg" size="lg" aria-label="Options">
-                        <Tab key="profile" title="Profile">
+                        <Tab key="account" title="Account">
                             <div className="sm:w-full md:w-[400px] lg:w-[600px]">
                                 <h3 className="text-lg font-bold">Profile</h3>
                                 <p className="text-default-500">
@@ -147,11 +149,10 @@ export default function Settings() {
                                         </div>
                                     </CardBody>
                                 </Card>
-                            </div>
-                        </Tab>
-                        <Tab key="account" title="Account">
-                            <div className="sm:w-full md:w-[400px] lg:w-[600px]">
-                                <h3 className="text-lg font-bold">Full Name</h3>
+
+                                <h3 className="text-lg font-bold mt-4">
+                                    Full Name
+                                </h3>
                                 <p className="text-default-500">
                                     Your full name in your account.
                                 </p>
@@ -235,7 +236,7 @@ export default function Settings() {
                                                 </SelectItem>
                                             ))
                                         ) : selectedDepartment ===
-                                          "Junior High" ? (
+                                            "Junior High" ? (
                                             JuniorHighYear.map((items) => (
                                                 <SelectItem
                                                     key={items.value}
@@ -245,7 +246,7 @@ export default function Settings() {
                                                 </SelectItem>
                                             ))
                                         ) : selectedDepartment ===
-                                          "Senior High" ? (
+                                            "Senior High" ? (
                                             SeniorHighYear.map((items) => (
                                                 <SelectItem
                                                     key={items.value}
@@ -274,16 +275,15 @@ export default function Settings() {
                             </div>
                         </Tab>
                         <Tab key="security" title="Security">
-                            <div className="sm:w-full md:w-[400px] lg:w-[600px]">
-                                {" "}
+                            <div className="sm:w-[300px] md:w-[500px] lg:w-[700px]">
                                 <div>
-                                    {/* <UsernameCard username={user?.username} /> */}
+                                    <UsernameCard username={user?.username} />
                                 </div>
                                 <div className="mt-4">
                                     <PasswordCard />
                                 </div>
                                 <div className="mt-4">
-                                    {/* <EmailCard email={user?.email} /> */}
+                                    <EmailCard email={user?.email} />
                                 </div>
                             </div>
                         </Tab>
@@ -292,11 +292,15 @@ export default function Settings() {
                             <div className="sm:w-full md:w-[400px] lg:w-[600px]">
                                 {notifications.map((notification) => (
                                     <Card key={notification.id}>
-                                        <CardHeader>{notification.recipient}</CardHeader>
+                                        <CardHeader>
+                                            {notification.recipient}
+                                        </CardHeader>
                                         <CardBody>
-                                        {notification.message}
+                                            {notification.message}
                                         </CardBody>
-                                        <CardFooter>{notification.createdAt}</CardFooter>
+                                        <CardFooter>
+                                            {notification.createdAt}
+                                        </CardFooter>
                                     </Card>
                                 ))}
                             </div>

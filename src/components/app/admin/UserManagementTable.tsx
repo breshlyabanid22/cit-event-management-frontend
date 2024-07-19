@@ -356,7 +356,7 @@ export default function UserManagementTable() {
                 </div>
                 <div className="flex justify-between items-center">
                     <span className="text-default-400 text-small">
-                        Total {data ? data.length : 0} users
+                        Total {data ? filteredItems.length : 0} users
                     </span>
                     <label className="flex items-center text-default-400 text-small">
                         Rows per page:
