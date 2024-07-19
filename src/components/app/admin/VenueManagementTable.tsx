@@ -46,7 +46,7 @@ const columns = [
     },
     {
         name: "Capacity",
-        uid: "capacity",
+        uid: "maxCapacity",
         sortable: true,
     },
     {
@@ -56,7 +56,7 @@ const columns = [
     },
     {
         name: "Venue Manager",
-        uid: "venuemanager",
+        uid: "venueManager",
         sortable: true,
     },
     {
@@ -94,10 +94,14 @@ const statusColorMap = {
 };
 
 const INITIAL_VISIBLE_COLUMNS = [
+    "id",
+    "name",
+    "location",
+    "maxCapacity",
+    "events",
     "date",
     "venue",
     "department",
-    "capacity",
     "actions",
 ];
 
