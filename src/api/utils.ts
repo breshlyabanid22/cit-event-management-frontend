@@ -1,8 +1,8 @@
-import { Event, Resource, Venue, TypeUser } from "@/types";
+import { Event, Resource, TypeUser } from "@/types";
 
 export async function addVenue(data: {
     userID: number;
-    venueManager: String[];
+    venueManagersID: number;
     name: string;
     location: string;
     maxCapacity: number;
@@ -10,10 +10,11 @@ export async function addVenue(data: {
 }) {
     const createVenueData = {
         userID: data.userID,
-        venueManager: data.venueManager,
+        venueManagersID: data.venueManagersID,
         name: data.name,
         location: data.location,
         maxCapacity: data.maxCapacity,
+        image: data.image
     };
 
     const formData = new FormData();
@@ -24,11 +25,9 @@ export async function addVenue(data: {
             type: "application/json",
         }),
     );
-    createVenueData.venueManager.forEach((id) => {
-        formData.append("venueManager", id.toString());
-    });
-
-    formData.append("imageFile", data.image);
+    if(createVenueData.image){
+        formData.append("imageFile", data.image);
+    }
 
     const response = await fetch("http://localhost:8080/venues", {
         method: "POST",

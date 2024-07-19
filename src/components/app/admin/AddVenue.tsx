@@ -35,7 +35,7 @@ const venueSchema = z.object({
         .string()
         .min(3, "Event location must be at least 3 characters long"),
     maxCapacity: z.number().min(1, "Capacity must be at least 1 people"),
-    venueManager: z.number().min(1, "Venue Manager must be at least 1 people"),
+    venueManagersID: z.number(),
 });
 
 export default function AddVenue(data) {
@@ -55,17 +55,16 @@ export default function AddVenue(data) {
         },
     });
 
-    const submitEvent = async (data: z.infer<typeof venueSchema>) => {
+    const submitEvent = async (venueData: z.infer<typeof venueSchema>) => {
         try {
-            console.log(data);
-            await addVenue(data);
+            console.log(venueData);
+            await addVenue(venueData);
             toast.success("Venue added successfully");
             isOpen ? onOpenChange() : null;
         } catch (error) {
             toast.error("Error adding venue:", error);
         }
     };
-
     const users = data.users.data;
     console.log(data.users.isPending);
     return (
@@ -156,7 +155,7 @@ export default function AddVenue(data) {
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <Controller
-                                                name="venueManager"
+                                                name="venueManagersID"
                                                 control={control}
                                                 rules={{
                                                     required:
@@ -170,11 +169,11 @@ export default function AddVenue(data) {
                                                         placeholder="Select a user"
                                                         labelPlacement="inside"
                                                         errorMessage={
-                                                            errors.venueManager
+                                                            errors.venueManagersID
                                                                 ?.message
                                                         }
                                                         isInvalid={
-                                                            !!errors.venueManager
+                                                            !!errors.venueManagersID
                                                         }
                                                         onSelectionChange={(
                                                             userID,
@@ -209,7 +208,7 @@ export default function AddVenue(data) {
                                                                         user.userID
                                                                     }
                                                                 >
-                                                                    <div className="flex gap-2 items-center">
+                                                                    <div className="flex items-center gap-2">
                                                                         <Avatar
                                                                             alt={
                                                                                 user.firstName

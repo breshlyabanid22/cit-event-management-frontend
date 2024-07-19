@@ -31,6 +31,7 @@ export type TypeUser = {
     year: number | null;
     course: number | null;
     department: number | null;
+    imagePath: string | undefined;
     createdAt: string;
     updatedAt: number | null;
     active: boolean;
@@ -209,7 +210,7 @@ export type Venue = {
     location: string;
     maxCapacity: number;
     events: String[];
-    venueManagers: String[];
+    venueManagersID: number[];
 };
 
 export type Event = {
