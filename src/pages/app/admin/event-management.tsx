@@ -1,4 +1,5 @@
 import AddEvent from "@/components/app/organizer/addEvent";
+import EventManagementTable from "@/components/app/admin/EventManagementTable";
 export default function EventManagement() {
     return (
         <div>
@@ -11,7 +12,9 @@ export default function EventManagement() {
                 </div>
                 <AddEvent />
             </header>
-            <body className="grid grid-cols-1 gap-4">Hey</body>
+            <body className="grid grid-cols-1 gap-4">
+                <EventManagementTable />
+            </body>
         </div>
     );
 }
