@@ -11,9 +11,11 @@ import {
     SelectItem,
     Textarea,
     useDisclosure,
-    CheckboxGroup,
     Image,
-    Checkbox,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
 } from "@nextui-org/react";
 import { getLocalTimeZone, now, parseDateTime } from "@internationalized/date";
 import LogoIcon from "@/components/icons/LogoIcon.tsx";
@@ -95,6 +97,7 @@ export default function AddEvent() {
             if (createEventData.image) {
                 formData.append("imageFile", createEventData.image);
             }
+            console.log(createEventData);
             await fetch("http://localhost:8080/events", {
                 method: "POST",
                 body: formData,
@@ -149,7 +152,7 @@ export default function AddEvent() {
             }
             const resourceData: Resource[] = await response.json();
             setResources(resourceData);
-        } catch (error) {}
+        } catch (error) { }
     };
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     return (
@@ -304,44 +307,70 @@ export default function AddEvent() {
                                                     onBlur,
                                                 },
                                             }) => (
-                                                <CheckboxGroup
-                                                    label="Select resources"
-                                                    orientation="horizontal"
+                                                <Dropdown
                                                     isInvalid={
                                                         isInvalid ||
                                                         !!errors.resourceId
                                                     }
-                                                    onValueChange={(
-                                                        selectedValues,
-                                                    ) => {
-                                                        const numberValues =
-                                                            selectedValues.map(
-                                                                Number,
-                                                            );
-                                                        onChange(numberValues);
-                                                        setIsInvalid(
-                                                            numberValues.length <
-                                                                1,
-                                                        );
-                                                    }}
-                                                    value={value.map(String)} // Ensure the value is a string array for the checkbox group
-                                                    onBlur={onBlur}
+                                                    onClose={onBlur}
                                                 >
-                                                    {resources.map(
-                                                        (resource) => (
-                                                            <Checkbox
-                                                                key={
-                                                                    resource.id
-                                                                }
-                                                                value={String(
-                                                                    resource.id,
-                                                                )}
-                                                            >
-                                                                {resource.name}
-                                                            </Checkbox>
-                                                        ),
-                                                    )}
-                                                </CheckboxGroup>
+                                                    <DropdownTrigger>
+                                                        <Button
+                                                            variant="bordered"
+                                                            className="capitalize"
+                                                        >
+                                                            {value.length > 0
+                                                                ? `${value.length} selected`
+                                                                : "Select resources"}
+                                                        </Button>
+                                                    </DropdownTrigger>
+                                                    <DropdownMenu
+                                                        closeOnSelect={false}
+                                                        disallowEmptySelection
+                                                        aria-label="Select resources"
+                                                        selectionMode="multiple"
+                                                        selectedKeys={
+                                                            new Set(
+                                                                value.map(
+                                                                    String,
+                                                                ),
+                                                            )
+                                                        }
+                                                        onSelectionChange={(
+                                                            selectedKeys,
+                                                        ) => {
+                                                            const selectedArray =
+                                                                Array.from(
+                                                                    selectedKeys,
+                                                                );
+                                                            const numberValues =
+                                                                selectedArray.map(
+                                                                    Number,
+                                                                );
+                                                            onChange(
+                                                                numberValues,
+                                                            );
+                                                            setIsInvalid(
+                                                                numberValues.length <
+                                                                1,
+                                                            );
+                                                        }}
+                                                    >
+                                                        {resources.map(
+                                                            (resource) => (
+                                                                <DropdownItem
+                                                                    key={String(
+                                                                        resource.id,
+                                                                    )}
+                                                                >
+                                                                    {
+                                                                        resource.name
+                                                                    }
+                                                                </DropdownItem>
+                                                            ),
+                                                        )}
+                                                    </DropdownMenu>
+                                                </Dropdown>
                                             )}
                                         />
                                         <div className="flex flex-col gap-2">
@@ -369,8 +398,8 @@ export default function AddEvent() {
                                                                 value={
                                                                     field.value
                                                                         ? parseDateTime(
-                                                                              field.value,
-                                                                          )
+                                                                            field.value,
+                                                                        )
                                                                         : null
                                                                 }
                                                                 onChange={(
@@ -378,7 +407,7 @@ export default function AddEvent() {
                                                                 ) => {
                                                                     const isoDate =
                                                                         date !=
-                                                                        null
+                                                                            null
                                                                             ? date.toString()
                                                                             : "";
                                                                     field.onChange(
@@ -417,8 +446,8 @@ export default function AddEvent() {
                                                                 value={
                                                                     field.value
                                                                         ? parseDateTime(
-                                                                              field.value,
-                                                                          )
+                                                                            field.value,
+                                                                        )
                                                                         : null
                                                                 }
                                                                 onChange={(
@@ -426,7 +455,7 @@ export default function AddEvent() {
                                                                 ) => {
                                                                     const isoDate =
                                                                         date !=
-                                                                        null
+                                                                            null
                                                                             ? date.toString()
                                                                             : "";
                                                                     field.onChange(

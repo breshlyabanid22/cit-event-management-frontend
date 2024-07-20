@@ -65,7 +65,6 @@ export default function AddVenue(data) {
         }
     };
     const users = data.users.data;
-    console.log(data.users.isPending);
     return (
         <div>
             <Toaster
@@ -127,7 +126,7 @@ export default function AddVenue(data) {
                                                                 Array.from(
                                                                     e.target
                                                                         .files ||
-                                                                        [],
+                                                                    [],
                                                                 );
                                                             if (
                                                                 files.length > 0
@@ -220,8 +219,8 @@ export default function AddVenue(data) {
                                                                 Error
                                                             </AutocompleteItem>
                                                         ) : !data.users.data ||
-                                                          data.users.data
-                                                              .length === 0 ? (
+                                                            data.users.data
+                                                                .length === 0 ? (
                                                             <AutocompleteItem
                                                                 key="empty"
                                                                 textValue="No users found"
