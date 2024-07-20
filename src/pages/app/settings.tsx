@@ -236,7 +236,7 @@ export default function Settings() {
                                                 </SelectItem>
                                             ))
                                         ) : selectedDepartment ===
-                                            "Junior High" ? (
+                                          "Junior High" ? (
                                             JuniorHighYear.map((items) => (
                                                 <SelectItem
                                                     key={items.value}
@@ -246,7 +246,7 @@ export default function Settings() {
                                                 </SelectItem>
                                             ))
                                         ) : selectedDepartment ===
-                                            "Senior High" ? (
+                                          "Senior High" ? (
                                             SeniorHighYear.map((items) => (
                                                 <SelectItem
                                                     key={items.value}

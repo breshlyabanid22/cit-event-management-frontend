@@ -14,7 +14,7 @@ export async function addVenue(data: {
         name: data.name,
         location: data.location,
         maxCapacity: data.maxCapacity,
-        image: data.image
+        image: data.image,
     };
 
     const formData = new FormData();
@@ -25,7 +25,7 @@ export async function addVenue(data: {
             type: "application/json",
         }),
     );
-    if(createVenueData.image){
+    if (createVenueData.image) {
         formData.append("imageFile", data.image);
     }
 

@@ -237,4 +237,4 @@ export type Notifications = {
     message: string;
     event: string;
     createdAt: string;
-}
+};
