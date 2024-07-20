@@ -110,7 +110,6 @@ export default function VenueManagementTable() {
         queryKey: ["venues"],
         queryFn: getVenues,
     });
-
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(
@@ -198,7 +197,7 @@ export default function VenueManagementTable() {
                 );
             case "actions":
                 return (
-                    <div className="relative flex justify-end items-center gap-2">
+                    <div className="relative flex items-center justify-end gap-2">
                         <Dropdown>
                             <DropdownTrigger>
                                 <Button isIconOnly size="sm" variant="light">
@@ -255,7 +254,7 @@ export default function VenueManagementTable() {
     const topContent = React.useMemo(() => {
         return (
             <div className="flex flex-col gap-4">
-                <div className="flex justify-between gap-3 items-end">
+                <div className="flex items-end justify-between gap-3">
                     <Input
                         isClearable
                         className="w-full sm:max-w-[44%]"
@@ -326,7 +325,7 @@ export default function VenueManagementTable() {
                         </Dropdown>
                     </div>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                     <span className="text-default-400 text-small">
                         Total {data ? data.length : 0} venues
                     </span>
@@ -356,7 +355,7 @@ export default function VenueManagementTable() {
 
     const bottomContent = React.useMemo(() => {
         return (
-            <div className="py-2 px-2 flex justify-between items-center">
+            <div className="flex items-center justify-between px-2 py-2">
                 <span className="w-[30%] text-small text-default-400">
                     {selectedKeys === "all"
                         ? "All items selected"

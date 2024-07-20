@@ -152,13 +152,6 @@ export default function AddEvent() {
 		}
 
 	}
-	// const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	const file = e.target.files?.[0];
-	// 	if (file) {
-	// 	  setValue('image', file);
-	// 	  setThumbnail(file);
-	// 	}
-	//   };
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	return (
 		<div>

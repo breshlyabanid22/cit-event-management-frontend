@@ -6,7 +6,7 @@ export async function addVenue(data: {
     name: string;
     location: string;
     maxCapacity: number;
-    image: File;
+    images: File[];
 }) {
     const createVenueData = {
         userID: data.userID,
@@ -14,7 +14,7 @@ export async function addVenue(data: {
         name: data.name,
         location: data.location,
         maxCapacity: data.maxCapacity,
-        image: data.image
+        imageFiles: data.images
     };
 
     const formData = new FormData();
@@ -25,8 +25,10 @@ export async function addVenue(data: {
             type: "application/json",
         }),
     );
-    if(createVenueData.image){
-        formData.append("imageFile", data.image);
+    if (createVenueData.imageFiles && createVenueData.imageFiles.length > 0) {
+        Array.from(createVenueData.imageFiles).forEach((file) => {
+            formData.append('imageFiles', file);
+        });
     }
 
     const response = await fetch("http://localhost:8080/venues", {
@@ -100,6 +102,11 @@ export const editUser = async (user: TypeUser) => {
     );
     if (!response.ok) {
         throw new Error("Network Error");
+    }
+    if(response.status == 409){
+        throw new Error("School Id already exist");
+    }else if(response.status == 400){
+        throw new Error("Email already exist");
     }
     return response.text();
 };

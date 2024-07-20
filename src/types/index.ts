@@ -211,6 +211,7 @@ export type Venue = {
     maxCapacity: number;
     events: String[];
     venueManagersID: number[];
+    images: File[];
 };
 
 export type Event = {

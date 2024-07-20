@@ -22,14 +22,7 @@ import useAuthStore from "@/provider/auth";
 import toast, { Toaster } from "react-hot-toast";
 const venueSchema = z.object({
     userID: z.number().min(1, "User ID must be at least 1 characters long"),
-    image: z
-        .instanceof(File)
-        .refine((file) => file.size <= 5000000, `Max file size is 5MB.`)
-        .refine(
-            (file) =>
-                ["image/jpeg", "image/png", "image/webp"].includes(file.type),
-            "Only .jpg, .png and .webp formats are supported.",
-        ),
+    images: z.array(z.instanceof(File)).min(1, "At least (1) image is required"),
     name: z.string().min(3, "Event name must be at least 3 characters long"),
     location: z
         .string()
@@ -40,7 +33,7 @@ const venueSchema = z.object({
 
 export default function AddVenue(data) {
     const { user } = useAuthStore();
-    const [thumbnail, setThumbnail] = useState<File | null>(null);
+    const [images, setImages] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const {
@@ -107,7 +100,7 @@ export default function AddVenue(data) {
                                     <form className="flex flex-col gap-4">
                                         <div className="flex flex-col gap-2">
                                             <Controller
-                                                name="image"
+                                                name="images"
                                                 control={control}
                                                 render={({
                                                     field: {
@@ -121,22 +114,31 @@ export default function AddVenue(data) {
                                                         type="file"
                                                         accept=".jpg,.png,.webp"
                                                         className="hidden"
+                                                        multiple
                                                         ref={fileInputRef}
                                                         onChange={(e) => {
-                                                            const file =
-                                                                e.target
-                                                                    .files?.[0];
-                                                            if (file) {
-                                                                onChange(file);
-                                                                setThumbnail(
-                                                                    file
-                                                                );
+                                                            const files = Array.from(e.target.files || []);
+                                                            if (files.length > 0) {
+                                                                onChange(files);
+                                                                setImages(files);
                                                             }
                                                         }}
                                                         {...restField}
+                                                        
                                                     />
                                                 )}
                                             />
+                                            {images.length > 0 && (
+                                                <div className="flex flex-row gap-1 overflow-auto">
+                                                    {images.map((image, index) => (
+                                                        <img
+                                                        key={index}
+                                                        src={URL.createObjectURL(image)}
+                                                        className="object-cover w-32 rounded-md hover:flex-1 max-h-44"
+                                                        />
+                                                    ))}
+                                                </div>
+                                            )}
                                             <Button
                                                 color="default"
                                                 variant="flat"
@@ -146,12 +148,6 @@ export default function AddVenue(data) {
                                             >
                                                 Choose Image
                                             </Button>
-                                            {thumbnail && (
-                                            <img
-                                                src={URL.createObjectURL(thumbnail)}
-                                                className="object-cover rounded-md max-h-48 hover:object-contain"
-                                              />
-                                            )}
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <Controller
