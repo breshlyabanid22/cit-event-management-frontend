@@ -1,7 +1,7 @@
-import ResourceManagementCard from "@/components/app/admin/ResourceManagementCard";
 import AddResource from "@/components/app/admin/AddResource";
 import { useQuery } from "@tanstack/react-query";
 import { getResources } from "@/api/utils";
+import ResourceManagementTable from "@/components/app/admin/ResourceManagementTable";
 export default function ResourceManagement() {
     const { isPending, isError, data, error } = useQuery<TypeUser[], Error>({
         queryKey: ["resources"],
@@ -19,10 +19,8 @@ export default function ResourceManagement() {
                 </div>
                 <AddResource />
             </header>
-            <body className="grid grid-cols-3 gap-4">
-                <div className="col-span-1 flex flex-col gap-4">
-                    <ResourceManagementCard />
-                </div>
+            <body className="col-span-1 flex flex-col gap-4">
+                <ResourceManagementTable />
             </body>
         </div>
     );

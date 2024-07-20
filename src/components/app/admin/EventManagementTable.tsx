@@ -189,7 +189,7 @@ export default function eventManagementTable() {
                     <User
                         avatarProps={{
                             radius: "lg",
-                            src: event.imagePath,
+                            src: event.image,
                         }}
                         name={event.name}
                     ></User>

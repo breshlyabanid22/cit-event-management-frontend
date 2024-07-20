@@ -16,7 +16,7 @@ import {
     User,
     Pagination,
 } from "@nextui-org/react";
-import { getVenues } from "@/api/utils";
+import { getResources } from "@/api/utils";
 import { useQuery } from "@tanstack/react-query";
 import {
     IconDotsVertical,
@@ -40,29 +40,22 @@ const columns = [
         sortable: true,
     },
     {
-        name: "Location",
-        uid: "location",
+        name: "Description",
+        uid: "description",
+    },
+    {
+        name: "Type",
+        uid: "type",
         sortable: true,
     },
     {
-        name: "Capacity",
-        uid: "maxCapacity",
+        name: "Availability",
+        uid: "availability",
         sortable: true,
     },
     {
         name: "Events",
-        uid: "events",
-        sortable: true,
-    },
-    {
-        name: "Venue Manager",
-        uid: "venueManager",
-        sortable: true,
-    },
-    {
-        name: "Department",
-        uid: "department",
-        sortable: true,
+        uid: "eventId",
     },
     {
         name: "Actions",
@@ -88,28 +81,26 @@ const statusOptions = [
 export { columns, statusOptions };
 
 const statusColorMap = {
-    PARTICIPANT: "success",
-    ADMIN: "danger",
-    ORGANIZER: "warning",
+    true: "success",
+    false: "danger",
 };
 
 const INITIAL_VISIBLE_COLUMNS = [
     "id",
     "name",
-    "location",
-    "maxCapacity",
-    "events",
-    "date",
-    "venue",
-    "department",
+    "description",
+    "type",
+    "availability",
+    "eventId",
     "actions",
 ];
 
-export default function VenueManagementTable() {
+export default function ResourceManagementTable() {
     const { isPending, isError, data, error } = useQuery({
-        queryKey: ["venues"],
-        queryFn: getVenues,
+        queryKey: ["resources"],
+        queryFn: getResources,
     });
+    console.log(data);
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(
@@ -170,29 +161,21 @@ export default function VenueManagementTable() {
         });
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((venue, columnKey) => {
-        const cellValue = venue[columnKey];
+    const renderCell = React.useCallback((resource, columnKey) => {
+        const cellValue = resource[columnKey];
 
-        switch (columnKey) {
-            case "name":
-                return (
-                    <User
-                        avatarProps={{
-                            radius: "lg",
-                            src: venue.image,
-                        }}
-                        name={`${venue.name}`}
-                    ></User>
-                );
-            case "department":
+        switch (resource) {
+            case "availability":
                 return (
                     <Chip
                         className="capitalize"
-                        color={statusColorMap[venue.department]}
+                        color={statusColorMap[resource.availability]}
                         size="sm"
                         variant="flat"
                     >
-                        {venue.department}
+                        {resource.availability.toString() === "true"
+                            ? "Active"
+                            : "Deactivated"}
                     </Chip>
                 );
             case "actions":
