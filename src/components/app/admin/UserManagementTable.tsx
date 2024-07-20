@@ -51,7 +51,7 @@ const columns = [
         sortable: true,
     },
     {
-        name: "Active",
+        name: "Status",
         uid: "active",
         sortable: true,
     },
@@ -94,6 +94,7 @@ const statusColorMap = {
     PARTICIPANT: "success",
     ADMIN: "danger",
     ORGANIZER: "warning",
+    VENUE_MANAGER: "primary",
 };
 
 const activeColorMap = {
@@ -211,7 +212,9 @@ export default function UserManagementTable() {
                         size="sm"
                         variant="flat"
                     >
-                        {user.role}
+                        {user.role === "VENUE_MANAGER"
+                            ? "VENUE MANAGER"
+                            : user.role}
                     </Chip>
                 );
             case "active":
@@ -222,7 +225,9 @@ export default function UserManagementTable() {
                         size="sm"
                         variant="flat"
                     >
-                        {user.active.toString()}
+                        {user.active.toString() === "true"
+                            ? "Active"
+                            : "Deactivated"}
                     </Chip>
                 );
             case "actions":
