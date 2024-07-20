@@ -158,3 +158,66 @@ export const getVenues = async () => {
     }
     return response.json();
 };
+
+export const getEvent = async (eventId: number) => {
+    const response = await fetch(`http://localhost:8080/events/${eventId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};
+
+export const editEvent = async (event: Event) => {
+    const response = await fetch(
+        `http://localhost:8080/events/${event.eventId}`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(event),
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
+export const deleteEvent = async (eventId: number) => {
+    const response = await fetch(
+        `http://localhost:8080/events/${eventId}/deactivate`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
+export const getAllEvents = async () => {
+    const response = await fetch("http://localhost:8080/events", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};

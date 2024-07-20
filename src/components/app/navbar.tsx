@@ -18,7 +18,7 @@ export default function AppNavBar() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     return (
-        <Navbar onMenuOpenChange={setIsMenuOpen}>
+        <Navbar onMenuOpenChange={setIsMenuOpen} isBordered>
             <NavbarContent>
                 <NavbarMenuToggle
                     aria-label={isMenuOpen ? "Close menu" : "Open menu"}

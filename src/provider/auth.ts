@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { TypeUser, accountLogin } from "@/types";
+import { removeCookie } from "@/hooks/cookie";
 
 interface AuthState {
     user: TypeUser | null;
@@ -88,8 +89,13 @@ const useAuthStore = create<AuthState>()(
                         });
                     }
                 } catch (error) {
-                    console.error("Refresh user data error:", error);
                     get().logout();
+                    removeCookie("JSESSIONID");
+                    set({
+                        user: null,
+                        isAuthenticated: false,
+                    });
+                    localStorage.removeItem("auth-storage");
                 }
             },
         }),
