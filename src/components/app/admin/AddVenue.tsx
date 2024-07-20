@@ -11,6 +11,7 @@ import {
     useDisclosure,
     Autocomplete,
     AutocompleteItem,
+    Image,
 } from "@nextui-org/react";
 import { IconHomePlus } from "@tabler/icons-react";
 import { useForm, Controller } from "react-hook-form";
@@ -20,6 +21,7 @@ import { addVenue } from "@/api/utils";
 import { TypeUser } from "@/types";
 import useAuthStore from "@/provider/auth";
 import toast, { Toaster } from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 const venueSchema = z.object({
     userID: z.number().min(1, "User ID must be at least 1 characters long"),
     image: z
@@ -39,6 +41,7 @@ const venueSchema = z.object({
 });
 
 export default function AddVenue(data) {
+    const queryClient = useQueryClient();
     const { user } = useAuthStore();
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -59,6 +62,7 @@ export default function AddVenue(data) {
         try {
             console.log(venueData);
             await addVenue(venueData);
+            queryClient.invalidateQueries({ queryKey: ["venues"] });
             toast.success("Venue added successfully");
             isOpen ? onOpenChange() : null;
         } catch (error) {
@@ -129,7 +133,7 @@ export default function AddVenue(data) {
                                                             if (file) {
                                                                 onChange(file);
                                                                 setThumbnail(
-                                                                    file
+                                                                    file,
                                                                 );
                                                             }
                                                         }}
@@ -147,10 +151,16 @@ export default function AddVenue(data) {
                                                 Choose Image
                                             </Button>
                                             {thumbnail && (
-                                            <img
-                                                src={URL.createObjectURL(thumbnail)}
-                                                className="object-cover rounded-md max-h-48 hover:object-contain"
-                                              />
+                                                <Image
+                                                    isBlurred
+                                                    isZoomed
+                                                    height={400}
+                                                    radius="lg"
+                                                    src={URL.createObjectURL(
+                                                        thumbnail,
+                                                    )}
+                                                    className="object-cover hover:object-contain self-center justify-self-center items-center"
+                                                />
                                             )}
                                         </div>
                                         <div className="flex flex-col gap-2">
@@ -169,7 +179,8 @@ export default function AddVenue(data) {
                                                         placeholder="Select a user"
                                                         labelPlacement="inside"
                                                         errorMessage={
-                                                            errors.venueManagersID
+                                                            errors
+                                                                .venueManagersID
                                                                 ?.message
                                                         }
                                                         isInvalid={
@@ -183,64 +194,83 @@ export default function AddVenue(data) {
                                                             )
                                                         }
                                                     >
-                                                        {data.users.isLoading ? (
-                                                            <AutocompleteItem key="loading" textValue="Loading..." value="loading">
+                                                        {data.users
+                                                            .isLoading ? (
+                                                            <AutocompleteItem
+                                                                key="loading"
+                                                                textValue="Loading..."
+                                                                value="loading"
+                                                            >
                                                                 Loading...
                                                             </AutocompleteItem>
                                                         ) : data.users.error ? (
-                                                            <AutocompleteItem key="error" textValue="Error" value="error">
+                                                            <AutocompleteItem
+                                                                key="error"
+                                                                textValue="Error"
+                                                                value="error"
+                                                            >
                                                                 Error
                                                             </AutocompleteItem>
-                                                        ) : !data.users.data || data.users.data.length === 0 ? (
-                                                            <AutocompleteItem key="empty" textValue="No users found" value="empty">
+                                                        ) : !data.users.data ||
+                                                            data.users.data
+                                                                .length === 0 ? (
+                                                            <AutocompleteItem
+                                                                key="empty"
+                                                                textValue="No users found"
+                                                                value="empty"
+                                                            >
                                                                 No users found
                                                             </AutocompleteItem>
                                                         ) : (
-                                                            users.map((user: TypeUser) => (
-                                                                <AutocompleteItem
-                                                                    key={
-                                                                        user.userID
-                                                                    }
-                                                                    textValue={
-                                                                        user.email
-                                                                    }
-                                                                    value={
-                                                                        user.userID
-                                                                    }
-                                                                >
-                                                                    <div className="flex items-center gap-2">
-                                                                        <Avatar
-                                                                            alt={
-                                                                                user.firstName
-                                                                            }
-                                                                            className="flex-shrink-0"
-                                                                            size="sm"
-                                                                            src={
-                                                                                user.imagePath
-                                                                            }
-                                                                        />
-                                                                        <div className="flex flex-col">
-                                                                            <span className="text-small">
-                                                                                {
+                                                            users.map(
+                                                                (
+                                                                    user: TypeUser,
+                                                                ) => (
+                                                                    <AutocompleteItem
+                                                                        key={
+                                                                            user.userID
+                                                                        }
+                                                                        textValue={
+                                                                            user.email
+                                                                        }
+                                                                        value={
+                                                                            user.userID
+                                                                        }
+                                                                    >
+                                                                        <div className="flex items-center gap-2">
+                                                                            <Avatar
+                                                                                alt={
                                                                                     user.firstName
-                                                                                }{" "}
-                                                                                {
-                                                                                    user.lastName
                                                                                 }
-                                                                            </span>
-                                                                            <span className="text-tiny text-default-400">
-                                                                                {
-                                                                                    user.email
+                                                                                className="flex-shrink-0"
+                                                                                size="sm"
+                                                                                src={
+                                                                                    user.imagePath
                                                                                 }
-                                                                            </span>
+                                                                            />
+                                                                            <div className="flex flex-col">
+                                                                                <span className="text-small">
+                                                                                    {
+                                                                                        user.firstName
+                                                                                    }{" "}
+                                                                                    {
+                                                                                        user.lastName
+                                                                                    }
+                                                                                </span>
+                                                                                <span className="text-tiny text-default-400">
+                                                                                    {
+                                                                                        user.email
+                                                                                    }
+                                                                                </span>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </AutocompleteItem>
-                                                            ))
+                                                                    </AutocompleteItem>
+                                                                ),
+                                                            )
                                                         )}
-
                                                     </Autocomplete>
-                                                )} />
+                                                )}
+                                            />
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <Input
