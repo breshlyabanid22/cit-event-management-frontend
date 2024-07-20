@@ -12,8 +12,8 @@ import {
     Dropdown,
     DropdownMenu,
     DropdownItem,
+    User,
     Chip,
-    event,
     Pagination,
 } from "@nextui-org/react";
 import { getAllEvents } from "@/api/utils";
@@ -186,16 +186,13 @@ export default function eventManagementTable() {
         switch (columnKey) {
             case "name":
                 return (
-                    <event
+                    <User
                         avatarProps={{
                             radius: "lg",
                             src: event.imagePath,
                         }}
-                        description={event.email}
-                        name={`${event.firstName} ${event.lastName}`}
-                    >
-                        {event.email}
-                    </event>
+                        name={event.name}
+                    ></User>
                 );
             case "role":
                 return (
@@ -226,12 +223,12 @@ export default function eventManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2 ">
-                        <Editevent event={event} />
+                        {/* <Editevent event={event} />
                         {event.active === false ? (
                             <Activateevent event={event} />
                         ) : (
                             <Deactivateevent event={event} />
-                        )}
+                        )} */}
                     </div>
                 );
             default:

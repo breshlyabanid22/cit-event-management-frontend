@@ -24,9 +24,9 @@ import { Venue, Resource, Event } from "@/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { getVenues, getResources } from "@/api/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const eventSchema = z
     .object({
@@ -46,6 +46,7 @@ const eventSchema = z
     });
 
 export default function AddEvent() {
+    const queryClient = useQueryClient();
     const {
         isPending,
         isError,
@@ -119,6 +120,7 @@ export default function AddEvent() {
                 .then(async (res) => {
                     const message = await res.text();
                     if (res.ok) {
+                        queryClient.invalidateQueries({ queryKey: ["events"] });
                         toast.success(message);
                         isOpen ? onOpenChange() : null;
                     } else {
