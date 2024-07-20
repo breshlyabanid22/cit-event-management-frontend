@@ -11,11 +11,13 @@ const DefaultLayout = lazy(() => import("./layouts"));
 const IndexPage = lazy(() => import("@/pages/index"));
 const AboutPage = lazy(() => import("@/pages/about"));
 const Login = lazy(() => import("@/pages/login"));
-const OrganizerLayout = lazy(() => import("@/layouts/organizer"));
-const OrganizerHome = lazy(() => import("@/pages/app/organizer/home"));
 const Settings = lazy(() => import("@/pages/app/settings"));
-const EventRegistration = lazy(
-    () => import("@/pages/app/organizer/eventRegistration"),
+const OrganizerLayout = lazy(() => import("@/layouts/organizer"));
+const OrganizerEventManagement = lazy(
+    () => import("@/pages/app/organizer/EventManagement"),
+);
+const OrganizerParticipantManagement = lazy(
+    () => import("@/pages/app/organizer/ParticipantManagement"),
 );
 const VenueManagement = lazy(() => import("@/pages/app/organizer/venue"));
 
@@ -99,16 +101,24 @@ function App() {
                         index
                         element={
                             <Suspense fallback={<Loader />}>
-                                <OrganizerHome />
+                                <ParticipantHome />
                             </Suspense>
                         }
                     />
-                    <Route path="event-registration">
+                    <Route
+                        path="event-registration"
+                        element={
+                            <Suspense fallback={<Loader />}>
+                                <OrganizerEventManagement />
+                            </Suspense>
+                        }
+                    />
+                    <Route path="participant-management">
                         <Route
                             index
                             element={
                                 <Suspense fallback={<Loader />}>
-                                    <EventRegistration />
+                                    <OrganizerParticipantManagement />
                                 </Suspense>
                             }
                         />

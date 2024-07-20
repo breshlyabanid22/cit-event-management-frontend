@@ -52,9 +52,9 @@ export default function AddVenue(data) {
 
     const submitEvent = async (venueData: z.infer<typeof venueSchema>) => {
         try {
-            console.log(venueData);
             await addVenue(venueData);
             queryClient.invalidateQueries({ queryKey: ["venues"] });
+            queryClient.invalidateQueries({ queryKey: ["users"] });
             toast.success("Venue added successfully");
             isOpen ? onOpenChange() : null;
         } catch (error) {
@@ -201,8 +201,8 @@ export default function AddVenue(data) {
                                                                 Error
                                                             </AutocompleteItem>
                                                         ) : !data.users.data ||
-                                                          data.users.data
-                                                              .length === 0 ? (
+                                                            data.users.data
+                                                                .length === 0 ? (
                                                             <AutocompleteItem
                                                                 key="empty"
                                                                 textValue="No users found"

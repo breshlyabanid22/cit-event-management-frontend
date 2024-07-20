@@ -60,6 +60,7 @@ export default function AppSidebar() {
                 return ParticipantSideBarItems;
             case "ORGANIZER":
                 return OrganizerSideBarItems;
+            case "VENUE_MANAGER":
             default:
                 return [];
         }
@@ -84,6 +85,43 @@ export default function AppSidebar() {
                         list: "gap-4",
                     }}
                 >
+                    <ListboxItem key="home" startContent={<IconHome />}>
+                        <Tooltip color="foreground" content="Home" delay={500}>
+                            {(() => {
+                                let homePath = "";
+                                switch (user?.role) {
+                                    case "ADMIN":
+                                        homePath = "/admin";
+                                        break;
+                                    case "PARTICIPANT":
+                                        homePath = "/participant";
+                                        break;
+                                    case "ORGANIZER":
+                                        homePath = "/organizer";
+                                        break;
+                                    case "VENUE_MANAGER":
+                                        homePath = "/venue-manager";
+                                        break;
+                                    default:
+                                        return null;
+                                }
+
+                                return (
+                                    <Link
+                                        href={homePath}
+                                        color={
+                                            pathname === homePath
+                                                ? "primary"
+                                                : "foreground"
+                                        }
+                                    >
+                                        Home
+                                    </Link>
+                                );
+                            })()}
+                        </Tooltip>
+                    </ListboxItem>
+
                     {sidebarItems.map((item) => (
                         <ListboxItem
                             key={item.label}
@@ -107,6 +145,48 @@ export default function AppSidebar() {
                             </Tooltip>
                         </ListboxItem>
                     ))}
+
+                    <ListboxItem key="settings" startContent={<IconSettings />}>
+                        <Tooltip
+                            color="foreground"
+                            content="settings"
+                            delay={500}
+                        >
+                            {(() => {
+                                let settingsPath = "";
+                                switch (user?.role) {
+                                    case "ADMIN":
+                                        settingsPath = "/admin/settings";
+                                        break;
+                                    case "PARTICIPANT":
+                                        settingsPath = "/participant/settings";
+                                        break;
+                                    case "ORGANIZER":
+                                        settingsPath = "/organizer/settings";
+                                        break;
+                                    case "VENUE_MANAGER":
+                                        settingsPath =
+                                            "/venue-management/settings";
+                                        break;
+                                    default:
+                                        return null; // Or some default behavior
+                                }
+
+                                return (
+                                    <Link
+                                        href={settingsPath}
+                                        color={
+                                            pathname === settingsPath
+                                                ? "primary"
+                                                : "foreground"
+                                        }
+                                    >
+                                        Settings
+                                    </Link>
+                                );
+                            })()}
+                        </Tooltip>
+                    </ListboxItem>
                     <ListboxItem
                         key="logout"
                         className="text-danger"

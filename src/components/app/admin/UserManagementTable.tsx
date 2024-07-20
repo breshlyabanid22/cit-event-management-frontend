@@ -41,6 +41,11 @@ const columns = [
         sortable: true,
     },
     {
+        name: "Username",
+        uid: "username",
+        sortable: true,
+    },
+    {
         name: "Role",
         uid: "role",
         sortable: true,
@@ -73,12 +78,6 @@ const columns = [
     {
         name: "Updated At",
         uid: "updatedAt",
-        sortable: true,
-    },
-
-    {
-        name: "Username",
-        uid: "username",
         sortable: true,
     },
 ];

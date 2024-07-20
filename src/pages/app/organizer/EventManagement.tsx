@@ -1,7 +1,7 @@
 import AddEvent from "@/components/app/organizer/addEvent";
 import EventCard from "@/components/app/organizer/eventCard";
 
-export default function Home() {
+export default function EventRegistration() {
     return (
         <div>
             <header className="mb-6 flex w-full items-center justify-between">

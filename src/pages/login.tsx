@@ -99,7 +99,17 @@ export default function Login() {
             username: data.username,
             password: data.password,
         };
-        await login(loginData);
+        try {
+            await login(loginData);
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message);
+            } else if (typeof error === "string") {
+                toast.error(error);
+            } else {
+                toast.error("An unknown error occurred");
+            }
+        }
     };
 
     const onRegisterSubmit = async (data: z.infer<typeof registerSchema>) => {

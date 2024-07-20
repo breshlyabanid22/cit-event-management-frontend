@@ -2,10 +2,6 @@ export type SiteConfig = typeof siteConfig;
 
 export const AdminSideBarItems = [
     {
-        label: "Home",
-        href: "/admin",
-    },
-    {
         label: "User Management",
         href: "/admin/user-management",
     },
@@ -21,21 +17,9 @@ export const AdminSideBarItems = [
         label: "Event Management",
         href: "/admin/event-management",
     },
-    {
-        label: "Settings",
-        href: "/admin/settings",
-    },
 ];
 
 export const ParticipantSideBarItems = [
-    {
-        label: "Home",
-        href: "/participant",
-    },
-    {
-        label: "Event Registration",
-        href: "/participant/event-registration",
-    },
     {
         label: "Scheduled List",
         href: "/participant/scheduled-list",
@@ -48,28 +32,37 @@ export const ParticipantSideBarItems = [
         label: "Feedback",
         href: "/participant/feedback",
     },
-    {
-        label: "Settings",
-        href: "/participant/settings",
-    },
 ];
 
 export const OrganizerSideBarItems = [
-    {
-        label: "Home",
-        href: "/organizer",
-    },
     {
         label: "Event Registration",
         href: "/organizer/event-registration",
     },
     {
-        label: "Venue Management",
-        href: "/organizer/venue-management",
+        label: "Participant Management",
+        href: "/organizer/participant-management",
     },
+];
+
+export const VenueManagerSideBarItems = [
     {
-        label: "Settings",
-        href: "/organizer/settings",
+        label: "Venue Management",
+        href: "/venue-management",
+    },
+];
+
+export const EventManagerSideBarItems = [
+    {
+        label: "Event Management",
+        href: "/event-management",
+    },
+];
+
+export const ResourceManagerSideBarItems = [
+    {
+        label: "Resource Management",
+        href: "/resource-management",
     },
 ];
 

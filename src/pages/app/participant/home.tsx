@@ -1,5 +1,3 @@
-import AddEvent from "../../../components/app/participant/addEvent";
-
 export default function ParticipantHome() {
     return (
         <div>
@@ -10,9 +8,6 @@ export default function ParticipantHome() {
                         Take a look at the events
                     </p>
                 </div>
-                <body>
-                    <AddEvent />
-                </body>
             </header>
             <body className="grid grid-cols-1 gap-4">
                 <div className="flex flex-col col-span-1 gap-4"></div>
