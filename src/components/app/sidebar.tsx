@@ -19,6 +19,7 @@ import {
     AdminSideBarItems,
     ParticipantSideBarItems,
     OrganizerSideBarItems,
+    VenueManagerSideBarItems,
 } from "@/config/site";
 
 export default function AppSidebar() {
@@ -51,7 +52,6 @@ export default function AppSidebar() {
         }
     };
 
-    // Function to get the appropriate sidebar items based on user role
     const getSidebarItems = () => {
         switch (user?.role) {
             case "ADMIN":
@@ -60,7 +60,15 @@ export default function AppSidebar() {
                 return ParticipantSideBarItems;
             case "ORGANIZER":
                 return OrganizerSideBarItems;
+            default:
+                return [];
+        }
+    };
+
+    const extraSidebarItems = () => {
+        switch (user?.userType) {
             case "VENUE_MANAGER":
+                return VenueManagerSideBarItems;
             default:
                 return [];
         }
@@ -139,6 +147,30 @@ export default function AppSidebar() {
                                             : "foreground"
                                     }
                                     href={item.href}
+                                >
+                                    {item.label}
+                                </Link>
+                            </Tooltip>
+                        </ListboxItem>
+                    ))}
+
+                    {extraSidebarItems().map((item) => (
+                        <ListboxItem
+                            key={item.label}
+                            startContent={getIcon(item.label)}
+                        >
+                            <Tooltip
+                                color="foreground"
+                                content={item.label}
+                                delay={500}
+                            >
+                                <Link
+                                    color={
+                                        pathname === item.href
+                                            ? "primary"
+                                            : "foreground"
+                                    }
+                                    href={`/${(user?.role || "default").toLowerCase()}/${item.href.replace(/^\//, "")}`}
                                 >
                                     {item.label}
                                 </Link>

@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import useAuthStore from "@/provider/auth";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const ParticipantFeedback = lazy(
     () => import("@/pages/app/participant/feedback"),
 );
 function App() {
+    const { user } = useAuthStore();
     return (
         <QueryClientProvider client={queryClient}>
             <Routes>
@@ -123,16 +125,16 @@ function App() {
                             }
                         />
                     </Route>
-                    <Route path="venue-management">
+                    {user?.userType === "VENUE_MANAGER" && (
                         <Route
-                            index
+                            path="venue-management"
                             element={
                                 <Suspense fallback={<Loader />}>
                                     <VenueManagement />
                                 </Suspense>
                             }
                         />
-                    </Route>
+                    )}
                     <Route
                         path="settings"
                         element={
@@ -261,6 +263,16 @@ function App() {
                             }
                         />
                     </Route>
+                    {user?.userType === "VENUE_MANAGER" && (
+                        <Route
+                            path="venue-management"
+                            element={
+                                <Suspense fallback={<Loader />}>
+                                    <VenueManagement />
+                                </Suspense>
+                            }
+                        />
+                    )}
                     <Route
                         path="settings"
                         element={
