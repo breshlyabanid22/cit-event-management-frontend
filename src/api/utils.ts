@@ -14,7 +14,7 @@ export async function addVenue(data: {
         name: data.name,
         location: data.location,
         maxCapacity: data.maxCapacity,
-        imageFiles: data.images
+        imageFiles: data.images,
     };
 
     const formData = new FormData();
@@ -27,7 +27,7 @@ export async function addVenue(data: {
     );
     if (createVenueData.imageFiles && createVenueData.imageFiles.length > 0) {
         Array.from(createVenueData.imageFiles).forEach((file) => {
-            formData.append('imageFiles', file);
+            formData.append("imageFiles", file);
         });
     }
 
@@ -71,6 +71,20 @@ export const addResource = async (resource: Resource) => {
     if (!response.ok) {
         throw new Error("Network Error");
     }
+    return response.text();
+};
+
+export const getResources = async () => {
+    const response = await fetch("http://localhost:8080/resources", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
     return response.json();
 };
 
@@ -103,9 +117,9 @@ export const editUser = async (user: TypeUser) => {
     if (!response.ok) {
         throw new Error("Network Error");
     }
-    if(response.status == 409){
+    if (response.status == 409) {
         throw new Error("School Id already exist");
-    }else if(response.status == 400){
+    } else if (response.status == 400) {
         throw new Error("Email already exist");
     }
     return response.text();

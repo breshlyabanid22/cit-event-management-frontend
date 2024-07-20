@@ -9,6 +9,7 @@ import {
     ModalFooter,
     ModalHeader,
     useDisclosure,
+    Image,
     Autocomplete,
     AutocompleteItem,
 } from "@nextui-org/react";
@@ -23,7 +24,9 @@ import toast, { Toaster } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 const venueSchema = z.object({
     userID: z.number().min(1, "User ID must be at least 1 characters long"),
-    images: z.array(z.instanceof(File)).min(1, "At least (1) image is required"),
+    images: z
+        .array(z.instanceof(File))
+        .min(1, "At least (1) image is required"),
     name: z.string().min(3, "Event name must be at least 3 characters long"),
     location: z
         .string()
@@ -120,26 +123,42 @@ export default function AddVenue(data) {
                                                         multiple
                                                         ref={fileInputRef}
                                                         onChange={(e) => {
-                                                            const files = Array.from(e.target.files || []);
-                                                            if (files.length > 0) {
+                                                            const files =
+                                                                Array.from(
+                                                                    e.target
+                                                                        .files ||
+                                                                        [],
+                                                                );
+                                                            if (
+                                                                files.length > 0
+                                                            ) {
                                                                 onChange(files);
-                                                                setImages(files);
+                                                                setImages(
+                                                                    files,
+                                                                );
                                                             }
                                                         }}
                                                         {...restField}
-                                                        
                                                     />
                                                 )}
                                             />
                                             {images.length > 0 && (
                                                 <div className="flex flex-row gap-1 overflow-auto">
-                                                    {images.map((image, index) => (
-                                                        <img
-                                                        key={index}
-                                                        src={URL.createObjectURL(image)}
-                                                        className="object-cover w-32 rounded-md hover:flex-1 max-h-44"
-                                                        />
-                                                    ))}
+                                                    {images.map(
+                                                        (image, index) => (
+                                                            <Image
+                                                                isBlurred
+                                                                isZoomed
+                                                                width={300}
+                                                                height={300}
+                                                                key={index}
+                                                                src={URL.createObjectURL(
+                                                                    image,
+                                                                )}
+                                                                className="object-cover "
+                                                            />
+                                                        ),
+                                                    )}
                                                 </div>
                                             )}
                                             <Button
@@ -201,8 +220,8 @@ export default function AddVenue(data) {
                                                                 Error
                                                             </AutocompleteItem>
                                                         ) : !data.users.data ||
-                                                            data.users.data
-                                                                .length === 0 ? (
+                                                          data.users.data
+                                                              .length === 0 ? (
                                                             <AutocompleteItem
                                                                 key="empty"
                                                                 textValue="No users found"

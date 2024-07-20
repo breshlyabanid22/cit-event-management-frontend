@@ -8,6 +8,7 @@ import {
     ModalFooter,
     ModalHeader,
     Select,
+    Image,
     SelectItem,
     Textarea,
     useDisclosure,
@@ -81,135 +82,147 @@ export default function AddEvent() {
                 endTime: data.endTime,
             };
 
-			const formData = new FormData();
-			formData.append("eventDTO", new Blob([JSON.stringify(createEventData)], { type: "application/json" }));
-			createEventData.resourceId.forEach((id) => {
-				formData.append("resourceId", id.toString());
-			});
-			if(createEventData.image){
-				formData.append("imageFile", createEventData.image);
-			}
-			await fetch("http://localhost:8080/events", {
-				method: "POST",
-				body: formData,
-				credentials: "include",
-			}).then(async (res) => {
-				const message = await res.text();
-				if(res.ok){
-					toast.success(message);
-				}else{
-					toast.error(message);
-				}
-			})
-			.catch((error) => {
-				console.error("Error creating event:", error);
-			})
-			console.log(createEventData);
-		} catch (error) {
-			console.error("error submitting", error);
-		}
-		
-	};
-	
-	const fetchVenues = async () => {
+            const formData = new FormData();
+            formData.append(
+                "eventDTO",
+                new Blob([JSON.stringify(createEventData)], {
+                    type: "application/json",
+                }),
+            );
+            createEventData.resourceId.forEach((id) => {
+                formData.append("resourceId", id.toString());
+            });
+            if (createEventData.image) {
+                formData.append("imageFile", createEventData.image);
+            }
+            await fetch("http://localhost:8080/events", {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+            })
+                .then(async (res) => {
+                    const message = await res.text();
+                    if (res.ok) {
+                        toast.success(message);
+                    } else {
+                        toast.error(message);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error creating event:", error);
+                });
+            console.log(createEventData);
+        } catch (error) {
+            console.error("error submitting", error);
+        }
+    };
 
-		try {
-			const response = await fetch("http://localhost:8080/venues", {
-				method: "GET",
-				headers: {
-			 	 "Content-Type": "application/json",
-				},
-				credentials: "include",
-			});
-			if(!response.ok){
-				throw new Error('Network Error');
-			}
-			const venueData: Venue[] = await response.json();
-			setVenues(venueData);
-		} catch (error) {
-			console.error('Error fetching venues:', error);
-		}
-	}
-	const fetchResources= async () => {
-		try{
-			const response = await fetch("http://localhost:8080/resources", {
-				method: "GET",
-				headers: {
-			 	 "Content-Type": "application/json",
-				},
-				credentials: "include",
-			});
-			if(!response.ok){
-				throw new Error('Network Error');
-			}
-			const resourceData: Resource[] = await response.json();
-			setResources(resourceData);
-		}catch(error){
-
-		}
-
-	}
-	const { isOpen, onOpen, onOpenChange } = useDisclosure();
-	return (
-		<div>
-		<Toaster
-        position="bottom-right"
-        reverseOrder={false}
-        gutter={8}
-        containerClassName=""
-        containerStyle={{}}
-        toastOptions={{
-          // Define default options
-          className: "text-sm",
-          duration: 5000,
-          style: {
-            background: "#800000",
-            color: "#fff",
-          },
-        }}
-      />
-			<Button onPress={onOpen} color="primary" startContent={<LogoIcon />}>
-				Create an event
-			</Button>
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
-				<form onSubmit={handleSubmit(submitEvent)}>
-					<ModalContent>
-						{(onClose) => (
-							<>
-								<ModalHeader className="flex flex-col gap-1">
-									Add Event
-								</ModalHeader>
-								<ModalBody>
-									<form className="flex flex-col gap-4">
-										<div className="flex flex-col gap-2">
-											<Controller
-											name="image"
-											control={control}
-											render={({
-												field:{
-													onChange,
-													value,
-													ref,
-													...restField
-												},
-											}) => (
-												<input
-												type="file"
-												accept="image/*"
-												className="hidden"
-												ref={fileInputRef}
-												onChange={(e) => {
-													const file = e.target.files?.[0];
-													if(file){
-														setValue('image', file);
-														setThumbnail(file);
-													}
-												}}
-												{...restField}
-											/>
-											)}
-											/>
-											 <Button
+    const fetchVenues = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/venues", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
+            if (!response.ok) {
+                throw new Error("Network Error");
+            }
+            const venueData: Venue[] = await response.json();
+            setVenues(venueData);
+        } catch (error) {
+            console.error("Error fetching venues:", error);
+        }
+    };
+    const fetchResources = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/resources", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
+            if (!response.ok) {
+                throw new Error("Network Error");
+            }
+            const resourceData: Resource[] = await response.json();
+            setResources(resourceData);
+        } catch (error) {}
+    };
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    return (
+        <div>
+            <Toaster
+                position="bottom-right"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                    // Define default options
+                    className: "text-sm",
+                    duration: 5000,
+                    style: {
+                        background: "#800000",
+                        color: "#fff",
+                    },
+                }}
+            />
+            <Button
+                onPress={onOpen}
+                color="primary"
+                startContent={<LogoIcon />}
+            >
+                Create an event
+            </Button>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
+                <form onSubmit={handleSubmit(submitEvent)}>
+                    <ModalContent>
+                        {(onClose) => (
+                            <>
+                                <ModalHeader className="flex flex-col gap-1">
+                                    Add Event
+                                </ModalHeader>
+                                <ModalBody>
+                                    <form className="flex flex-col gap-4">
+                                        <div className="flex flex-col gap-2">
+                                            <Controller
+                                                name="image"
+                                                control={control}
+                                                render={({
+                                                    field: {
+                                                        onChange,
+                                                        value,
+                                                        ref,
+                                                        ...restField
+                                                    },
+                                                }) => (
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        ref={fileInputRef}
+                                                        onChange={(e) => {
+                                                            const file =
+                                                                e.target
+                                                                    .files?.[0];
+                                                            if (file) {
+                                                                setValue(
+                                                                    "image",
+                                                                    file,
+                                                                );
+                                                                setThumbnail(
+                                                                    file,
+                                                                );
+                                                            }
+                                                        }}
+                                                        {...restField}
+                                                    />
+                                                )}
+                                            />
+                                            <Button
                                                 color="default"
                                                 variant="flat"
                                                 onPress={() =>
@@ -218,11 +231,17 @@ export default function AddEvent() {
                                             >
                                                 Choose Image
                                             </Button>
-											{thumbnail && (
-                                              <img
-											  src={URL.createObjectURL(thumbnail)}
-											  className="object-cover rounded-md max-h-48 hover:object-contain"
-											/>
+                                            {thumbnail && (
+                                                <Image
+                                                    isBlurred
+                                                    isZoomed
+                                                    width={300}
+                                                    height={300}
+                                                    src={URL.createObjectURL(
+                                                        thumbnail,
+                                                    )}
+                                                    className="object-cover rounded-md max-h-48 hover:object-contain"
+                                                />
                                             )}
                                         </div>
                                         <div className="flex flex-col gap-2">
