@@ -25,6 +25,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect, useRef } from "react";
+import { getVenues, getResources } from "@/api/utils";
+import { useQuery } from "@tanstack/react-query";
 
 const eventSchema = z
     .object({
@@ -44,8 +46,26 @@ const eventSchema = z
     });
 
 export default function AddEvent() {
-    const [venues, setVenues] = useState<Venue[]>([]);
-    const [resources, setResources] = useState<Resource[]>([]);
+    const {
+        isPending,
+        isError,
+        data: venues,
+        error,
+    } = useQuery<Venue[], Error>({
+        queryKey: ["venues"],
+        queryFn: getVenues,
+    });
+
+    const {
+        isPending: isPendingResources,
+        isError: isErrorResources,
+        data: resources,
+        error: errorResources,
+    } = useQuery<Resource[], Error>({
+        queryKey: ["resources"],
+        queryFn: getResources,
+    });
+
     const [isInvalid, setIsInvalid] = useState(true);
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -56,7 +76,6 @@ export default function AddEvent() {
         register,
         handleSubmit,
         setValue,
-        reset,
         formState: { errors, isSubmitting, isSubmitSuccessful, isDirty },
     } = useForm<FormField>({
         resolver: zodResolver(eventSchema),
@@ -65,13 +84,7 @@ export default function AddEvent() {
             image: undefined,
         },
     });
-    useEffect(() => {
-        fetchVenues();
-        fetchResources();
-        if (isSubmitSuccessful) {
-            reset();
-        }
-    }, [isSubmitSuccessful, reset]);
+
     const submitEvent: SubmitHandler<FormField> = async (data) => {
         try {
             const createEventData: Event = {
@@ -107,6 +120,7 @@ export default function AddEvent() {
                     const message = await res.text();
                     if (res.ok) {
                         toast.success(message);
+                        isOpen ? onOpenChange() : null;
                     } else {
                         toast.error(message);
                     }
@@ -114,46 +128,13 @@ export default function AddEvent() {
                 .catch((error) => {
                     console.error("Error creating event:", error);
                 });
+
             console.log(createEventData);
         } catch (error) {
             console.error("error submitting", error);
         }
     };
 
-    const fetchVenues = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/venues", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-            if (!response.ok) {
-                throw new Error("Network Error");
-            }
-            const venueData: Venue[] = await response.json();
-            setVenues(venueData);
-        } catch (error) {
-            console.error("Error fetching venues:", error);
-        }
-    };
-    const fetchResources = async () => {
-        try {
-            const response = await fetch("http://localhost:8080/resources", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-            if (!response.ok) {
-                throw new Error("Network Error");
-            }
-            const resourceData: Resource[] = await response.json();
-            setResources(resourceData);
-        } catch (error) { }
-    };
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     return (
         <div>
