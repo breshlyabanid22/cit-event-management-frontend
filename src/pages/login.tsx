@@ -136,13 +136,11 @@ export default function Login() {
                 toast.success("Registration successful!");
             } else {
                 const errorData = await response.json();
-                // throw new Error(errorData.message || "Registration failed");
                 toast.error(String(errorData.message));
             }
             return response;
         } catch (error) {
             console.error("Registration failed:", error);
-            // toast.error(String(error));
         }
     };
 

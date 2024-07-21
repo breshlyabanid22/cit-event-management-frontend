@@ -75,7 +75,7 @@ export default function Settings() {
     const fetchNotifications = async () => {
         try {
             const response = await fetch(
-                `http://localhost:8080/notifications/${user?.userID}`,
+                `http://localhost:8080/notifications/${user.userID}`,
                 {
                     method: "GET",
                     headers: {
@@ -92,6 +92,7 @@ export default function Settings() {
             console.log("Notifs: ", notifications);
         } catch (error) {
             console.log("Error fetching notifications", error);
+            console.log("user:", user.userID)
         }
     };
     return (
@@ -150,7 +151,7 @@ export default function Settings() {
                                     </CardBody>
                                 </Card>
 
-                                <h3 className="text-lg font-bold mt-4">
+                                <h3 className="mt-4 text-lg font-bold">
                                     Full Name
                                 </h3>
                                 <p className="text-default-500">
@@ -345,9 +346,9 @@ export default function Settings() {
                         <Tab key="notifications" title="Notifications">
                             <div className="sm:w-full md:w-[400px] lg:w-[600px]">
                                 {notifications.map((notification) => (
-                                    <Card key={notification.id}>
-                                        <CardHeader>
-                                            {notification.recipient}
+                                    <Card key={notification.id} className="p-1">
+                                        <CardHeader className="flex justify-between text-lg font-semibold">
+                                            To: {notification.recipient}
                                         </CardHeader>
                                         <CardBody>
                                             {notification.message}

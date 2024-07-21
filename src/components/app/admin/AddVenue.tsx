@@ -142,7 +142,7 @@ export default function AddVenue(data) {
                                                 )}
                                             />
                                             {images.length > 0 && (
-                                                <div className="flex flex-row gap-1 overflow-auto">
+                                                <div className="flex flex-row gap-1">
                                                     {images.map(
                                                         (image, index) => (
                                                             <Image
@@ -154,7 +154,6 @@ export default function AddVenue(data) {
                                                                 src={URL.createObjectURL(
                                                                     image,
                                                                 )}
-                                                                className="object-cover "
                                                             />
                                                         ),
                                                     )}
