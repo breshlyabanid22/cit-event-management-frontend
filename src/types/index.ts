@@ -21,7 +21,7 @@ export type accountLogin = {
 export type TypeUser = {
     userID: number;
     username: string;
-    password: string;
+    password: string | undefined;
     email: string;
     schoolID: string;
     firstName: string;

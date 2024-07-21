@@ -11,9 +11,11 @@ import {
     SelectItem,
     Textarea,
     useDisclosure,
-    CheckboxGroup,
     Image,
-    Checkbox,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
 } from "@nextui-org/react";
 import { getLocalTimeZone, now, parseDateTime } from "@internationalized/date";
 import LogoIcon from "@/components/icons/LogoIcon.tsx";
@@ -22,7 +24,9 @@ import { Venue, Resource, Event } from "@/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
+import { getVenues, getResources } from "@/api/utils";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const eventSchema = z
     .object({
@@ -42,8 +46,27 @@ const eventSchema = z
     });
 
 export default function AddEvent() {
-    const [venues, setVenues] = useState<Venue[]>([]);
-    const [resources, setResources] = useState<Resource[]>([]);
+    const queryClient = useQueryClient();
+    const {
+        isPending,
+        isError,
+        data: venues,
+        error,
+    } = useQuery<Venue[], Error>({
+        queryKey: ["venues"],
+        queryFn: getVenues,
+    });
+
+    const {
+        isPending: isPendingResources,
+        isError: isErrorResources,
+        data: resources,
+        error: errorResources,
+    } = useQuery<Resource[], Error>({
+        queryKey: ["resources"],
+        queryFn: getResources,
+    });
+
     const [isInvalid, setIsInvalid] = useState(true);
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -54,8 +77,7 @@ export default function AddEvent() {
         register,
         handleSubmit,
         setValue,
-        reset,
-        formState: { errors, isSubmitting, isSubmitSuccessful, isDirty },
+        formState: { errors, isSubmitting, isDirty },
     } = useForm<FormField>({
         resolver: zodResolver(eventSchema),
         defaultValues: {
@@ -63,13 +85,7 @@ export default function AddEvent() {
             image: undefined,
         },
     });
-    useEffect(() => {
-        fetchVenues();
-        fetchResources();
-        if (isSubmitSuccessful) {
-            reset();
-        }
-    }, [isSubmitSuccessful, reset]);
+
     const submitEvent: SubmitHandler<FormField> = async (data) => {
         try {
             const createEventData: Event = {
@@ -82,135 +98,117 @@ export default function AddEvent() {
                 endTime: data.endTime,
             };
 
-			const formData = new FormData();
-			formData.append("eventDTO", new Blob([JSON.stringify(createEventData)], { type: "application/json" }));
-			createEventData.resourceId.forEach((id) => {
-				formData.append("resourceId", id.toString());
-			});
-			if(createEventData.image){
-				formData.append("imageFile", createEventData.image);
-			}
-			await fetch("http://localhost:8080/events", {
-				method: "POST",
-				body: formData,
-				credentials: "include",
-			}).then(async (res) => {
-				const message = await res.text();
-				if(res.ok){
-					toast.success(message);
-				}else{
-					toast.error(message);
-				}
-			})
-			.catch((error) => {
-				console.error("Error creating event:", error);
-			})
-			console.log(createEventData);
-		} catch (error) {
-			console.error("error submitting", error);
-		}
-		
-	};
-	
-	const fetchVenues = async () => {
+            const formData = new FormData();
+            formData.append(
+                "eventDTO",
+                new Blob([JSON.stringify(createEventData)], {
+                    type: "application/json",
+                }),
+            );
+            createEventData.resourceId.forEach((id) => {
+                formData.append("resourceId", id.toString());
+            });
+            if (createEventData.image) {
+                formData.append("imageFile", createEventData.image);
+            }
+            console.log(createEventData);
+            await fetch("http://localhost:8080/events", {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+            })
+                .then(async (res) => {
+                    const message = await res.text();
+                    if (res.ok) {
+                        queryClient.invalidateQueries({ queryKey: ["events"] });
+                        toast.success(message);
+                        isOpen ? onOpenChange() : null;
+                    } else {
+                        toast.error(message);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error creating event:", error);
+                });
 
-		try {
-			const response = await fetch("http://localhost:8080/venues", {
-				method: "GET",
-				headers: {
-			 	 "Content-Type": "application/json",
-				},
-				credentials: "include",
-			});
-			if(!response.ok){
-				throw new Error('Network Error');
-			}
-			const venueData: Venue[] = await response.json();
-			setVenues(venueData);
-		} catch (error) {
-			console.error('Error fetching venues:', error);
-		}
-	}
-	const fetchResources= async () => {
-		try{
-			const response = await fetch("http://localhost:8080/resources", {
-				method: "GET",
-				headers: {
-			 	 "Content-Type": "application/json",
-				},
-				credentials: "include",
-			});
-			if(!response.ok){
-				throw new Error('Network Error');
-			}
-			const resourceData: Resource[] = await response.json();
-			setResources(resourceData);
-		}catch(error){
+            console.log(createEventData);
+        } catch (error) {
+            console.error("error submitting", error);
+        }
+    };
 
-		}
-
-	}
-	const { isOpen, onOpen, onOpenChange } = useDisclosure();
-	return (
-		<div>
-		<Toaster
-        position="bottom-right"
-        reverseOrder={false}
-        gutter={8}
-        containerClassName=""
-        containerStyle={{}}
-        toastOptions={{
-          // Define default options
-          className: "text-sm",
-          duration: 5000,
-          style: {
-            background: "#800000",
-            color: "#fff",
-          },
-        }}
-      />
-			<Button onPress={onOpen} color="primary" startContent={<LogoIcon />}>
-				Create an event
-			</Button>
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
-				<form onSubmit={handleSubmit(submitEvent)}>
-					<ModalContent>
-						{(onClose) => (
-							<>
-								<ModalHeader className="flex flex-col gap-1">
-									Add Event
-								</ModalHeader>
-								<ModalBody>
-									<form className="flex flex-col gap-4">
-										<div className="flex flex-col gap-2">
-											<Controller
-											name="image"
-											control={control}
-											render={({
-												field:{
-													onChange,
-													value,
-													ref,
-													...restField
-												},
-											}) => (
-												<input
-												type="file"
-												accept="image/*"
-												className="hidden"
-												ref={fileInputRef}
-												onChange={(e) => {
-													const file = e.target.files?.[0];
-													if(file){
-														setValue('image', file);
-														setThumbnail(file);
-													}
-												}}
-												{...restField}
-											/>
-											)}
-											/>
-											 <Button
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    return (
+        <div>
+            <Toaster
+                position="bottom-right"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                    // Define default options
+                    className: "text-sm",
+                    duration: 5000,
+                    style: {
+                        background: "#800000",
+                        color: "#fff",
+                    },
+                }}
+            />
+            <Button
+                onPress={onOpen}
+                color="primary"
+                startContent={<LogoIcon />}
+            >
+                Create an event
+            </Button>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
+                <form onSubmit={handleSubmit(submitEvent)}>
+                    <ModalContent>
+                        {(onClose) => (
+                            <>
+                                <ModalHeader className="flex flex-col gap-1">
+                                    Add Event
+                                </ModalHeader>
+                                <ModalBody>
+                                    <form className="flex flex-col gap-4">
+                                        <div className="flex flex-col gap-2">
+                                            <Controller
+                                                name="image"
+                                                control={control}
+                                                render={({
+                                                    field: {
+                                                        onChange,
+                                                        value,
+                                                        ref,
+                                                        ...restField
+                                                    },
+                                                }) => (
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        ref={fileInputRef}
+                                                        onChange={(e) => {
+                                                            const file =
+                                                                e.target
+                                                                    .files?.[0];
+                                                            if (file) {
+                                                                setValue(
+                                                                    "image",
+                                                                    file,
+                                                                );
+                                                                setThumbnail(
+                                                                    file,
+                                                                );
+                                                            }
+                                                        }}
+                                                        {...restField}
+                                                    />
+                                                )}
+                                            />
+                                            <Button
                                                 color="default"
                                                 variant="flat"
                                                 onPress={() =>
@@ -223,12 +221,12 @@ export default function AddEvent() {
                                                 <Image
                                                     isBlurred
                                                     isZoomed
-                                                    height={400}
+                                                    width={300}
+                                                    height={300}
                                                     radius="lg"
                                                     src={URL.createObjectURL(
                                                         thumbnail,
                                                     )}
-                                                    className="items-center self-center object-cover hover:object-contain justify-self-center"
                                                 />
                                             )}
                                         </div>
@@ -291,44 +289,70 @@ export default function AddEvent() {
                                                     onBlur,
                                                 },
                                             }) => (
-                                                <CheckboxGroup
-                                                    label="Select resources"
-                                                    orientation="horizontal"
+                                                <Dropdown
                                                     isInvalid={
                                                         isInvalid ||
                                                         !!errors.resourceId
                                                     }
-                                                    onValueChange={(
-                                                        selectedValues,
-                                                    ) => {
-                                                        const numberValues =
-                                                            selectedValues.map(
-                                                                Number,
-                                                            );
-                                                        onChange(numberValues);
-                                                        setIsInvalid(
-                                                            numberValues.length <
-                                                                1,
-                                                        );
-                                                    }}
-                                                    value={value.map(String)} // Ensure the value is a string array for the checkbox group
-                                                    onBlur={onBlur}
+                                                    onClose={onBlur}
                                                 >
-                                                    {resources.map(
-                                                        (resource) => (
-                                                            <Checkbox
-                                                                key={
-                                                                    resource.id
-                                                                }
-                                                                value={String(
-                                                                    resource.id,
-                                                                )}
-                                                            >
-                                                                {resource.name}
-                                                            </Checkbox>
-                                                        ),
-                                                    )}
-                                                </CheckboxGroup>
+                                                    <DropdownTrigger>
+                                                        <Button
+                                                            variant="bordered"
+                                                            className="capitalize"
+                                                        >
+                                                            {value.length > 0
+                                                                ? `${value.length} selected`
+                                                                : "Select resources"}
+                                                        </Button>
+                                                    </DropdownTrigger>
+                                                    <DropdownMenu
+                                                        closeOnSelect={false}
+                                                        disallowEmptySelection
+                                                        aria-label="Select resources"
+                                                        selectionMode="multiple"
+                                                        selectedKeys={
+                                                            new Set(
+                                                                value.map(
+                                                                    String,
+                                                                ),
+                                                            )
+                                                        }
+                                                        onSelectionChange={(
+                                                            selectedKeys,
+                                                        ) => {
+                                                            const selectedArray =
+                                                                Array.from(
+                                                                    selectedKeys,
+                                                                );
+                                                            const numberValues =
+                                                                selectedArray.map(
+                                                                    Number,
+                                                                );
+                                                            onChange(
+                                                                numberValues,
+                                                            );
+                                                            setIsInvalid(
+                                                                numberValues.length <
+                                                                1,
+                                                            );
+                                                        }}
+                                                    >
+                                                        {resources.map(
+                                                            (resource) => (
+                                                                <DropdownItem
+                                                                    key={String(
+                                                                        resource.id,
+                                                                    )}
+                                                                >
+                                                                    {
+                                                                        resource.name
+                                                                    }
+                                                                </DropdownItem>
+                                                            ),
+                                                        )}
+                                                    </DropdownMenu>
+                                                </Dropdown>
                                             )}
                                         />
                                         <div className="flex flex-col gap-2">
@@ -356,8 +380,8 @@ export default function AddEvent() {
                                                                 value={
                                                                     field.value
                                                                         ? parseDateTime(
-                                                                              field.value,
-                                                                          )
+                                                                            field.value,
+                                                                        )
                                                                         : null
                                                                 }
                                                                 onChange={(
@@ -365,7 +389,7 @@ export default function AddEvent() {
                                                                 ) => {
                                                                     const isoDate =
                                                                         date !=
-                                                                        null
+                                                                            null
                                                                             ? date.toString()
                                                                             : "";
                                                                     field.onChange(
@@ -404,8 +428,8 @@ export default function AddEvent() {
                                                                 value={
                                                                     field.value
                                                                         ? parseDateTime(
-                                                                              field.value,
-                                                                          )
+                                                                            field.value,
+                                                                        )
                                                                         : null
                                                                 }
                                                                 onChange={(
@@ -413,7 +437,7 @@ export default function AddEvent() {
                                                                 ) => {
                                                                     const isoDate =
                                                                         date !=
-                                                                        null
+                                                                            null
                                                                             ? date.toString()
                                                                             : "";
                                                                     field.onChange(

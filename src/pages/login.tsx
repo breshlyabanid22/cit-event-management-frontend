@@ -16,7 +16,7 @@ import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { accountRegister, accountLogin } from "@/types";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import useAuthStore from "@/provider/auth";
+import { useAuthStore, useLogin } from "@/provider/auth";
 import { useEffect } from "react";
 
 const loginSchema = z.object({
@@ -52,15 +52,12 @@ const registerSchema = z
     });
 
 export default function Login() {
+    const { mutate: login } = useLogin();
     const [selected, setSelected] = useState("login");
     const [isVisible, setIsVisible] = useState(false);
     const toggleVisibility = () => setIsVisible(!isVisible);
     const navigate = useNavigate();
-    const { user, isAuthenticated, login, refreshUserData } = useAuthStore();
-
-    useEffect(() => {
-        refreshUserData();
-    }, []);
+    const { user, isAuthenticated } = useAuthStore();
 
     useEffect(() => {
         if (isAuthenticated && user !== null) {
@@ -99,7 +96,17 @@ export default function Login() {
             username: data.username,
             password: data.password,
         };
+        try {
             await login(loginData);
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message);
+            } else if (typeof error === "string") {
+                toast.error(error);
+            } else {
+                toast.error("An unknown error occurred");
+            }
+        }
     };
 
     const onRegisterSubmit = async (data: z.infer<typeof registerSchema>) => {

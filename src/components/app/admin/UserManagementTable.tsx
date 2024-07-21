@@ -23,7 +23,7 @@ import ActivateUser from "@/components/app/admin/ActivateUser";
 import { useQuery } from "@tanstack/react-query";
 import { IconSearch, IconChevronDown } from "@tabler/icons-react";
 import { TypeUser } from "@/types";
-import useAuth from "@/provider/auth";
+import { useAuthStore, useUser } from "@/provider/auth";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -38,6 +38,11 @@ const columns = [
     {
         name: "Name",
         uid: "name",
+        sortable: true,
+    },
+    {
+        name: "Username",
+        uid: "username",
         sortable: true,
     },
     {
@@ -75,12 +80,6 @@ const columns = [
         uid: "updatedAt",
         sortable: true,
     },
-
-    {
-        name: "Username",
-        uid: "username",
-        sortable: true,
-    },
 ];
 
 const statusOptions = [
@@ -111,7 +110,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function UserManagementTable() {
-    const { user: currentUser } = useAuth();
+    const { data: currentUser } = useUser();
     const { isPending, isError, data, error } = useQuery<TypeUser[], Error>({
         queryKey: ["users"],
         queryFn: getUsers,

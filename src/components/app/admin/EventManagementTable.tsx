@@ -12,15 +12,15 @@ import {
     Dropdown,
     DropdownMenu,
     DropdownItem,
+    User,
     Chip,
-    event,
     Pagination,
 } from "@nextui-org/react";
 import { getAllEvents } from "@/api/utils";
 import { useQuery } from "@tanstack/react-query";
 import { IconSearch, IconChevronDown } from "@tabler/icons-react";
-import { Typeevent } from "@/types";
-import useAuth from "@/provider/auth";
+import { Event } from "@/types";
+import { useAuthStore } from "@/provider/auth";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -186,16 +186,13 @@ export default function eventManagementTable() {
         switch (columnKey) {
             case "name":
                 return (
-                    <event
+                    <User
                         avatarProps={{
                             radius: "lg",
-                            src: event.imagePath,
+                            src: event.image,
                         }}
-                        description={event.email}
-                        name={`${event.firstName} ${event.lastName}`}
-                    >
-                        {event.email}
-                    </event>
+                        name={event.name}
+                    ></User>
                 );
             case "role":
                 return (
@@ -226,12 +223,12 @@ export default function eventManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2 ">
-                        <Editevent event={event} />
+                        {/* <Editevent event={event} />
                         {event.active === false ? (
                             <Activateevent event={event} />
                         ) : (
                             <Deactivateevent event={event} />
-                        )}
+                        )} */}
                     </div>
                 );
             default:
