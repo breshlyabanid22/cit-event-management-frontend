@@ -223,7 +223,8 @@ export default function eventManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2 ">
-                       <DeleteEvent event={event} />
+                        <EditEvent event={event} />
+                        <DeleteEvent event={event} />
                     </div>
                 );
             default:

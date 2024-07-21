@@ -1,86 +1,143 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
+    DatePicker,
     Input,
     Modal,
     ModalBody,
     ModalContent,
-    Avatar,
     ModalFooter,
     ModalHeader,
+    Select,
+    SelectItem,
+    Textarea,
     useDisclosure,
     Image,
-    Autocomplete,
-    AutocompleteItem,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
 } from "@nextui-org/react";
-import { IconHomePlus } from "@tabler/icons-react";
-import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
-import { useState, useRef } from "react";
-import { editEvent, getUsers } from "@/api/utils";
-import { TypeUser } from "@/types";
+import { getLocalTimeZone, now, parseDateTime } from "@internationalized/date";
+import LogoIcon from "@/components/icons/LogoIcon.tsx";
+import z from "zod";
+import { Venue, Resource, Event } from "@/types";
 import toast, { Toaster } from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
-import { Event } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import useAuthStore from "@/provider/auth";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useRef } from "react";
+import { getVenues, getResources } from "@/api/utils";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-const eventSchema = z.object({
-    id: z.number().min(1, "Event ID must be at least 1 characters long"),
-    userID: z.number().min(1, "User ID must be at least 1 characters long"),
-    images: z
-        .array(z.instanceof(File))
-        .min(1, "At least (1) image is required"),
-    name: z.string().min(3, "Event name must be at least 3 characters long"),
-    location: z
-        .string()
-        .min(3, "Event location must be at least 3 characters long"),
-    maxCapacity: z.number().min(1, "Capacity must be at least 1 people"),
-    venueManagersID: z.number(),
-});
+const eventSchema = z
+    .object({
+        name: z
+            .string()
+            .min(3, "Event name must be at least 3 characters long"),
+        description: z.string().max(300, "Maximum of 300 characters only"),
+        venueId: z.coerce.number(),
+        resourceId: z.array(z.coerce.number()),
+        image: z.instanceof(File),
+        startTime: z.string(),
+        endTime: z.string(),
+    })
+    .refine((data) => new Date(data.startTime) < new Date(data.endTime), {
+        message: "Start date must be before end date",
+        path: ["endTime"],
+    });
 
-export default function EditVenue({ venue }: { venue: Venue }) {
+export default function EditEvent({ eventId }: { eventId: number }) {
     const queryClient = useQueryClient();
     const {
         isPending,
         isError,
-        data: users,
+        data: venues,
         error,
-    } = useQuery<TypeUser[], Error>({
-        queryKey: ["users"],
-        queryFn: getUsers,
+    } = useQuery<Venue[], Error>({
+        queryKey: ["venues"],
+        queryFn: getVenues,
     });
-    const { user } = useAuthStore();
-    const [images, setImages] = useState<File[]>([]);
+
+    const {
+        isPending: isPendingResources,
+        isError: isErrorResources,
+        data: resources,
+        error: errorResources,
+    } = useQuery<Resource[], Error>({
+        queryKey: ["resources"],
+        queryFn: getResources,
+    });
+
+    const [isInvalid, setIsInvalid] = useState(true);
+    const [thumbnail, setThumbnail] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+    type FormField = z.infer<typeof eventSchema>;
     const {
         control,
         register,
         handleSubmit,
-        formState: { errors },
-    } = useForm<z.infer<typeof venueSchema>>({
-        resolver: zodResolver(venueSchema),
+        setValue,
+        formState: { errors, isSubmitting, isSubmitSuccessful, isDirty },
+    } = useForm<FormField>({
+        resolver: zodResolver(eventSchema),
         defaultValues: {
-            id: venue.id,
-            name: venue.name,
-            location: venue.location,
-            maxCapacity: venue.maxCapacity,
+            resourceId: [],
+            image: undefined,
         },
     });
 
-    const submitEvent = async (venueData: z.infer<typeof venueSchema>) => {
+    const submitEvent: SubmitHandler<FormField> = async (data) => {
         try {
-            await editVenue(venueData);
-            queryClient.invalidateQueries({ queryKey: ["venues"] });
-            queryClient.invalidateQueries({ queryKey: ["users"] });
-            toast.success("Venue added successfully");
-            isOpen ? onOpenChange() : null;
+            const createEventData: Event = {
+                name: data.name,
+                description: data.description,
+                venueId: data.venueId,
+                resourceId: data.resourceId,
+                image: data.image,
+                startTime: data.startTime,
+                endTime: data.endTime,
+            };
+
+            const formData = new FormData();
+            formData.append(
+                "eventDTO",
+                new Blob([JSON.stringify(createEventData)], {
+                    type: "application/json",
+                }),
+            );
+            createEventData.resourceId.forEach((id) => {
+                formData.append("resourceId", id.toString());
+            });
+            if (createEventData.image) {
+                formData.append("imageFile", createEventData.image);
+            }
+            console.log(createEventData);
+            await fetch("http://localhost:8080/events", {
+                method: "PATCH",
+                body: formData,
+                credentials: "include",
+            })
+                .then(async (res) => {
+                    const message = await res.text();
+                    if (res.ok) {
+                        queryClient.invalidateQueries({ queryKey: ["events"] });
+                        toast.success(message);
+                        isOpen ? onOpenChange() : null;
+                    } else {
+                        toast.error(message);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error creating event:", error);
+                });
+
+            console.log(createEventData);
         } catch (error) {
-            toast.error("Error adding venue:");
+            console.error("error submitting", error);
         }
     };
 
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     return (
         <div>
             <Toaster
@@ -90,6 +147,7 @@ export default function EditVenue({ venue }: { venue: Venue }) {
                 containerClassName=""
                 containerStyle={{}}
                 toastOptions={{
+                    // Define default options
                     className: "text-sm",
                     duration: 5000,
                     style: {
@@ -101,28 +159,25 @@ export default function EditVenue({ venue }: { venue: Venue }) {
             <Button
                 size="sm"
                 radius="full"
-                onPress={onOpen}
                 variant="flat"
                 color="warning"
+                onPress={onOpen}
             >
                 Edit
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
-                <form
-                    onSubmit={handleSubmit(submitEvent)}
-                    encType="multipart/form-data"
-                >
+                <form onSubmit={handleSubmit(submitEvent)}>
                     <ModalContent>
                         {(onClose) => (
                             <>
                                 <ModalHeader className="flex flex-col gap-1">
-                                    Edit Venue
+                                    Edit Event
                                 </ModalHeader>
                                 <ModalBody>
                                     <form className="flex flex-col gap-4">
                                         <div className="flex flex-col gap-2">
                                             <Controller
-                                                name="images"
+                                                name="image"
                                                 control={control}
                                                 render={({
                                                     field: {
@@ -134,23 +189,20 @@ export default function EditVenue({ venue }: { venue: Venue }) {
                                                 }) => (
                                                     <input
                                                         type="file"
-                                                        accept=".jpg,.png,.webp"
+                                                        accept="image/*"
                                                         className="hidden"
-                                                        multiple
                                                         ref={fileInputRef}
                                                         onChange={(e) => {
-                                                            const files =
-                                                                Array.from(
-                                                                    e.target
-                                                                        .files ||
-                                                                    [],
+                                                            const file =
+                                                                e.target
+                                                                    .files?.[0];
+                                                            if (file) {
+                                                                setValue(
+                                                                    "image",
+                                                                    file,
                                                                 );
-                                                            if (
-                                                                files.length > 0
-                                                            ) {
-                                                                onChange(files);
-                                                                setImages(
-                                                                    files,
+                                                                setThumbnail(
+                                                                    file,
                                                                 );
                                                             }
                                                         }}
@@ -158,25 +210,6 @@ export default function EditVenue({ venue }: { venue: Venue }) {
                                                     />
                                                 )}
                                             />
-                                            {images.length > 0 && (
-                                                <div className="flex flex-row gap-1 overflow-auto">
-                                                    {images.map(
-                                                        (image, index) => (
-                                                            <Image
-                                                                isBlurred
-                                                                isZoomed
-                                                                width={300}
-                                                                height={300}
-                                                                key={index}
-                                                                src={URL.createObjectURL(
-                                                                    image,
-                                                                )}
-                                                                className="object-cover "
-                                                            />
-                                                        ),
-                                                    )}
-                                                </div>
-                                            )}
                                             <Button
                                                 color="default"
                                                 variant="flat"
@@ -186,118 +219,25 @@ export default function EditVenue({ venue }: { venue: Venue }) {
                                             >
                                                 Choose Image
                                             </Button>
-                                        </div>
-                                        <div className="flex flex-col gap-2">
-                                            <Controller
-                                                name="venueManagersID"
-                                                control={control}
-                                                rules={{
-                                                    required:
-                                                        "Venue manager is required",
-                                                }}
-                                                render={({ field }) => (
-                                                    <Autocomplete
-                                                        {...field}
-                                                        defaultItems={users}
-                                                        label="Assigned to"
-                                                        placeholder="Select a user"
-                                                        labelPlacement="inside"
-                                                        errorMessage={
-                                                            errors
-                                                                .venueManagersID
-                                                                ?.message
-                                                        }
-                                                        isInvalid={
-                                                            !!errors.venueManagersID
-                                                        }
-                                                        onSelectionChange={(
-                                                            userID,
-                                                        ) =>
-                                                            field.onChange(
-                                                                Number(userID),
-                                                            )
-                                                        }
-                                                    >
-                                                        {users.isLoading ? (
-                                                            <AutocompleteItem
-                                                                key="loading"
-                                                                textValue="Loading..."
-                                                                value="loading"
-                                                            >
-                                                                Loading...
-                                                            </AutocompleteItem>
-                                                        ) : users.error ? (
-                                                            <AutocompleteItem
-                                                                key="error"
-                                                                textValue="Error"
-                                                                value="error"
-                                                            >
-                                                                Error
-                                                            </AutocompleteItem>
-                                                        ) : !users ||
-                                                            users.length === 0 ? (
-                                                            <AutocompleteItem
-                                                                key="empty"
-                                                                textValue="No users found"
-                                                                value="empty"
-                                                            >
-                                                                No users found
-                                                            </AutocompleteItem>
-                                                        ) : (
-                                                            users.map(
-                                                                (
-                                                                    user: TypeUser,
-                                                                ) => (
-                                                                    <AutocompleteItem
-                                                                        key={
-                                                                            user.userID
-                                                                        }
-                                                                        textValue={
-                                                                            user.email
-                                                                        }
-                                                                        value={
-                                                                            user.userID
-                                                                        }
-                                                                    >
-                                                                        <div className="flex items-center gap-2">
-                                                                            <Avatar
-                                                                                alt={
-                                                                                    user.firstName
-                                                                                }
-                                                                                className="flex-shrink-0"
-                                                                                size="sm"
-                                                                                src={
-                                                                                    user.imagePath
-                                                                                }
-                                                                            />
-                                                                            <div className="flex flex-col">
-                                                                                <span className="text-small">
-                                                                                    {
-                                                                                        user.firstName
-                                                                                    }{" "}
-                                                                                    {
-                                                                                        user.lastName
-                                                                                    }
-                                                                                </span>
-                                                                                <span className="text-tiny text-default-400">
-                                                                                    {
-                                                                                        user.email
-                                                                                    }
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </AutocompleteItem>
-                                                                ),
-                                                            )
-                                                        )}
-                                                    </Autocomplete>
-                                                )}
-                                            />
+                                            {thumbnail && (
+                                                <Image
+                                                    isBlurred
+                                                    isZoomed
+                                                    width={300}
+                                                    height={300}
+                                                    radius="lg"
+                                                    src={URL.createObjectURL(
+                                                        thumbnail,
+                                                    )}
+                                                    className="items-center self-center object-cover hover:object-contain justify-self-center"
+                                                />
+                                            )}
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <Input
+                                                className="col-span-2"
                                                 type="text"
-                                                label="Venue Name"
+                                                label="Event Name"
                                                 isClearable
                                                 {...register("name")}
                                                 errorMessage={
@@ -307,31 +247,216 @@ export default function EditVenue({ venue }: { venue: Venue }) {
                                             />
                                         </div>
                                         <div className="flex flex-col gap-2">
-                                            <Input
+                                            <Textarea
                                                 type="text"
-                                                label="Venue Location"
-                                                isClearable
-                                                {...register("location")}
+                                                label="Description/Purpose"
+                                                {...register("description")}
                                                 errorMessage={
-                                                    errors.location?.message
+                                                    errors.description?.message
                                                 }
-                                                isInvalid={!!errors.location}
+                                                isInvalid={!!errors.description}
                                             />
                                         </div>
-                                        <div className="flex flex-col gap-2">
-                                            <Input
-                                                type="number"
-                                                label="Max Capacity"
-                                                isClearable
-                                                defaultValue="0"
-                                                {...register("maxCapacity", {
+                                        <div className="grid grid-cols-1 gap-2 ">
+                                            <Select
+                                                label="Venue"
+                                                id="venueId"
+                                                placeholder="Select a venue"
+                                                {...register("venueId", {
                                                     valueAsNumber: true,
                                                 })}
                                                 errorMessage={
-                                                    errors.maxCapacity?.message
+                                                    errors.venueId?.message
                                                 }
-                                                isInvalid={!!errors.maxCapacity}
-                                            />
+                                                isInvalid={!!errors.venueId}
+                                            >
+                                                {venues.map((venue) => (
+                                                    <SelectItem
+                                                        key={venue.id}
+                                                        value={venue.id}
+                                                    >
+                                                        {venue.name +
+                                                            " | " +
+                                                            venue.location}
+                                                    </SelectItem>
+                                                ))}
+                                            </Select>
+                                        </div>
+                                        <Controller
+                                            name="resourceId"
+                                            control={control}
+                                            render={({
+                                                field: {
+                                                    value,
+                                                    onChange,
+                                                    onBlur,
+                                                },
+                                            }) => (
+                                                <Dropdown
+                                                    isInvalid={
+                                                        isInvalid ||
+                                                        !!errors.resourceId
+                                                    }
+                                                    onClose={onBlur}
+                                                >
+                                                    <DropdownTrigger>
+                                                        <Button
+                                                            variant="bordered"
+                                                            className="capitalize"
+                                                        >
+                                                            {value.length > 0
+                                                                ? `${value.length} selected`
+                                                                : "Select resources"}
+                                                        </Button>
+                                                    </DropdownTrigger>
+                                                    <DropdownMenu
+                                                        closeOnSelect={false}
+                                                        disallowEmptySelection
+                                                        aria-label="Select resources"
+                                                        selectionMode="multiple"
+                                                        selectedKeys={
+                                                            new Set(
+                                                                value.map(
+                                                                    String,
+                                                                ),
+                                                            )
+                                                        }
+                                                        onSelectionChange={(
+                                                            selectedKeys,
+                                                        ) => {
+                                                            const selectedArray =
+                                                                Array.from(
+                                                                    selectedKeys,
+                                                                );
+                                                            const numberValues =
+                                                                selectedArray.map(
+                                                                    Number,
+                                                                );
+                                                            onChange(
+                                                                numberValues,
+                                                            );
+                                                            setIsInvalid(
+                                                                numberValues.length <
+                                                                    1,
+                                                            );
+                                                        }}
+                                                    >
+                                                        {resources.map(
+                                                            (resource) => (
+                                                                <DropdownItem
+                                                                    key={String(
+                                                                        resource.id,
+                                                                    )}
+                                                                >
+                                                                    {
+                                                                        resource.name
+                                                                    }
+                                                                </DropdownItem>
+                                                            ),
+                                                        )}
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                            )}
+                                        />
+                                        <div className="flex flex-col gap-2">
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <Controller
+                                                    control={control}
+                                                    name="startTime"
+                                                    render={({ field }) => {
+                                                        return (
+                                                            <DatePicker
+                                                                {...field}
+                                                                minValue={now(
+                                                                    getLocalTimeZone(),
+                                                                )}
+                                                                hideTimeZone
+                                                                showMonthAndYearPickers
+                                                                errorMessage={
+                                                                    errors
+                                                                        .startTime
+                                                                        ?.message
+                                                                }
+                                                                isInvalid={
+                                                                    !!errors.startTime
+                                                                }
+                                                                value={
+                                                                    field.value
+                                                                        ? parseDateTime(
+                                                                              field.value,
+                                                                          )
+                                                                        : null
+                                                                }
+                                                                onChange={(
+                                                                    date,
+                                                                ) => {
+                                                                    const isoDate =
+                                                                        date !=
+                                                                        null
+                                                                            ? date.toString()
+                                                                            : "";
+                                                                    field.onChange(
+                                                                        isoDate,
+                                                                    );
+                                                                    setValue(
+                                                                        "startTime",
+                                                                        isoDate,
+                                                                    );
+                                                                }}
+                                                                label="Start Date"
+                                                            />
+                                                        );
+                                                    }}
+                                                />
+                                                <Controller
+                                                    control={control}
+                                                    name="endTime"
+                                                    render={({ field }) => {
+                                                        return (
+                                                            <DatePicker
+                                                                {...field}
+                                                                minValue={now(
+                                                                    getLocalTimeZone(),
+                                                                )}
+                                                                hideTimeZone
+                                                                showMonthAndYearPickers
+                                                                errorMessage={
+                                                                    errors
+                                                                        .endTime
+                                                                        ?.message
+                                                                }
+                                                                isInvalid={
+                                                                    !!errors.endTime
+                                                                }
+                                                                value={
+                                                                    field.value
+                                                                        ? parseDateTime(
+                                                                              field.value,
+                                                                          )
+                                                                        : null
+                                                                }
+                                                                onChange={(
+                                                                    date,
+                                                                ) => {
+                                                                    const isoDate =
+                                                                        date !=
+                                                                        null
+                                                                            ? date.toString()
+                                                                            : "";
+                                                                    field.onChange(
+                                                                        isoDate,
+                                                                    );
+                                                                    setValue(
+                                                                        "endTime",
+                                                                        isoDate,
+                                                                    );
+                                                                }}
+                                                                label="End Date"
+                                                            />
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                     </form>
                                 </ModalBody>
@@ -343,8 +468,12 @@ export default function EditVenue({ venue }: { venue: Venue }) {
                                     >
                                         Close
                                     </Button>
-                                    <Button color="primary" type="submit">
-                                        Submit
+                                    <Button
+                                        color="primary"
+                                        type="submit"
+                                        isDisabled={!isDirty || isSubmitting}
+                                    >
+                                        {isSubmitting ? "Loading" : "Submit"}
                                     </Button>
                                 </ModalFooter>
                             </>
