@@ -10,6 +10,7 @@ import {
     SelectItem,
     CardHeader,
     CardFooter,
+    Button,
 } from "@nextui-org/react";
 import {
     Course,
@@ -23,12 +24,15 @@ import {
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { useUser } from "@/provider/auth";
 import {
     UsernameCard,
     PasswordCard,
     EmailCard,
 } from "@/components/app/SecuritySettingsCard";
+import { editAccount } from "@/api/utils";
 
 const settingsSchema = z
     .object({
@@ -60,6 +64,13 @@ const settingsSchema = z
         message: "Passwords don't match",
         path: ["passwordConfirm"],
     });
+
+const changeNameSchema = z.object({
+    firstName: z
+        .string()
+        .min(1, "First Name must be at least 1 character long"),
+    lastName: z.string().min(1, "Last Name must be at least 1 character long"),
+});
 
 export default function Settings() {
     const { data: user } = useUser();
@@ -94,6 +105,25 @@ export default function Settings() {
             console.log("Error fetching notifications", error);
         }
     };
+    const {
+        register: changeNameRegister,
+        handleSubmit: handleChangeNameSubmit,
+        formState: { errors: changeNameErrors },
+    } = useForm<z.infer<typeof changeNameSchema>>({
+        resolver: zodResolver(changeNameSchema),
+        defaultValues: {
+            firstName: user?.firstName,
+            lastName: user?.lastName,
+        },
+    });
+
+    const nameOnSubmit = async (data: z.infer<typeof changeNameSchema>) => {
+        await editAccount({
+            firstName: data.firstName,
+            lastName: data.lastName,
+        });
+    };
+
     return (
         <div>
             <header className="flex items-center justify-between w-full mb-6">
@@ -108,225 +138,267 @@ export default function Settings() {
                 <div className="flex flex-col col-span-1 gap-4">
                     <Tabs radius="lg" size="lg" aria-label="Options">
                         <Tab key="account" title="Account">
-                            <div className="sm:w-full md:w-[400px] lg:w-[600px]">
-                                <h3 className="text-lg font-bold">Profile</h3>
-                                <p className="text-default-500">
-                                    This displays your profile information.
-                                </p>
-                                <Card
-                                    radius="lg"
-                                    shadow="sm"
-                                    className="gap-4 mt-4"
-                                >
-                                    <CardBody className="flex flex-row gap-4">
-                                        <Image
-                                            isBlurred
-                                            width={50}
-                                            radius="full"
-                                            src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
-                                            alt="NextUI Album Cover"
-                                            className="col-span-2"
-                                        />
-                                        <div className="items-center justify-center">
-                                            <p className="text-sm font-medium text-default-600">
-                                                {user?.firstName}{" "}
-                                                {user?.lastName}{" "}
-                                                <Chip
-                                                    className="ml-2"
-                                                    size="sm"
-                                                    radius="full"
-                                                    color="primary"
-                                                >
-                                                    {user?.role}
-                                                </Chip>
-                                            </p>
-                                            <p className="text-xs text-default-400">
-                                                {user?.schoolID}
-                                            </p>
-                                            <p className="text-xs text-default-400">
-                                                {user?.email}
+                            <form
+                                onSubmit={handleChangeNameSubmit(nameOnSubmit)}
+                            >
+                                <div className="sm:w-full md:w-[400px] lg:w-[600px]">
+                                    <h3 className="text-lg font-bold">
+                                        Profile
+                                    </h3>
+                                    <p className="text-default-500">
+                                        This displays your profile information.
+                                    </p>
+                                    <Card
+                                        radius="lg"
+                                        shadow="sm"
+                                        className="gap-4 mt-4"
+                                    >
+                                        <CardBody className="flex flex-row gap-4">
+                                            <Image
+                                                isBlurred
+                                                width={50}
+                                                radius="full"
+                                                src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
+                                                alt="NextUI Album Cover"
+                                                className="col-span-2"
+                                            />
+                                            <div className="items-center justify-center">
+                                                <p className="text-sm font-medium text-default-600">
+                                                    {user?.firstName}{" "}
+                                                    {user?.lastName}{" "}
+                                                    <Chip
+                                                        className="ml-2"
+                                                        size="sm"
+                                                        radius="full"
+                                                        color="primary"
+                                                    >
+                                                        {user?.role}
+                                                    </Chip>
+                                                </p>
+                                                <p className="text-xs text-default-400">
+                                                    {user?.schoolID}
+                                                </p>
+                                                <p className="text-xs text-default-400">
+                                                    {user?.email}
+                                                </p>
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+
+                                    <div className="flex justify-between gap-4">
+                                        <div>
+                                            <h3 className="text-lg font-bold mt-4">
+                                                Full Name
+                                            </h3>
+                                            <p className="text-default-500">
+                                                Your full name in your account.
                                             </p>
                                         </div>
-                                    </CardBody>
-                                </Card>
-
-                                <h3 className="text-lg font-bold mt-4">
-                                    Full Name
-                                </h3>
-                                <p className="text-default-500">
-                                    Your full name in your account.
-                                </p>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <Input
-                                        type="text"
-                                        className="mt-2"
-                                        size="md"
-                                        radius="lg"
-                                        placeholder="First Name"
-                                        defaultValue={user?.firstName}
-                                    />
-                                    <Input
-                                        type="text"
-                                        className="mt-2"
-                                        size="md"
-                                        radius="lg"
-                                        placeholder="Last Name"
-                                        defaultValue={user?.lastName}
-                                    />
-                                </div>
-
-                                {user?.role !== "ADMIN" && (
-                                    <div>
-                                        <h3 className="mt-4 text-lg font-bold">
-                                            Department
-                                        </h3>
-                                        <p className="text-default-500">
-                                            Your Department in your account.
-                                        </p>
-                                        <Select
-                                            placeholder="Select a Department"
-                                            className="w-full mt-2"
-                                            onSelectionChange={
-                                                handleDepartmentChange
-                                            }
+                                        <Button
+                                            color="primary"
+                                            size="sm"
+                                            type="submit"
+                                            radius="full"
+                                            className="self-center"
                                         >
-                                            {Department.map(
-                                                (
-                                                    item /* Changed items to item for clarity */,
-                                                ) => (
-                                                    <SelectItem
-                                                        key={item.value}
-                                                        value={item.value}
-                                                    >
-                                                        {item.label}
-                                                    </SelectItem>
-                                                ),
-                                            )}
-                                        </Select>
-                                        <h3 className="mt-4 text-lg font-bold">
-                                            Course / Year
-                                        </h3>
-                                        <p className="text-default-500">
-                                            Your academic level in your account.
-                                        </p>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            {selectedDepartment ===
-                                                "College" && (
-                                                <Select
-                                                    placeholder="Select a course"
-                                                    className="w-full mt-2"
-                                                >
-                                                    {Course.map((item) => (
+                                            Save
+                                        </Button>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <Input
+                                            type="text"
+                                            className="mt-2"
+                                            size="md"
+                                            radius="lg"
+                                            placeholder="First Name"
+                                            defaultValue={user?.firstName}
+                                            {...changeNameRegister("firstName")}
+                                            errorMessage={
+                                                changeNameErrors.firstName
+                                                    ?.message
+                                            }
+                                            isInvalid={
+                                                !!changeNameErrors.firstName
+                                            }
+                                        />
+                                        <Input
+                                            type="text"
+                                            className="mt-2"
+                                            size="md"
+                                            radius="lg"
+                                            placeholder="Last Name"
+                                            defaultValue={user?.lastName}
+                                            {...changeNameRegister("lastName")}
+                                            errorMessage={
+                                                changeNameErrors.lastName
+                                                    ?.message
+                                            }
+                                            isInvalid={
+                                                !!changeNameErrors.lastName
+                                            }
+                                        />
+                                    </div>
+
+                                    {user?.role !== "ADMIN" && (
+                                        <div>
+                                            <h3 className="mt-4 text-lg font-bold">
+                                                Department
+                                            </h3>
+                                            <p className="text-default-500">
+                                                Your Department in your account.
+                                            </p>
+                                            <Select
+                                                placeholder="Select a Department"
+                                                className="w-full mt-2"
+                                                onSelectionChange={
+                                                    handleDepartmentChange
+                                                }
+                                            >
+                                                {Department.map(
+                                                    (
+                                                        item /* Changed items to item for clarity */,
+                                                    ) => (
                                                         <SelectItem
                                                             key={item.value}
                                                             value={item.value}
                                                         >
                                                             {item.label}
                                                         </SelectItem>
-                                                    ))}
-                                                </Select>
-                                            )}
-
-                                            <Select
-                                                isDisabled={
-                                                    selectedDepartment === ""
-                                                }
-                                                placeholder="Select a Year"
-                                                className={clsx("mt-2 w-full", {
-                                                    "col-span-2":
-                                                        selectedDepartment !==
-                                                        "College",
-                                                })}
-                                            >
-                                                {/* Simplified year selection logic using a switch-like approach */}
-                                                {(() => {
-                                                    switch (
-                                                        selectedDepartment
-                                                    ) {
-                                                        case "Elementary":
-                                                            return ElementaryYear.map(
-                                                                (item) => (
-                                                                    <SelectItem
-                                                                        key={
-                                                                            item.value
-                                                                        }
-                                                                        value={
-                                                                            item.value
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            item.label
-                                                                        }
-                                                                    </SelectItem>
-                                                                ),
-                                                            );
-                                                        case "Junior High":
-                                                            return JuniorHighYear.map(
-                                                                (
-                                                                    item /* ...similar for other cases */,
-                                                                ) => (
-                                                                    <SelectItem
-                                                                        key={
-                                                                            item.value
-                                                                        }
-                                                                        value={
-                                                                            item.value
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            item.label
-                                                                        }
-                                                                    </SelectItem>
-                                                                ),
-                                                            );
-                                                        case "Senior High":
-                                                            return SeniorHighYear.map(
-                                                                (item) => (
-                                                                    <SelectItem
-                                                                        key={
-                                                                            item.value
-                                                                        }
-                                                                        value={
-                                                                            item.value
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            item.label
-                                                                        }
-                                                                    </SelectItem>
-                                                                ),
-                                                            );
-                                                        case "College":
-                                                            return Year.map(
-                                                                (item) => (
-                                                                    <SelectItem
-                                                                        key={
-                                                                            item.value
-                                                                        }
-                                                                        value={
-                                                                            item.value
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            item.label
-                                                                        }
-                                                                    </SelectItem>
-                                                                ),
-                                                            );
-                                                        default:
-                                                            return (
-                                                                <SelectItem
-                                                                    key="Undefined"
-                                                                    value="Undefined"
-                                                                />
-                                                            );
-                                                    }
-                                                })()}
+                                                    ),
+                                                )}
                                             </Select>
+                                            <h3 className="mt-4 text-lg font-bold">
+                                                Course / Year
+                                            </h3>
+                                            <p className="text-default-500">
+                                                Your academic level in your
+                                                account.
+                                            </p>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                {selectedDepartment ===
+                                                    "College" && (
+                                                        <Select
+                                                            placeholder="Select a course"
+                                                            className="w-full mt-2"
+                                                        >
+                                                            {Course.map((item) => (
+                                                                <SelectItem
+                                                                    key={item.value}
+                                                                    value={
+                                                                        item.value
+                                                                    }
+                                                                >
+                                                                    {item.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </Select>
+                                                    )}
+
+                                                <Select
+                                                    isDisabled={
+                                                        selectedDepartment ===
+                                                        ""
+                                                    }
+                                                    placeholder="Select a Year"
+                                                    className={clsx(
+                                                        "mt-2 w-full",
+                                                        {
+                                                            "col-span-2":
+                                                                selectedDepartment !==
+                                                                "College",
+                                                        },
+                                                    )}
+                                                >
+                                                    {/* Simplified year selection logic using a switch-like approach */}
+                                                    {(() => {
+                                                        switch (
+                                                        selectedDepartment
+                                                        ) {
+                                                            case "Elementary":
+                                                                return ElementaryYear.map(
+                                                                    (item) => (
+                                                                        <SelectItem
+                                                                            key={
+                                                                                item.value
+                                                                            }
+                                                                            value={
+                                                                                item.value
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                item.label
+                                                                            }
+                                                                        </SelectItem>
+                                                                    ),
+                                                                );
+                                                            case "Junior High":
+                                                                return JuniorHighYear.map(
+                                                                    (
+                                                                        item /* ...similar for other cases */,
+                                                                    ) => (
+                                                                        <SelectItem
+                                                                            key={
+                                                                                item.value
+                                                                            }
+                                                                            value={
+                                                                                item.value
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                item.label
+                                                                            }
+                                                                        </SelectItem>
+                                                                    ),
+                                                                );
+                                                            case "Senior High":
+                                                                return SeniorHighYear.map(
+                                                                    (item) => (
+                                                                        <SelectItem
+                                                                            key={
+                                                                                item.value
+                                                                            }
+                                                                            value={
+                                                                                item.value
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                item.label
+                                                                            }
+                                                                        </SelectItem>
+                                                                    ),
+                                                                );
+                                                            case "College":
+                                                                return Year.map(
+                                                                    (item) => (
+                                                                        <SelectItem
+                                                                            key={
+                                                                                item.value
+                                                                            }
+                                                                            value={
+                                                                                item.value
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                item.label
+                                                                            }
+                                                                        </SelectItem>
+                                                                    ),
+                                                                );
+                                                            default:
+                                                                return (
+                                                                    <SelectItem
+                                                                        key="Undefined"
+                                                                        value="Undefined"
+                                                                    />
+                                                                );
+                                                        }
+                                                    })()}
+                                                </Select>
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                            </div>
+                                    )}
+                                </div>
+                            </form>
                         </Tab>
                         <Tab key="security" title="Security">
                             <div className="sm:w-[300px] md:w-[500px] lg:w-[700px]">

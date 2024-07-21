@@ -1,4 +1,4 @@
-import { Event, Resource, TypeUser } from "@/types";
+import { Event, Venue, Resource, TypeUser } from "@/types";
 
 export async function addVenue(data: {
     userID: number;
@@ -159,6 +159,24 @@ export const activateUser = async (userID: number) => {
     return response.text();
 };
 
+export const editAccount = async (account: {
+    firstName: string;
+    lastName: string;
+}) => {
+    const response = await fetch(`http://localhost:8080/users/account`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(account),
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
 export const getVenues = async () => {
     const response = await fetch("http://localhost:8080/venues", {
         method: "GET",
@@ -171,6 +189,43 @@ export const getVenues = async () => {
         throw new Error("Network Error");
     }
     return response.json();
+};
+
+export const editVenue = async (data: {
+    id: number;
+    userID: number;
+    venueManagersID: number;
+    name: string;
+    location: string;
+    maxCapacity: number;
+    images: File[];
+}) => {
+    const response = await fetch(`http://localhost:8080/venues/${data.id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
+export const deleteVenue = async (venueID: number) => {
+    const response = await fetch(`http://localhost:8080/venues/${venueID}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
 };
 
 export const getEvent = async (eventId: number) => {

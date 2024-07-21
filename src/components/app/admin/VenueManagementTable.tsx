@@ -23,6 +23,8 @@ import {
     IconSearch,
     IconChevronDown,
 } from "@tabler/icons-react";
+import EditVenue from "@/components/app/admin/EditVenue";
+import DeleteVenue from "@/components/app/admin/DeleteVenue";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -198,17 +200,8 @@ export default function VenueManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2">
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button isIconOnly size="sm" variant="light">
-                                    <IconDotsVertical className="text-default-300" />
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu>
-                                <DropdownItem>Edit</DropdownItem>
-                                <DropdownItem>Delete</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                        <DeleteVenue venue={venue} />
+                        <EditVenue venue={venue} />
                     </div>
                 );
             default:
