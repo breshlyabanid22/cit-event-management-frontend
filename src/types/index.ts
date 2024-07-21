@@ -223,6 +223,17 @@ export type Event = {
     startTime: string;
     endTime: string;
 };
+export type Events = {
+    id: number;
+    name: string;
+    description: string;
+    venueName: number;
+    organizer: string;
+    imagePath: string;
+    startTime: string;
+    endTime: string;
+    status: string;
+}
 
 export type Resource = {
     id: number;

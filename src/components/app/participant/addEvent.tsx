@@ -209,6 +209,12 @@ export default function AddEvent() {
 											/>
 											)}
 											/>
+											{thumbnail && (
+                                              <img
+											  src={URL.createObjectURL(thumbnail)}
+											  className="object-cover rounded-md max-h-48 hover:object-contain"
+											/>
+                                            )}
 											 <Button
                                                 color="default"
                                                 variant="flat"
@@ -218,12 +224,6 @@ export default function AddEvent() {
                                             >
                                                 Choose Image
                                             </Button>
-											{thumbnail && (
-                                              <img
-											  src={URL.createObjectURL(thumbnail)}
-											  className="object-cover rounded-md max-h-48 hover:object-contain"
-											/>
-                                            )}
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <Input

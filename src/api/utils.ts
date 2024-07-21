@@ -221,3 +221,16 @@ export const getAllEvents = async () => {
     }
     return response.json();
 };
+export const approvedEvents = async () => {
+    const response = await fetch("http://localhost:8080/events/approved", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};

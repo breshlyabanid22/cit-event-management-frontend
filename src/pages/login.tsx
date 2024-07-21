@@ -99,7 +99,7 @@ export default function Login() {
             username: data.username,
             password: data.password,
         };
-        await login(loginData);
+            await login(loginData);
     };
 
     const onRegisterSubmit = async (data: z.infer<typeof registerSchema>) => {
