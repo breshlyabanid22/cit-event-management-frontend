@@ -17,16 +17,16 @@ import { IconHomePlus } from "@tabler/icons-react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { useState, useRef } from "react";
-import { editVenue, getUsers } from "@/api/utils";
+import { editEvent, getUsers } from "@/api/utils";
 import { TypeUser } from "@/types";
-import { useUser } from "@/provider/auth";
 import toast, { Toaster } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { Venue } from "@/types";
+import { Event } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import useAuthStore from "@/provider/auth";
 
-const venueSchema = z.object({
-    id: z.number().min(1, "Venue ID must be at least 1 characters long"),
+const eventSchema = z.object({
+    id: z.number().min(1, "Event ID must be at least 1 characters long"),
     userID: z.number().min(1, "User ID must be at least 1 characters long"),
     images: z
         .array(z.instanceof(File))
@@ -50,7 +50,7 @@ export default function EditVenue({ venue }: { venue: Venue }) {
         queryKey: ["users"],
         queryFn: getUsers,
     });
-    const { data: user } = useUser();
+    const { user } = useAuthStore();
     const [images, setImages] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();

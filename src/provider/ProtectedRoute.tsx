@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuthStore } from "./auth";
+import { useEffect } from "react";
+import useAuthStore from "./auth";
 
 interface ProtectedRouteProps {
     isAllowed?: string;
@@ -10,7 +11,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     isAllowed,
     children,
 }) => {
-    const { user, isAuthenticated } = useAuthStore();
+    const { user, isAuthenticated, refreshUserData } = useAuthStore();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            refreshUserData();
+        }
+    }, []);
 
     if (!user || !isAuthenticated) {
         return <Navigate to="/login" replace />;

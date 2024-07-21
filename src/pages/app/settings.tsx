@@ -26,7 +26,7 @@ import clsx from "clsx";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useUser } from "@/provider/auth";
+import useAuthStore from "@/provider/auth";
 import {
     UsernameCard,
     PasswordCard,
@@ -73,7 +73,7 @@ const changeNameSchema = z.object({
 });
 
 export default function Settings() {
-    const { data: user } = useUser();
+    const { user } = useAuthStore();
     const [selectedDepartment, setSelectedDepartment] = useState("");
     const handleDepartmentChange = (value: any) => {
         setSelectedDepartment(value.currentKey);

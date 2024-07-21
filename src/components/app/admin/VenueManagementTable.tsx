@@ -200,7 +200,6 @@ export default function VenueManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2">
-                        <EditVenue venue={venue} />
                         <DeleteVenue venue={venue} />
                     </div>
                 );

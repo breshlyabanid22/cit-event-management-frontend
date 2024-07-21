@@ -19,7 +19,7 @@ import { z } from "zod";
 import { useState, useRef } from "react";
 import { addVenue } from "@/api/utils";
 import { TypeUser } from "@/types";
-import { useUser } from "@/provider/auth";
+import useAuthStore from "@/provider/auth";
 import toast, { Toaster } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 const venueSchema = z.object({
@@ -37,7 +37,7 @@ const venueSchema = z.object({
 
 export default function AddVenue(data) {
     const queryClient = useQueryClient();
-    const { data: user } = useUser();
+    const { user } = useAuthStore();
     const [images, setImages] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();

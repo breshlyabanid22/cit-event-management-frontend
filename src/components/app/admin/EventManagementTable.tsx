@@ -19,8 +19,8 @@ import {
 import { getAllEvents } from "@/api/utils";
 import { useQuery } from "@tanstack/react-query";
 import { IconSearch, IconChevronDown } from "@tabler/icons-react";
-import { Event } from "@/types";
-import { useAuthStore } from "@/provider/auth";
+import DeleteEvent from "@/components/app/admin/DeleteEvent";
+import EditEvent from "@/components/app/admin/EditEvent";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -223,12 +223,7 @@ export default function eventManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2 ">
-                        {/* <Editevent event={event} />
-                        {event.active === false ? (
-                            <Activateevent event={event} />
-                        ) : (
-                            <Deactivateevent event={event} />
-                        )} */}
+                       <DeleteEvent event={event} />
                     </div>
                 );
             default:

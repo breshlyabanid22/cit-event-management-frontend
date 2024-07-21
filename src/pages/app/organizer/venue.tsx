@@ -1,7 +1,15 @@
 import AddVenue from "@/components/app/organizer/addVenue";
 import VenueCard from "@/components/app/organizer/venueCard";
-
+import { useQuery } from "@tanstack/react-query";
+import { getVenues } from "@/api/utils";
+import { Venue as TypeVenue } from "@/types";
+import { Skeleton } from "@nextui-org/react";
 export default function Venue() {
+    const { isPending, isError, data, error } = useQuery<TypeVenue[], Error>({
+        queryKey: ["venues"],
+        queryFn: getVenues,
+    });
+
     return (
         <div>
             <header className="mb-6 flex w-full items-center justify-between">
@@ -11,10 +19,22 @@ export default function Venue() {
                 </div>
                 <AddVenue />
             </header>
-            <body className="grid grid-cols-3 gap-4">
-                <div className="flex flex-col gap-4">
-                    <VenueCard />
-                </div>
+            <body className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-8">
+                {isPending ? (
+                    <div className="flex justify-center items-center h-full">
+                        <Skeleton className="w-full h-full" />
+                    </div>
+                ) : data?.length === 0 ? (
+                    <div className="flex justify-center items-center h-full">
+                        <p className="text-center text-default-400">
+                            No venues found
+                        </p>
+                    </div>
+                ) : (
+                    data?.map((venue) => (
+                        <VenueCard venue={venue} key={venue.id} />
+                    ))
+                )}
             </body>
         </div>
     );

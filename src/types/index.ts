@@ -215,6 +215,7 @@ export type Venue = {
 };
 
 export type Event = {
+    id: number;
     name: string;
     description: string;
     venueId: number;
