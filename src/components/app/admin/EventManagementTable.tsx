@@ -19,8 +19,8 @@ import {
 import { getAllEvents } from "@/api/utils";
 import { useQuery } from "@tanstack/react-query";
 import { IconSearch, IconChevronDown } from "@tabler/icons-react";
-import { Typeevent } from "@/types";
-import useAuth from "@/provider/auth";
+import { Event } from "@/types";
+import { useAuthStore } from "@/provider/auth";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);

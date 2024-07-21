@@ -1,6 +1,6 @@
 import { Link, Listbox, ListboxItem, Tooltip, User } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
-import useAuthStore from "@/provider/auth";
+import { useAuthStore, useUser } from "@/provider/auth";
 import {
     IconBuilding,
     IconCalendar,
@@ -23,7 +23,8 @@ import {
 } from "@/config/site";
 
 export default function AppSidebar() {
-    const { logout, user } = useAuthStore();
+    const { logout } = useAuthStore();
+    const { data: user } = useUser();
     const pathname = useLocation().pathname;
 
     const getIcon = (label: string) => {
