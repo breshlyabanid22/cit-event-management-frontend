@@ -200,8 +200,8 @@ export default function VenueManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2">
-                        <DeleteVenue venue={venue} />
                         <EditVenue venue={venue} />
+                        <DeleteVenue venue={venue} />
                     </div>
                 );
             default:
@@ -395,7 +395,6 @@ export default function VenueManagementTable() {
                 wrapper: "max-h-[582px]",
             }}
             selectedKeys={selectedKeys}
-            selectionMode="multiple"
             sortDescriptor={sortDescriptor}
             topContent={topContent}
             topContentPlacement="outside"

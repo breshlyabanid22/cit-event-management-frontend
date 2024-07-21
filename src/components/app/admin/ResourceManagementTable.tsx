@@ -385,7 +385,6 @@ export default function ResourceManagementTable() {
                 wrapper: "max-h-[582px]",
             }}
             selectedKeys={selectedKeys}
-            selectionMode="multiple"
             sortDescriptor={sortDescriptor}
             topContent={topContent}
             topContentPlacement="outside"
