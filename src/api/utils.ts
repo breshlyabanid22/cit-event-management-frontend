@@ -294,6 +294,20 @@ export const getEvent = async (eventId: number) => {
     return response.json();
 };
 
+export const getEventById = async (eventId: number) => {
+    const response = await fetch(`http://localhost:8080/events/${eventId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};
+
 export const editEvent = async (event: Event) => {
     const response = await fetch(
         `http://localhost:8080/events/${event.eventId}`,
@@ -342,6 +356,7 @@ export const getAllEvents = async () => {
     }
     return response.json();
 };
+
 // Evenst that are displayed in the upcoming events
 export const approvedEvents = async () => {
     const response = await fetch("http://localhost:8080/events/approved", {

@@ -2,7 +2,8 @@ import DeleteEvent from "@/components/app/organizer/deleteEvent";
 import EventImage from "@/assets/event.jpg";
 import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
 import { IconEdit, IconEye } from "@tabler/icons-react";
-export default function EventCard() {
+import { Event } from "@/types";
+export default function EventCard({ event }: { event: Event }) {
     return (
         <Card className="p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
             <Image
@@ -15,18 +16,16 @@ export default function EventCard() {
                 width={600}
             />
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start justify-center gap-4">
-                <h4 className="font-bold text-large">Event Name</h4>
-                <p className="text-tiny uppercase font-bold">Event Location</p>
-                <small className="text-default-500">Event Date</small>
+                <h4 className="font-bold text-large">{event.name}</h4>
+                <p className="text-tiny uppercase font-bold">
+                    {event.location}
+                </p>
+                <small className="text-default-500">
+                    {event.startTime} - {event.endTime}
+                </small>
             </CardHeader>
             <CardBody className="overflow-visible py-2 items-start justify-center">
-                <p className="text-default-500">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Massa sed elementum tempus egestas sed sed.
-                    Condimentum vitae sapien pellentesque habitant morbi. Risus
-                    viverra adipiscing at in tellus integer.
-                </p>
+                <p className="text-default-500">{event.description}</p>
             </CardBody>
             <CardBody className="pb-0 pt-2 px-4 flex-col items-end justify-center gap-4">
                 <Button

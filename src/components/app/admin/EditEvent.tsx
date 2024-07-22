@@ -30,6 +30,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const eventSchema = z
     .object({
+        id: z.number().min(1, "Event ID must be at least 1 characters long"),
         name: z
             .string()
             .min(3, "Event name must be at least 3 characters long"),
@@ -45,7 +46,7 @@ const eventSchema = z
         path: ["endTime"],
     });
 
-export default function EditEvent({ eventId }: { eventId: number }) {
+export default function EditEvent({ event }: { event: Event }) {
     const queryClient = useQueryClient();
     const {
         isPending,
@@ -81,8 +82,14 @@ export default function EditEvent({ eventId }: { eventId: number }) {
     } = useForm<FormField>({
         resolver: zodResolver(eventSchema),
         defaultValues: {
-            resourceId: [],
-            image: undefined,
+            id: event.id,
+            name: event.name,
+            description: event.description,
+            venueId: event.venueId,
+            resourceId: event.resourceId,
+            image: event.image,
+            startTime: event.startTime,
+            endTime: event.endTime,
         },
     });
 
@@ -337,7 +344,7 @@ export default function EditEvent({ eventId }: { eventId: number }) {
                                                             );
                                                             setIsInvalid(
                                                                 numberValues.length <
-                                                                    1,
+                                                                1,
                                                             );
                                                         }}
                                                     >
@@ -383,8 +390,8 @@ export default function EditEvent({ eventId }: { eventId: number }) {
                                                                 value={
                                                                     field.value
                                                                         ? parseDateTime(
-                                                                              field.value,
-                                                                          )
+                                                                            field.value,
+                                                                        )
                                                                         : null
                                                                 }
                                                                 onChange={(
@@ -392,7 +399,7 @@ export default function EditEvent({ eventId }: { eventId: number }) {
                                                                 ) => {
                                                                     const isoDate =
                                                                         date !=
-                                                                        null
+                                                                            null
                                                                             ? date.toString()
                                                                             : "";
                                                                     field.onChange(
@@ -431,8 +438,8 @@ export default function EditEvent({ eventId }: { eventId: number }) {
                                                                 value={
                                                                     field.value
                                                                         ? parseDateTime(
-                                                                              field.value,
-                                                                          )
+                                                                            field.value,
+                                                                        )
                                                                         : null
                                                                 }
                                                                 onChange={(
@@ -440,7 +447,7 @@ export default function EditEvent({ eventId }: { eventId: number }) {
                                                                 ) => {
                                                                     const isoDate =
                                                                         date !=
-                                                                        null
+                                                                            null
                                                                             ? date.toString()
                                                                             : "";
                                                                     field.onChange(

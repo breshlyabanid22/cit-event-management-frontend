@@ -1,4 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
+import { approvedEvents } from "@/api/utils";
+import { Event } from "@/types";
+import OngoingEvents from "@/components/app/participant/OngoingEvents";
 export default function ParticipantHome() {
+    useQuery({
+        queryKey: ["events"],
+        queryFn: approvedEvents,
+        notifyOnChangeProps: [],
+    });
+
     return (
         <div>
             <header className="flex items-center justify-between w-full mb-6">
@@ -9,8 +19,8 @@ export default function ParticipantHome() {
                     </p>
                 </div>
             </header>
-            <body className="grid grid-cols-1 gap-4">
-                <div className="flex flex-col col-span-1 gap-4"></div>
+            <body className="grid grid-cols-3 gap-4">
+                <OngoingEvents />
             </body>
         </div>
     );

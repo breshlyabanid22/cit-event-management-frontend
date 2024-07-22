@@ -1,10 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import useAuthStore from "@/provider/auth";
 
-const queryClient = new QueryClient();
-
+const AppLayout = lazy(() => import("@/layouts/AppLayout"));
 const ProtectedRoute = lazy(() => import("@/provider/ProtectedRoute"));
 const Loader = lazy(() => import("@/components/loading"));
 const ErrorPage = lazy(() => import("@/pages/error"));
@@ -13,7 +11,6 @@ const IndexPage = lazy(() => import("@/pages/index"));
 const AboutPage = lazy(() => import("@/pages/about"));
 const Login = lazy(() => import("@/pages/login"));
 const Settings = lazy(() => import("@/pages/app/settings"));
-const OrganizerLayout = lazy(() => import("@/layouts/organizer"));
 const OrganizerEventManagement = lazy(
     () => import("@/pages/app/organizer/EventManagement"),
 );
@@ -22,7 +19,6 @@ const OrganizerParticipantManagement = lazy(
 );
 const VenueManagement = lazy(() => import("@/pages/app/organizer/venue"));
 
-const AdminLayout = lazy(() => import("@/layouts/admin"));
 const AdminHome = lazy(() => import("@/pages/app/admin/home"));
 const AdminUserManagement = lazy(
     () => import("@/pages/app/admin/user-management"),
@@ -37,7 +33,6 @@ const AdminEventManagement = lazy(
     () => import("@/pages/app/admin/event-management"),
 );
 
-const ParticipantLayout = lazy(() => import("@/layouts/participant"));
 const ParticipantHome = lazy(() => import("@/pages/app/participant/home"));
 const ParticipantScheduled = lazy(
     () => import("@/pages/app/participant/scheduled-list"),
@@ -48,6 +43,8 @@ const ParticipantUpcoming = lazy(
 const ParticipantFeedback = lazy(
     () => import("@/pages/app/participant/feedback"),
 );
+
+const Event = lazy(() => import("@/pages/app/event"));
 function App() {
     const { user } = useAuthStore();
     return (
@@ -93,7 +90,7 @@ function App() {
                 element={
                     <ProtectedRoute isAllowed="ORGANIZER">
                         <Suspense fallback={<Loader />}>
-                            <OrganizerLayout />
+                            <AppLayout />
                         </Suspense>
                     </ProtectedRoute>
                 }
@@ -150,7 +147,7 @@ function App() {
                 element={
                     <ProtectedRoute isAllowed="ADMIN">
                         <Suspense fallback={<Loader />}>
-                            <AdminLayout />
+                            <AppLayout />
                         </Suspense>
                     </ProtectedRoute>
                 }
@@ -219,7 +216,7 @@ function App() {
                 element={
                     <ProtectedRoute isAllowed="PARTICIPANT">
                         <Suspense fallback={<Loader />}>
-                            <ParticipantLayout />
+                            <AppLayout />
                         </Suspense>
                     </ProtectedRoute>
                 }
@@ -277,6 +274,26 @@ function App() {
                     element={
                         <Suspense fallback={<Loader />}>
                             <Settings />
+                        </Suspense>
+                    }
+                />
+            </Route>
+
+            <Route
+                path="event"
+                element={
+                    <ProtectedRoute isAllowed="ANY">
+                        <Suspense fallback={<Loader />}>
+                            <AppLayout />
+                        </Suspense>
+                    </ProtectedRoute>
+                }
+            >
+                <Route
+                    path=":id"
+                    element={
+                        <Suspense fallback={<Loader />}>
+                            <Event />
                         </Suspense>
                     }
                 />
