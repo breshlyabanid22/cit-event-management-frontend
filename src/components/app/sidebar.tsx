@@ -129,7 +129,6 @@ export default function AppSidebar() {
                             })()}
                         </Tooltip>
                     </ListboxItem>
-
                     {sidebarItems.map((item) => (
                         <ListboxItem
                             key={item.label}

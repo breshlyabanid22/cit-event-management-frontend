@@ -9,7 +9,6 @@ export default function Venue() {
         queryKey: ["venues"],
         queryFn: getVenues,
     });
-
     return (
         <div>
             <header className="mb-6 flex w-full items-center justify-between">

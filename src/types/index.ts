@@ -212,6 +212,7 @@ export type Venue = {
     events: String[];
     venueManagersID: number[];
     images: File[];
+    imagePath: string[] | null;
 };
 
 export type Event = {

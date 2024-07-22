@@ -42,7 +42,7 @@ const useAuthStore = create<AuthState>()(
                             isAuthenticated: true,
                         });
                     } else {
-                        throw new Error("Login failed");
+                        throw new Error("Invalid username or password");
                     }
                 } catch (error) {
                     console.error("Login error:", error);

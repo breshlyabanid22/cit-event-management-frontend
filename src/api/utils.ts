@@ -290,6 +290,7 @@ export const getAllEvents = async () => {
     }
     return response.json();
 };
+// Evenst that are displayed in the upcoming events
 export const approvedEvents = async () => {
     const response = await fetch("http://localhost:8080/events/approved", {
         method: "GET",
