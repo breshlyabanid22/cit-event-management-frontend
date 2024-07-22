@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useUser } from "@/provider/auth";
+import useAuthStore from "@/provider/auth";
 
 const queryClient = new QueryClient();
 
@@ -49,7 +49,7 @@ const ParticipantFeedback = lazy(
     () => import("@/pages/app/participant/feedback"),
 );
 function App() {
-    const { data: user } = useUser();
+    const { user } = useAuthStore();
     return (
         <Routes>
             {/* Landing Page */}

@@ -6,7 +6,8 @@ import {
     Chip,
     Button,
 } from "@nextui-org/react";
-export default function EventRegistrationCard() {
+import { Event } from "@/types";
+export default function EventRegistrationCard({ event }: { event: Event }) {
     return (
         <Card className="">
             <CardBody className="overflow-visible py-2 justify-end items-end">
@@ -27,9 +28,11 @@ export default function EventRegistrationCard() {
                 ></Image>
             </CardBody>
             <CardFooter className="px-4 py-2 flex-col items-start">
-                <p className="text-tiny uppercase font-bold">Availability</p>
-                <h4 className="font-bold text-large">Event Name</h4>
-                <small className="text-default-500">Location</small>
+                <p className="text-tiny uppercase font-bold">
+                    {event.availability}
+                </p>
+                <h4 className="font-bold text-large">{event.name}</h4>
+                <small className="text-default-500">{event.venueId}</small>
             </CardFooter>
             <Button size="sm" color="primary" radius="lg">
                 View Registration

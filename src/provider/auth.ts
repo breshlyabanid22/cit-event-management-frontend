@@ -2,26 +2,53 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { TypeUser, accountLogin } from "@/types";
 import { removeCookie } from "@/hooks/cookie";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface AuthState {
     user: TypeUser | null;
     isAuthenticated: boolean;
     setUser: (user: TypeUser | null) => void;
+    login: (loginData: accountLogin) => Promise<void>;
     logout: () => Promise<void>;
-    removeCookie: (name: string) => void;
+    refreshUserData: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>()(
+const useAuthStore = create<AuthState>()(
     persist(
         (set, get) => ({
             user: null,
             isAuthenticated: false,
             setUser: (user) =>
                 set({
-                    user: { ...user, password: undefined },
+                    user,
                     isAuthenticated: !!user,
                 }),
+            login: async (loginData) => {
+                try {
+                    const response = await fetch(
+                        "http://localhost:8080/users/login",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(loginData),
+                            credentials: "include",
+                        },
+                    );
+                    if (response.ok) {
+                        const user = await response.json();
+                        set({
+                            user,
+                            isAuthenticated: true,
+                        });
+                    } else {
+                        throw new Error("Login failed");
+                    }
+                } catch (error) {
+                    console.error("Login error:", error);
+                    throw error;
+                }
+            },
             logout: async () => {
                 try {
                     await fetch("http://localhost:8080/users/logout", {
@@ -35,14 +62,41 @@ export const useAuthStore = create<AuthState>()(
                         user: null,
                         isAuthenticated: false,
                     });
-                    removeCookie("JSESSIONID");
                     localStorage.removeItem("auth-storage");
                 } catch (error) {
                     console.error("Logout error:", error);
                 }
             },
-            removeCookie: (name: string) => {
-                document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+            refreshUserData: async () => {
+                try {
+                    const userId = get().user?.userID;
+                    if (!userId) return;
+                    const response = await fetch(
+                        `http://localhost:8080/users/${userId}`,
+                        {
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            credentials: "include",
+                        },
+                    );
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        set({
+                            user: userData,
+                            isAuthenticated: true,
+                        });
+                    }
+                } catch (error) {
+                    get().logout();
+                    removeCookie("JSESSIONID");
+                    set({
+                        user: null,
+                        isAuthenticated: false,
+                    });
+                    localStorage.removeItem("auth-storage");
+                }
             },
         }),
         {
@@ -52,69 +106,4 @@ export const useAuthStore = create<AuthState>()(
     ),
 );
 
-export const useLogin = () => {
-    const queryClient = useQueryClient();
-    const setUser = useAuthStore((state) => state.setUser);
-
-    return useMutation({
-        mutationFn: async (loginData: accountLogin) => {
-            const response = await fetch("http://localhost:8080/users/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(loginData),
-                credentials: "include",
-            });
-
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error("Login failed");
-            }
-        },
-        onSuccess: (user: TypeUser) => {
-            setUser(user);
-            queryClient.invalidateQueries({ queryKey: ["user", user.userID] });
-        },
-        onError: (error) => {
-            console.error("Login error:", error);
-            throw error;
-        },
-    });
-};
-
-export const useUser = () => {
-    const user = useAuthStore((state) => state.user);
-    const logout = useAuthStore((state) => state.logout);
-    const removeCookie = useAuthStore((state) => state.removeCookie);
-
-    return useQuery({
-        queryKey: ["user", user?.userID],
-        queryFn: async () => {
-            if (!user?.userID) return null;
-            const response = await fetch(
-                `http://localhost:8080/users/${user.userID}`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                },
-            );
-
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error("Failed to fetch user data");
-            }
-        },
-        enabled: !!user?.userID,
-        onError: (error) => {
-            console.error("Error fetching user data:", error);
-            logout();
-            removeCookie("JSESSIONID");
-            localStorage.removeItem("auth-storage");
-        },
-    });
-};
+export default useAuthStore;

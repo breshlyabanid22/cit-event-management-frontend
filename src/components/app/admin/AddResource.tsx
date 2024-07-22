@@ -18,7 +18,7 @@ import { z } from "zod";
 import { useState, useRef } from "react";
 import { addResource } from "@/api/utils";
 import { TypeUser } from "@/types";
-import { useAuthStore } from "@/provider/auth";
+import useAuthStore from "@/provider/auth";
 import toast, { Toaster } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
