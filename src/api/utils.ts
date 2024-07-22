@@ -59,6 +59,23 @@ export const addEvent = async (event: Event) => {
     return response.json();
 };
 
+export const approveEvent = async (eventID: number) => {
+    const response = await fetch(
+        `http://localhost:8080/events/${eventID}/approve`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
 export const addResource = async (resource: Resource) => {
     const response = await fetch("http://localhost:8080/resources", {
         method: "POST",
@@ -86,6 +103,41 @@ export const getResources = async () => {
         throw new Error("Network Error");
     }
     return response.json();
+};
+
+export const editResource = async (resource: Resource) => {
+    const response = await fetch(
+        `http://localhost:8080/resources/${resource.id}`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(resource),
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
+export const deleteResource = async (resourceId: number) => {
+    const response = await fetch(
+        `http://localhost:8080/resources/${resourceId}`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
 };
 
 export const getUsers = async (): Promise<TypeUser[]> => {
@@ -262,7 +314,7 @@ export const editEvent = async (event: Event) => {
 
 export const deleteEvent = async (eventId: number) => {
     const response = await fetch(
-        `http://localhost:8080/events/${eventId}/deactivate`,
+        `http://localhost:8080/events/${eventId}/cancel`,
         {
             method: "DELETE",
             headers: {

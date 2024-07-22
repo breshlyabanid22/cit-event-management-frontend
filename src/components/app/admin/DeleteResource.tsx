@@ -7,19 +7,20 @@ import {
     useDisclosure,
     Button,
 } from "@nextui-org/react";
-import { deleteEvent } from "@/api/utils";
+import { deleteResource } from "@/api/utils";
 import toast, { Toaster } from "react-hot-toast";
-import { Event } from "@/types";
+import { Resource } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function DeleteEvent({ event }: { event: Event }) {
+export default function DeleteResource({ resource }: { resource: Resource }) {
     const queryClient = useQueryClient();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-    const submitDelete = async (eventID: number) => {
-        await deleteEvent(eventID);
-        queryClient.invalidateQueries({ queryKey: ["events"] });
-        toast.success("Event deleted successfully");
+    const submitDelete = async (resourceID: number) => {
+        console.log(resourceID);
+        await deleteResource(resourceID);
+        queryClient.invalidateQueries({ queryKey: ["venues"] });
+        toast.success("Venue deleted successfully");
         isOpen ? onOpenChange() : null;
     };
 
@@ -32,7 +33,6 @@ export default function DeleteEvent({ event }: { event: Event }) {
                 containerClassName=""
                 containerStyle={{}}
                 toastOptions={{
-                    // Define default options
                     className: "text-sm",
                     duration: 5000,
                     style: {
@@ -48,18 +48,19 @@ export default function DeleteEvent({ event }: { event: Event }) {
                 color="danger"
                 onPress={onOpen}
             >
-                Cancel
+                Delete
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Delete Event
+                                Delete Venue
                             </ModalHeader>
                             <ModalBody>
                                 <p>
-                                    Are you sure you want to cancel this event?
+                                    Are you sure you want to delete this
+                                    resource?
                                 </p>
                             </ModalBody>
                             <ModalFooter>
@@ -73,9 +74,9 @@ export default function DeleteEvent({ event }: { event: Event }) {
                                 <Button
                                     type="submit"
                                     color="danger"
-                                    onPress={() => submitDelete(event.id)}
+                                    onPress={() => submitDelete(resource.id)}
                                 >
-                                    Cancel
+                                    Delete
                                 </Button>
                             </ModalFooter>
                         </>

@@ -18,13 +18,10 @@ import {
 } from "@nextui-org/react";
 import { getVenues } from "@/api/utils";
 import { useQuery } from "@tanstack/react-query";
-import {
-    IconDotsVertical,
-    IconSearch,
-    IconChevronDown,
-} from "@tabler/icons-react";
+import { IconSearch, IconChevronDown } from "@tabler/icons-react";
 import EditVenue from "@/components/app/admin/EditVenue";
 import DeleteVenue from "@/components/app/admin/DeleteVenue";
+import AcceptVenue from "@/components/app/admin/AcceptVenue";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -200,6 +197,7 @@ export default function VenueManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2">
+                        <EditVenue venue={venue} />
                         <DeleteVenue venue={venue} />
                     </div>
                 );

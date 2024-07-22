@@ -21,6 +21,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IconSearch, IconChevronDown } from "@tabler/icons-react";
 import DeleteEvent from "@/components/app/admin/DeleteEvent";
 import EditEvent from "@/components/app/admin/EditEvent";
+import AcceptEvent from "@/components/app/admin/AcceptEvent";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -223,6 +224,9 @@ export default function eventManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2 ">
+                        {event.status === "Pending" && (
+                            <AcceptEvent event={event} />
+                        )}
                         <EditEvent event={event} />
                         <DeleteEvent event={event} />
                     </div>

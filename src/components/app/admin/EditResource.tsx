@@ -16,13 +16,13 @@ import { IconPackage } from "@tabler/icons-react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { useState, useRef } from "react";
-import { addResource } from "@/api/utils";
-import { TypeUser } from "@/types";
-import useAuthStore from "@/provider/auth";
+import { editResource } from "@/api/utils";
+import { Resource } from "@/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
 const resourceSchema = z.object({
+    id: z.number().min(1, "Resource ID must be at least 1 characters long"),
     name: z.string().min(3, "Resource name must be at least 3 characters long"),
     description: z
         .string()
@@ -31,7 +31,7 @@ const resourceSchema = z.object({
     availability: z.boolean(),
 });
 
-export default function AddResource() {
+export default function EditResource({ resource }: { resource: Resource }) {
     const queryClient = useQueryClient();
     const [availability, setAvailability] = useState(false);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -43,7 +43,11 @@ export default function AddResource() {
     } = useForm<z.infer<typeof resourceSchema>>({
         resolver: zodResolver(resourceSchema),
         defaultValues: {
-            availability: availability,
+            id: resource.id,
+            name: resource.name,
+            description: resource.description,
+            type: resource.type,
+            availability: resource.availability,
         },
     });
 
@@ -51,14 +55,15 @@ export default function AddResource() {
         resourceData: z.infer<typeof resourceSchema>,
     ) => {
         try {
-            await addResource(resourceData);
+            await editResource(resourceData);
             queryClient.invalidateQueries({ queryKey: ["resources"] });
-            toast.success("Resource added successfully");
+            toast.success("Resource edited successfully");
             isOpen ? onOpenChange() : null;
         } catch (error) {
-            toast.error("Error adding Resource:", error);
+            toast.error("Error editing Resource:", error);
         }
     };
+
     return (
         <div>
             <Toaster
@@ -77,11 +82,13 @@ export default function AddResource() {
                 }}
             />
             <Button
+                size="sm"
+                radius="full"
                 onPress={onOpen}
-                color="primary"
-                startContent={<IconPackage />}
+                variant="flat"
+                color="warning"
             >
-                Add Resource
+                Edit
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
                 <form
@@ -92,7 +99,7 @@ export default function AddResource() {
                         {(onClose) => (
                             <>
                                 <ModalHeader className="flex flex-col gap-1">
-                                    Add Resource
+                                    Edit Resource
                                 </ModalHeader>
                                 <ModalBody>
                                     <form className="flex flex-col gap-4">

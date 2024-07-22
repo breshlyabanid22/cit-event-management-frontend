@@ -18,11 +18,9 @@ import {
 } from "@nextui-org/react";
 import { getResources } from "@/api/utils";
 import { useQuery } from "@tanstack/react-query";
-import {
-    IconDotsVertical,
-    IconSearch,
-    IconChevronDown,
-} from "@tabler/icons-react";
+import { IconSearch, IconChevronDown } from "@tabler/icons-react";
+import EditResource from "@/components/app/admin/EditResource";
+import DeleteResource from "@/components/app/admin/DeleteResource";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -100,7 +98,7 @@ export default function ResourceManagementTable() {
         queryKey: ["resources"],
         queryFn: getResources,
     });
-    console.log(data);
+
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(
@@ -164,7 +162,7 @@ export default function ResourceManagementTable() {
     const renderCell = React.useCallback((resource, columnKey) => {
         const cellValue = resource[columnKey];
 
-        switch (resource) {
+        switch (columnKey) {
             case "availability":
                 return (
                     <Chip
@@ -181,17 +179,8 @@ export default function ResourceManagementTable() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2">
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button isIconOnly size="sm" variant="light">
-                                    <IconDotsVertical className="text-default-300" />
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu>
-                                <DropdownItem>Edit</DropdownItem>
-                                <DropdownItem>Delete</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                        <EditResource resource={resource} />
+                        <DeleteResource resource={resource} />
                     </div>
                 );
             default:

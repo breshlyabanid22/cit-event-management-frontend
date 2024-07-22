@@ -7,19 +7,19 @@ import {
     useDisclosure,
     Button,
 } from "@nextui-org/react";
-import { deleteEvent } from "@/api/utils";
+import { approveEvent } from "@/api/utils";
 import toast, { Toaster } from "react-hot-toast";
 import { Event } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function DeleteEvent({ event }: { event: Event }) {
+export default function AcceptEvent({ event }: { event: Event }) {
     const queryClient = useQueryClient();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const submitDelete = async (eventID: number) => {
-        await deleteEvent(eventID);
+        await approveEvent(eventID);
         queryClient.invalidateQueries({ queryKey: ["events"] });
-        toast.success("Event deleted successfully");
+        toast.success("Event accepted successfully");
         isOpen ? onOpenChange() : null;
     };
 
@@ -45,21 +45,21 @@ export default function DeleteEvent({ event }: { event: Event }) {
                 size="sm"
                 radius="full"
                 variant="flat"
-                color="danger"
+                color="success"
                 onPress={onOpen}
             >
-                Cancel
+                Approve
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Delete Event
+                                Approve Event
                             </ModalHeader>
                             <ModalBody>
                                 <p>
-                                    Are you sure you want to cancel this event?
+                                    Are you sure you want to approve this event?
                                 </p>
                             </ModalBody>
                             <ModalFooter>
@@ -75,7 +75,7 @@ export default function DeleteEvent({ event }: { event: Event }) {
                                     color="danger"
                                     onPress={() => submitDelete(event.id)}
                                 >
-                                    Cancel
+                                    Approve
                                 </Button>
                             </ModalFooter>
                         </>
