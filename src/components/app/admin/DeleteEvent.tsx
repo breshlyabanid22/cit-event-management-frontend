@@ -48,7 +48,7 @@ export default function DeleteEvent({ event }: { event: Event }) {
                 color="danger"
                 onPress={onOpen}
             >
-                Delete
+                Cancel
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
@@ -59,7 +59,7 @@ export default function DeleteEvent({ event }: { event: Event }) {
                             </ModalHeader>
                             <ModalBody>
                                 <p>
-                                    Are you sure you want to delete this event?
+                                    Are you sure you want to cancel this event?
                                 </p>
                             </ModalBody>
                             <ModalFooter>
@@ -75,7 +75,7 @@ export default function DeleteEvent({ event }: { event: Event }) {
                                     color="danger"
                                     onPress={() => submitDelete(event.id)}
                                 >
-                                    Delete
+                                    Cancel
                                 </Button>
                             </ModalFooter>
                         </>

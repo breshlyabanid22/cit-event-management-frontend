@@ -279,7 +279,7 @@ export const editEvent = async (event: Event) => {
 
 export const deleteEvent = async (eventId: number) => {
     const response = await fetch(
-        `http://localhost:8080/events/${eventId}/deactivate`,
+        `http://localhost:8080/events/${eventId}/cancel`,
         {
             method: "DELETE",
             headers: {
