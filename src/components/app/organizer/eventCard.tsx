@@ -5,7 +5,7 @@ import { IconEdit, IconEye } from "@tabler/icons-react";
 import { Event } from "@/types";
 import { format, parseISO } from 'date-fns';
 export default function EventCard({ event }: { event: Event }) {    
-    const imagePath: string = "http://localhost:8080";
+    const imagePath: string = "http://localhost:8080" + event.imagePath;
 
     const formatDate = (dateString: string) => {
         const date = parseISO(dateString);
@@ -13,7 +13,6 @@ export default function EventCard({ event }: { event: Event }) {
       };
       const startDate = formatDate(event.startTime);
       const endDate = formatDate(event.endTime);
-      console.log("Formatted: ", startDate);
     return (
         <Card className="p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
             <Image
@@ -21,7 +20,7 @@ export default function EventCard({ event }: { event: Event }) {
                 isZoomed
                 alt="Card background"
                 className="object-cover rounded-xl"
-                src={imagePath + event.imagePath}
+                src={imagePath}
                 fallbackSrc={EventImage}
                 width={600}
             />
