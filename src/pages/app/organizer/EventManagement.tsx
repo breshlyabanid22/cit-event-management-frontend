@@ -1,7 +1,7 @@
 import AddEvent from "@/components/app/organizer/addEvent";
 import EventCard from "@/components/app/organizer/eventCard";
 import { useQuery } from "@tanstack/react-query";
-import { getAllEvents } from "@/api/utils";
+import { approvedEvents } from "@/api/utils";
 import { Event } from "@/types";
 export default function EventRegistration() {
     const {
@@ -11,9 +11,8 @@ export default function EventRegistration() {
         error,
     } = useQuery<Event[], Error>({
         queryKey: ["events"],
-        queryFn: getAllEvents,
+        queryFn: approvedEvents,
     });
-
     return (
         <div>
             <header className="mb-6 flex w-full items-center justify-between">
@@ -28,7 +27,7 @@ export default function EventRegistration() {
                     {isPending && <p>Loading...</p>}
                     {isError && <p>Error: {error?.message}</p>}
                     {events?.map((event) => (
-                        <EventCard key={event.eventId} event={event} />
+                        <EventCard key={event.id} event={event} />
                     ))}
                 </div>
             </body>

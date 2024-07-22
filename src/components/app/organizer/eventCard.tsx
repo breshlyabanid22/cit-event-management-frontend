@@ -3,7 +3,17 @@ import EventImage from "@/assets/event.jpg";
 import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
 import { IconEdit, IconEye } from "@tabler/icons-react";
 import { Event } from "@/types";
-export default function EventCard({ event }: { event: Event }) {
+import { format, parseISO } from 'date-fns';
+export default function EventCard({ event }: { event: Event }) {    
+    const imagePath: string = "http://localhost:8080";
+
+    const formatDate = (dateString: string) => {
+        const date = parseISO(dateString);
+        return format(date, 'MMM dd yyyy hh:mm a');
+      };
+      const startDate = formatDate(event.startTime);
+      const endDate = formatDate(event.endTime);
+      console.log("Formatted: ", startDate);
     return (
         <Card className="p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
             <Image
@@ -11,17 +21,18 @@ export default function EventCard({ event }: { event: Event }) {
                 isZoomed
                 alt="Card background"
                 className="object-cover rounded-xl"
-                src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src={imagePath + event.imagePath}
                 fallbackSrc={EventImage}
                 width={600}
             />
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start justify-center gap-4">
                 <h4 className="font-bold text-large">{event.name}</h4>
                 <p className="text-tiny uppercase font-bold">
-                    {event.location}
+                    {event.venueName}
                 </p>
                 <small className="text-default-500">
-                    {event.startTime} - {event.endTime}
+                    Start on: {startDate} <br/>
+                    until {endDate} 
                 </small>
             </CardHeader>
             <CardBody className="overflow-visible py-2 items-start justify-center">
