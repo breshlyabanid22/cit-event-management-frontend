@@ -8,8 +8,7 @@ import {
     Input,
     Select,
     SelectItem,
-    CardHeader,
-    CardFooter,
+    ScrollShadow,
     Button,
 } from "@nextui-org/react";
 import {
@@ -103,7 +102,7 @@ export default function Settings() {
             console.log("Notifs: ", notifications);
         } catch (error) {
             console.log("Error fetching notifications", error);
-            console.log("user:", user.userID)
+            console.log("user:", user.userID);
         }
     };
     const {
@@ -278,22 +277,22 @@ export default function Settings() {
                                             <div className="grid grid-cols-2 gap-4">
                                                 {selectedDepartment ===
                                                     "College" && (
-                                                        <Select
-                                                            placeholder="Select a course"
-                                                            className="w-full mt-2"
-                                                        >
-                                                            {Course.map((item) => (
-                                                                <SelectItem
-                                                                    key={item.value}
-                                                                    value={
-                                                                        item.value
-                                                                    }
-                                                                >
-                                                                    {item.label}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </Select>
-                                                    )}
+                                                    <Select
+                                                        placeholder="Select a course"
+                                                        className="w-full mt-2"
+                                                    >
+                                                        {Course.map((item) => (
+                                                            <SelectItem
+                                                                key={item.value}
+                                                                value={
+                                                                    item.value
+                                                                }
+                                                            >
+                                                                {item.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </Select>
+                                                )}
 
                                                 <Select
                                                     isDisabled={
@@ -313,7 +312,7 @@ export default function Settings() {
                                                     {/* Simplified year selection logic using a switch-like approach */}
                                                     {(() => {
                                                         switch (
-                                                        selectedDepartment
+                                                            selectedDepartment
                                                         ) {
                                                             case "Elementary":
                                                                 return ElementaryYear.map(
@@ -417,19 +416,31 @@ export default function Settings() {
 
                         <Tab key="notifications" title="Notifications">
                             <div className="sm:w-full md:w-[400px] lg:w-[600px]">
-                                {notifications.map((notification) => (
-                                    <Card key={notification.id} className="p-1">
-                                        <CardHeader className="flex justify-between text-lg font-semibold">
-                                            To: {notification.recipient}
-                                        </CardHeader>
-                                        <CardBody>
-                                            {notification.message}
-                                        </CardBody>
-                                        <CardFooter>
-                                            {notification.createdAt}
-                                        </CardFooter>
-                                    </Card>
-                                ))}
+                                <ScrollShadow
+                                    hideScrollBar={true}
+                                    size={100}
+                                    className="overflow-y-auto h-[600px]"
+                                >
+                                    {notifications.map((notification) => (
+                                        <Card
+                                            key={notification.id}
+                                            className="m-4 p-4 gap-4 flex flex-row justify-between self-center"
+                                            radius="lg"
+                                        >
+                                            <div>
+                                                <h3 className="text-lg font-bold">
+                                                    {notification.recipient}
+                                                </h3>
+                                                <p className="text-primary-500">
+                                                    {notification.message}
+                                                </p>
+                                            </div>
+                                            <small className="text-default-500">
+                                                {notification.createdAt}
+                                            </small>
+                                        </Card>
+                                    ))}
+                                </ScrollShadow>
                             </div>
                         </Tab>
                     </Tabs>

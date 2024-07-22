@@ -17,7 +17,6 @@ export default function DeleteResource({ resource }: { resource: Resource }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const submitDelete = async (resourceID: number) => {
-        console.log(resourceID);
         await deleteResource(resourceID);
         queryClient.invalidateQueries({ queryKey: ["venues"] });
         toast.success("Venue deleted successfully");
