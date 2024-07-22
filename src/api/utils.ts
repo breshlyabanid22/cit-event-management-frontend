@@ -105,6 +105,41 @@ export const getResources = async () => {
     return response.json();
 };
 
+export const editResource = async (resource: Resource) => {
+    const response = await fetch(
+        `http://localhost:8080/resources/${resource.id}`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(resource),
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
+export const deleteResource = async (resourceId: number) => {
+    const response = await fetch(
+        `http://localhost:8080/resources/${resourceId}`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
 export const getUsers = async (): Promise<TypeUser[]> => {
     const response = await fetch("http://localhost:8080/admin/users", {
         method: "GET",
