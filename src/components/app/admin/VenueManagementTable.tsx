@@ -21,6 +21,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IconSearch, IconChevronDown } from "@tabler/icons-react";
 import EditVenue from "@/components/app/admin/EditVenue";
 import DeleteVenue from "@/components/app/admin/DeleteVenue";
+import AcceptVenue from "@/components/app/admin/AcceptVenue";
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);

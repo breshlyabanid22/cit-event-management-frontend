@@ -59,6 +59,23 @@ export const addEvent = async (event: Event) => {
     return response.json();
 };
 
+export const approveEvent = async (eventID: number) => {
+    const response = await fetch(
+        `http://localhost:8080/events/${eventID}/approve`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
 export const addResource = async (resource: Resource) => {
     const response = await fetch("http://localhost:8080/resources", {
         method: "POST",
