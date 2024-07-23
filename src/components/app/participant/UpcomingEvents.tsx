@@ -1,14 +1,22 @@
-import { Card, CardHeader, CardBody, Link, Divider, Skeleton } from "@nextui-org/react";
+import {
+    Card,
+    CardHeader,
+    CardBody,
+    Link,
+    Divider,
+    Skeleton,
+} from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import { approvedEvents } from "@/api/utils";
 import { Event } from "@/types";
 import { IconCalendarEvent } from "@tabler/icons-react";
 
-export default function OngoingEvents() {
+export default function UpcomingEvents() {
     const { data: events, isSuccess } = useQuery<Event[]>({
         queryKey: ["events"],
         queryFn: approvedEvents,
     });
+    console.log(events);
 
     return (
         <Skeleton className="rounded-lg" isLoaded={isSuccess}>
@@ -16,7 +24,7 @@ export default function OngoingEvents() {
                 <CardHeader className="flex gap-3 justify-between">
                     <div className="flex flex-row gap-1">
                         <IconCalendarEvent />
-                        <p className="text-lg">Ongoing Events</p>
+                        <p className="text-lg">Upcoming Events</p>
                     </div>
                     <p className="text-default-500"> {events?.length} Events</p>
                 </CardHeader>
