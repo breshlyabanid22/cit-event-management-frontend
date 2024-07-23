@@ -224,8 +224,11 @@ export type Event = {
     image: File | undefined;
     startTime: string;
     endTime: string;
+    status: string;
     imagePath: string;
+    organizer: string;
 };
+
 export type Events = {
     id: number;
     name: string;
@@ -236,7 +239,7 @@ export type Events = {
     startTime: string;
     endTime: string;
     status: string;
-}
+};
 
 export type Resource = {
     id: number;

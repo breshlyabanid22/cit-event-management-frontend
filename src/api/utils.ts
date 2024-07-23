@@ -374,26 +374,32 @@ export const approvedEvents = async () => {
 };
 //Events created by the organizer
 export const getEventsByOrganizer = async (userID: number) => {
-    const response = await fetch(`http://localhost:8080/events/${userID}/event`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
+    const response = await fetch(
+        `http://localhost:8080/events/${userID}/event`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
         },
-        credentials: "include",
-    });
+    );
     if (!response.ok) {
         throw new Error("Network Error");
     }
     return response.json();
 };
 export const getAllEventsByVenue = async (venueID: number) => {
-    const response = await fetch(`http://localhost:8080/events/venues/${venueID}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
+    const response = await fetch(
+        `http://localhost:8080/events/venues/${venueID}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
         },
-        credentials: "include",
-    });
+    );
     if (!response.ok) {
         throw new Error("Network Error");
     }
@@ -412,4 +418,46 @@ export const getAllVenuesByManager = async (userID: number) => {
         throw new Error("Network Error");
     }
     return response.json();
+};
+
+export const getEventRegistrationByEventandUser = async (data: {
+    eventId: number;
+    userId: number;
+}) => {
+    const response = await fetch(
+        `http://localhost:8080/registrations/${data.eventId}/${data.userId}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};
+
+export const userRegisterEvent = async (data: {
+    eventId: number;
+    userId: number;
+}) => {
+    try {
+        const response = await fetch(
+            `http://localhost:8080/registrations/${data.eventId}/${data.userId}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+                credentials: "include",
+            },
+        );
+        return response.text();
+    } catch (error) {
+        console.error(error);
+    }
 };
