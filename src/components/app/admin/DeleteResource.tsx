@@ -18,8 +18,8 @@ export default function DeleteResource({ resource }: { resource: Resource }) {
 
     const submitDelete = async (resourceID: number) => {
         await deleteResource(resourceID);
-        queryClient.invalidateQueries({ queryKey: ["venues"] });
-        toast.success("Venue deleted successfully");
+        queryClient.invalidateQueries({ queryKey: ["resources"] });
+        toast.success("Resource deleted successfully");
         isOpen ? onOpenChange() : null;
     };
 

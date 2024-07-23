@@ -55,6 +55,7 @@ export default function EditResource({ resource }: { resource: Resource }) {
         resourceData: z.infer<typeof resourceSchema>,
     ) => {
         try {
+            console.log("Resource:", resourceData);
             await editResource(resourceData);
             queryClient.invalidateQueries({ queryKey: ["resources"] });
             toast.success("Resource edited successfully");
