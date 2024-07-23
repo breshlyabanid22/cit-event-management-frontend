@@ -1,13 +1,15 @@
 import EventRegistrationCard from "@/components/app/organizer/eventRegistrationCard";
 import ManageWaitlist from "@/components/app/organizer/ManageWaitlist";
 import { useQuery } from "@tanstack/react-query";
-import { getAllEvents } from "@/api/utils";
+import { getAllEventsByUser } from "@/api/utils";
 import { Event } from "@/types";
 import { Skeleton } from "@nextui-org/react";
+import useAuthStore from "@/provider/auth";
 export default function EventRegistration() {
+    const { user } = useAuthStore();
     const { isPending, isError, data, error } = useQuery<Event[], Error>({
-        queryKey: ["events"],
-        queryFn: getAllEvents,
+        queryKey: ["eventsforUser", user?.userID],
+        queryFn: () => getAllEventsByUser(Number(user?.userID)),
     });
 
     return (
@@ -19,7 +21,6 @@ export default function EventRegistration() {
                         Manage your participants
                     </p>
                 </div>
-                <ManageWaitlist />
             </header>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {isPending ? (

@@ -11,6 +11,7 @@ import {
 import { IconEdit, IconEye } from "@tabler/icons-react";
 import { Event } from "@/types";
 import { format, parseISO } from "date-fns";
+import { Link } from "react-router-dom";
 export default function EventCard({ event }: { event: Event }) {
     const imagePath: string = "http://localhost:8080" + event.imagePath;
 
@@ -54,6 +55,8 @@ export default function EventCard({ event }: { event: Event }) {
                 <Button
                     color="secondary"
                     variant="flat"
+                    as={Link}
+                    to={`/event/${event.id}`}
                     endContent={<IconEye />}
                 >
                     View

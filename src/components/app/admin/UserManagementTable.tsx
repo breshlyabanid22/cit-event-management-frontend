@@ -115,7 +115,7 @@ export default function UserManagementTable() {
         queryKey: ["users"],
         queryFn: getUsers,
     });
-    console.log(data);
+
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState(

@@ -102,10 +102,8 @@ export default function Settings() {
             }
             const Notifs: Notifications[] = await response.json();
             setNotifications(Notifs);
-            console.log("Notifs: ", notifications);
         } catch (error) {
-            console.log("Error fetching notifications", error);
-            console.log("user:", user.userID);
+            console.error(error);
         }
     };
     const {
@@ -298,22 +296,22 @@ export default function Settings() {
                                             <div className="grid grid-cols-2 gap-4">
                                                 {selectedDepartment ===
                                                     "College" && (
-                                                    <Select
-                                                        placeholder="Select a course"
-                                                        className="w-full mt-2"
-                                                    >
-                                                        {Course.map((item) => (
-                                                            <SelectItem
-                                                                key={item.value}
-                                                                value={
-                                                                    item.value
-                                                                }
-                                                            >
-                                                                {item.label}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </Select>
-                                                )}
+                                                        <Select
+                                                            placeholder="Select a course"
+                                                            className="w-full mt-2"
+                                                        >
+                                                            {Course.map((item) => (
+                                                                <SelectItem
+                                                                    key={item.value}
+                                                                    value={
+                                                                        item.value
+                                                                    }
+                                                                >
+                                                                    {item.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </Select>
+                                                    )}
 
                                                 <Select
                                                     isDisabled={
@@ -333,7 +331,7 @@ export default function Settings() {
                                                     {/* Simplified year selection logic using a switch-like approach */}
                                                     {(() => {
                                                         switch (
-                                                            selectedDepartment
+                                                        selectedDepartment
                                                         ) {
                                                             case "Elementary":
                                                                 return ElementaryYear.map(

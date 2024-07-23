@@ -16,7 +16,6 @@ export default function UpcomingEvents() {
         queryKey: ["events"],
         queryFn: approvedEvents,
     });
-    console.log(events);
 
     return (
         <Skeleton className="rounded-lg" isLoaded={isSuccess}>
