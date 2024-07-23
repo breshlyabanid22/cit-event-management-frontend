@@ -12,6 +12,7 @@ import { IconEdit, IconEye } from "@tabler/icons-react";
 import { Event } from "@/types";
 import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
+import EditEvent from "@/components/app/organizer/EditEvent";
 export default function EventCard({ event }: { event: Event }) {
     const imagePath: string = "http://localhost:8080" + event.imagePath;
 
@@ -61,14 +62,8 @@ export default function EventCard({ event }: { event: Event }) {
                 >
                     View
                 </Button>
-                <Button
-                    color="warning"
-                    variant="flat"
-                    endContent={<IconEdit />}
-                >
-                    Edit
-                </Button>
-                <DeleteEvent />
+                <EditEvent props={event} />
+                <DeleteEvent props={event} />
             </CardBody>
         </Card>
     );
