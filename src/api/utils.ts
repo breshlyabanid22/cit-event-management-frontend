@@ -215,6 +215,9 @@ export const activateUser = async (userID: number) => {
 export const editAccount = async (account: {
     firstName: string;
     lastName: string;
+    course: string | undefined;
+    department: string | undefined;
+    year: string | null;
 }) => {
     const response = await fetch(`http://localhost:8080/users/account`, {
         method: "PATCH",

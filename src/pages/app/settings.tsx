@@ -71,6 +71,9 @@ const changeNameSchema = z.object({
         .string()
         .min(1, "First Name must be at least 1 character long"),
     lastName: z.string().min(1, "Last Name must be at least 1 character long"),
+    department: z.string().optional(),
+    course: z.string().optional(),
+    year: z.string().optional()
 });
 
 export default function Settings() {
@@ -117,6 +120,7 @@ export default function Settings() {
         defaultValues: {
             firstName: user?.firstName,
             lastName: user?.lastName,
+            year: null
         },
     });
 
@@ -124,6 +128,9 @@ export default function Settings() {
             await editAccount({
                 firstName: data.firstName,
                 lastName: data.lastName,
+                course: data.course,
+                department: data.department,
+                year: data.year,
             });
             queryClient.invalidateQueries({ queryKey: ["users"] });
             toast.success("Successfully saved");
@@ -259,7 +266,21 @@ export default function Settings() {
                                             }
                                         />
                                     </div>
-
+                                    <div className="grid grid-cols-3 gap-4 mb-3 mt-3">
+                                        <p className="text-red-900 font-bold">
+                                            Department: 
+                                            <p className="font-normal text-default-foreground">{user?.department}</p>
+                                        </p>
+                                        <p className="text-red-900 font-bold">
+                                            Course:
+                                            <p className="font-normal text-default-foreground">{user?.course}</p>
+                                        </p> 
+                                        <p className="text-red-900 font-bold">
+                                            Year:
+                                            <p className="font-normal text-default-foreground">{user?.year}</p>
+                                        </p> 
+                                    </div>
+                                    <hr/>
                                     {user?.role !== "ADMIN" && (
                                         <div>
                                             <h3 className="mt-4 text-lg font-bold">
@@ -271,6 +292,7 @@ export default function Settings() {
                                             <Select
                                                 placeholder="Select a Department"
                                                 className="w-full mt-2"
+                                                {...changeNameRegister("department")}
                                                 onSelectionChange={
                                                     handleDepartmentChange
                                                 }
@@ -299,18 +321,19 @@ export default function Settings() {
                                                 {selectedDepartment ===
                                                     "College" && (
                                                     <Select
+                                                        {...changeNameRegister("course")}
                                                         placeholder="Select a course"
                                                         className="w-full mt-2"
                                                     >
                                                         {Course.map((item) => (
                                                             <SelectItem
-                                                                key={item.value}
-                                                                value={
-                                                                    item.value
-                                                                }
-                                                            >
-                                                                {item.label}
-                                                            </SelectItem>
+                                                            key={item.value}
+                                                            value={
+                                                                item.value
+                                                            }
+                                                        >
+                                                            {item.label}
+                                                        </SelectItem>
                                                         ))}
                                                     </Select>
                                                 )}
@@ -320,6 +343,7 @@ export default function Settings() {
                                                         selectedDepartment ===
                                                         ""
                                                     }
+                                                    {...changeNameRegister("year")}
                                                     placeholder="Select a Year"
                                                     className={clsx(
                                                         "mt-2 w-full",
