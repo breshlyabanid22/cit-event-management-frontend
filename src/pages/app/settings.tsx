@@ -105,10 +105,8 @@ export default function Settings() {
             }
             const Notifs: Notifications[] = await response.json();
             setNotifications(Notifs);
-            console.log("Notifs: ", notifications);
         } catch (error) {
-            console.log("Error fetching notifications", error);
-            console.log("user:", user.userID);
+            console.error(error);
         }
     };
     const {
@@ -119,8 +117,7 @@ export default function Settings() {
         resolver: zodResolver(changeNameSchema),
         defaultValues: {
             firstName: user?.firstName,
-            lastName: user?.lastName,
-            year: null
+            lastName: user?.lastName
         },
     });
 
@@ -357,7 +354,7 @@ export default function Settings() {
                                                     {/* Simplified year selection logic using a switch-like approach */}
                                                     {(() => {
                                                         switch (
-                                                            selectedDepartment
+                                                        selectedDepartment
                                                         ) {
                                                             case "Elementary":
                                                                 return ElementaryYear.map(

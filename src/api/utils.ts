@@ -217,7 +217,7 @@ export const editAccount = async (account: {
     lastName: string;
     course: string | undefined;
     department: string | undefined;
-    year: string | null;
+    year: string | undefined;
 }) => {
     const response = await fetch(`http://localhost:8080/users/account`, {
         method: "PATCH",
@@ -347,6 +347,7 @@ export const deleteEvent = async (eventId: number) => {
     return response.text();
 };
 
+//admin only
 export const getAllEvents = async () => {
     const response = await fetch("http://localhost:8080/events", {
         method: "GET",
@@ -355,6 +356,23 @@ export const getAllEvents = async () => {
         },
         credentials: "include",
     });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};
+
+export const getAllEventsByUser = async (userID: number) => {
+    const response = await fetch(
+        `http://localhost:8080/events/${userID}/event`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
     if (!response.ok) {
         throw new Error("Network Error");
     }
@@ -460,4 +478,55 @@ export const userRegisterEvent = async (data: {
     } catch (error) {
         console.error(error);
     }
+};
+
+export const getAllRegistrationsforOrganizer = async (userID: number) => {
+    const response = await fetch(
+        `http://localhost:8080/registrations/registered/${userID}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};
+
+export const acceptUserRegistration = async (registrationId: number) => {
+    const response = await fetch(
+        `http://localhost:8080/registrations/${registrationId}/accept`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
+export const declineUserRegistration = async (registrationId: number) => {
+    const response = await fetch(
+        `http://localhost:8080/registrations/${registrationId}/reject`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
 };
