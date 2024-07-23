@@ -1,4 +1,5 @@
 import { Event, Venue, Resource, TypeUser } from "@/types";
+import { json } from "react-router-dom";
 
 export async function addVenue(data: {
     userID: number;
@@ -374,6 +375,33 @@ export const approvedEvents = async () => {
 //Events created by the organizer
 export const getEventsByOrganizer = async (userID: number) => {
     const response = await fetch(`http://localhost:8080/events/${userID}/event`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};
+export const getAllEventsByVenue = async (venueID: number) => {
+    const response = await fetch(`http://localhost:8080/events/venues/${venueID}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};
+
+export const getAllVenuesByManager = async (userID: number) => {
+    const response = await fetch(`http://localhost:8080/venues/${userID}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

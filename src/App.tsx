@@ -18,6 +18,7 @@ const OrganizerParticipantManagement = lazy(
     () => import("@/pages/app/organizer/ParticipantManagement"),
 );
 const VenueManagement = lazy(() => import("@/pages/app/organizer/venue"));
+const VenueManagementByVenue = lazy(() => import("@/pages/app/organizer/venue-manager/venue"));
 
 const AdminHome = lazy(() => import("@/pages/app/admin/home"));
 const AdminUserManagement = lazy(
@@ -126,7 +127,7 @@ function App() {
                         path="venue-management"
                         element={
                             <Suspense fallback={<Loader />}>
-                                <VenueManagement />
+                                <VenueManagementByVenue />
                             </Suspense>
                         }
                     />
