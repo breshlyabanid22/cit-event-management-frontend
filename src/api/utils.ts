@@ -395,7 +395,7 @@ export const getAllEventsByVenue = async (venueID: number) => {
         headers: {
             "Content-Type": "application/json",
         },
-    );
+    });
     if (!response.ok) {
         throw new Error("Network Error");
     }

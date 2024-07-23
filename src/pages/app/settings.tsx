@@ -32,6 +32,8 @@ import {
     EmailCard,
 } from "@/components/app/SecuritySettingsCard";
 import { editAccount } from "@/api/utils";
+import toast, { Toaster } from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 const settingsSchema = z
     .object({
@@ -73,6 +75,7 @@ const changeNameSchema = z.object({
 
 export default function Settings() {
     const { user } = useAuthStore();
+    const queryClient = useQueryClient();
     const [selectedDepartment, setSelectedDepartment] = useState("");
     const handleDepartmentChange = (value: any) => {
         setSelectedDepartment(value.currentKey);
@@ -118,14 +121,32 @@ export default function Settings() {
     });
 
     const nameOnSubmit = async (data: z.infer<typeof changeNameSchema>) => {
-        await editAccount({
-            firstName: data.firstName,
-            lastName: data.lastName,
-        });
+            await editAccount({
+                firstName: data.firstName,
+                lastName: data.lastName,
+            });
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+            toast.success("Successfully saved");
     };
 
     return (
         <div>
+             <Toaster
+                position="bottom-right"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                    // Define default options
+                    className: "text-sm",
+                    duration: 5000,
+                    style: {
+                        background: "#800000",
+                        color: "#fff",
+                    },
+                }}
+            />
             <header className="flex items-center justify-between w-full mb-6">
                 <div className="flex flex-col">
                     <p className="text-3xl font-bold">Settings</p>
