@@ -165,7 +165,8 @@ export default function AppSidebar() {
                             >
                                 <Link
                                     color={
-                                        pathname === item.href
+                                        `/${user?.role.toLowerCase()}/${item.href.replace(/^\//, "")}` ===
+                                        pathname
                                             ? "primary"
                                             : "foreground"
                                     }
