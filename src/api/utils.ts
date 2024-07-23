@@ -387,7 +387,7 @@ export const getEventsByOrganizer = async (userID: number) => {
     return response.json();
 };
 export const getAllEventsByVenue = async (venueID: number) => {
-    const response = await fetch(`http://localhost:8080/events/venues/${venueID}`, {
+    const response = await fetch(`http://localhost:8080/events/venue/${venueID}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -397,6 +397,7 @@ export const getAllEventsByVenue = async (venueID: number) => {
     if (!response.ok) {
         throw new Error("Network Error");
     }
+    console.log("Events By Venue: ", response.json());
     return response.json();
 };
 
