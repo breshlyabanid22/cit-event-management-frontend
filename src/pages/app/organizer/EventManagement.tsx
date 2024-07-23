@@ -1,17 +1,19 @@
 import AddEvent from "@/components/app/organizer/addEvent";
 import EventCard from "@/components/app/organizer/eventCard";
 import { useQuery } from "@tanstack/react-query";
-import { approvedEvents } from "@/api/utils";
+import { getEventsByOrganizer } from "@/api/utils";
 import { Event } from "@/types";
+import useAuthStore from "@/provider/auth";
 export default function EventRegistration() {
+    const { user } = useAuthStore();
     const {
         isPending,
         isError,
         data: events,
         error,
     } = useQuery<Event[], Error>({
-        queryKey: ["events"],
-        queryFn: approvedEvents,
+        queryKey: ["events", user?.userID],
+        queryFn: () => getEventsByOrganizer(Number(user?.userID)),
     });
     return (
         <div>

@@ -371,3 +371,17 @@ export const approvedEvents = async () => {
     }
     return response.json();
 };
+//Events created by the organizer
+export const getEventsByOrganizer = async (userID: number) => {
+    const response = await fetch(`http://localhost:8080/events/${userID}/event`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};
