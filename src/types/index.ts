@@ -224,6 +224,7 @@ export type Event = {
     image: File | undefined;
     startTime: string;
     endTime: string;
+    imagePath: string;
 };
 export type Events = {
     id: number;
