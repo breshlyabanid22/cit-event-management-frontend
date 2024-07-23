@@ -1,18 +1,19 @@
 import DeleteEvent from "@/components/app/organizer/deleteEvent";
 import EventImage from "@/assets/event.jpg";
-import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Image, Button, Skeleton } from "@nextui-org/react";
 import { IconEdit, IconEye } from "@tabler/icons-react";
 import { Event } from "@/types";
 import { format, parseISO } from 'date-fns';
-export default function EventCard({ event }: { event: Event }) {    
+export default function EventCard({ event }: { event: Event }) {
     const imagePath: string = "http://localhost:8080" + event.imagePath;
 
     const formatDate = (dateString: string) => {
         const date = parseISO(dateString);
         return format(date, 'MMM dd yyyy hh:mm a');
-      };
-      const startDate = formatDate(event.startTime);
-      const endDate = formatDate(event.endTime);
+    };
+    const startDate = formatDate(event.startTime);
+    const endDate = formatDate(event.endTime);
+
     return (
         <Card className="p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
             <Image
@@ -30,8 +31,8 @@ export default function EventCard({ event }: { event: Event }) {
                     {event.venueName}
                 </p>
                 <small className="text-default-500">
-                    Start on: {startDate} <br/>
-                    until {endDate} 
+                    Start on: {startDate} <br />
+                    until {endDate}
                 </small>
             </CardHeader>
             <CardBody className="overflow-visible py-2 items-start justify-center">
