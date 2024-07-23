@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { approvedEvents } from "@/api/utils";
 import { Event } from "@/types";
 import OngoingEvents from "@/components/app/participant/OngoingEvents";
+import CalendarComponent from "@/components/app/participant/Calendar";
 export default function ParticipantHome() {
     useQuery({
         queryKey: ["events"],
@@ -21,6 +22,7 @@ export default function ParticipantHome() {
             </header>
             <body className="grid grid-cols-3 gap-4">
                 <OngoingEvents />
+                <CalendarComponent />
             </body>
         </div>
     );

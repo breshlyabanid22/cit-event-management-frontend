@@ -36,12 +36,12 @@ export const ParticipantSideBarItems = [
 
 export const OrganizerSideBarItems = [
     {
-        label: "Event Registration",
-        href: "/organizer/event-registration",
+        label: "Events",
+        href: "/organizer/events",
     },
     {
-        label: "Participant Management",
-        href: "/organizer/participant-management",
+        label: "Event Registration",
+        href: "/organizer/event-registration",
     },
 ];
 
