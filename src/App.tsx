@@ -104,14 +104,14 @@ function App() {
                     }
                 />
                 <Route
-                    path="event-registration"
+                    path="events"
                     element={
                         <Suspense fallback={<Loader />}>
                             <OrganizerEventManagement />
                         </Suspense>
                     }
                 />
-                <Route path="participant-management">
+                <Route path="event-registration">
                     <Route
                         index
                         element={
