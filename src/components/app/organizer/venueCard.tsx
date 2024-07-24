@@ -1,6 +1,6 @@
 import { Card, CardFooter, Image, Button } from "@nextui-org/react";
 import { Venue } from "@/types";
-import Slider from "react-slick"
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import venueImage from "@/assets/venue.png";
@@ -10,14 +10,14 @@ export default function VenueCard({ venue }: { venue: Venue }) {
         infinite: true,
         speed: 500,
         slidesToShow: 1,
-        slidesToScroll: 1
-      };
-    const localhost: string = "http://localhost:8080"; 
+        slidesToScroll: 1,
+    };
+    const localhost: string = "http://localhost:8080";
     return (
         <Card isFooterBlurred radius="lg" className="border-none min-w-[500px]">
             <Slider {...settings}>
                 {venue.imagePath?.map((path, index) => (
-                        <Image
+                    <Image
                         key={index}
                         isZoomed
                         alt={`Venue Image ${index + 1}`}
@@ -26,7 +26,7 @@ export default function VenueCard({ venue }: { venue: Venue }) {
                         height={600}
                         src={localhost + path}
                         fallbackSrc={venueImage}
-                        />
+                    />
                 ))}
             </Slider>
             <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">

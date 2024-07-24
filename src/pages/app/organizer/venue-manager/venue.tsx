@@ -11,8 +11,7 @@ export default function Venue() {
         queryKey: ["venues", user?.userID],
         queryFn: () => getAllVenuesByManager(Number(user?.userID)),
     });
-    
-    console.log("Venues by manager:", data);
+
     return (
         <div>
             <header className="mb-6 flex w-full items-center justify-between">
@@ -20,7 +19,6 @@ export default function Venue() {
                     <p className="text-3xl font-bold">Venue</p>
                     <p className="text-md font-light">Manage your Venue</p>
                 </div>
-                <AddVenue />
             </header>
             <body className="grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-8">
                 {isPending ? (

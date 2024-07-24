@@ -25,7 +25,9 @@ export default function EventRegistrationCard({ event }: { event: Event }) {
                     isBlurred
                     isZoomed
                     alt="Card background"
-                    className="object-cover rounded-xl"
+                    className="object-cover h-[300px]"
+                    radius="lg"
+                    width="100%"
                     src={imagePath}
                 ></Image>
             </CardBody>

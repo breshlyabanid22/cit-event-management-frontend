@@ -155,6 +155,23 @@ export const getUsers = async (): Promise<TypeUser[]> => {
     return response.json();
 };
 
+export const getUserByUsername = async (username: string) => {
+    const response = await fetch(
+        `http://localhost:8080/users/${username}/user`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};
+
 export const editUser = async (user: TypeUser) => {
     const response = await fetch(
         `http://localhost:8080/admin/users/${user.userID}`,
@@ -213,7 +230,7 @@ export const activateUser = async (userID: number) => {
 };
 
 export const editAccount = async (account: {
-    firstName: string;  
+    firstName: string;
     lastName: string;
     course: string | undefined;
     department: string | undefined;
@@ -234,16 +251,19 @@ export const editAccount = async (account: {
 };
 export const updateUsername = async (
     userId: number | undefined,
-    username: string
+    username: string,
 ) => {
-    const response = await fetch(`http://localhost:8080/users/${userId}/username`, {
-        method: "PATCH",
-        headers: { 
-            "Content-Type": "application/json",
+    const response = await fetch(
+        `http://localhost:8080/users/${userId}/username`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ updatedUsername: username }),
+            credentials: "include",
         },
-        body: JSON.stringify({updatedUsername: username}),
-        credentials: "include",
-    });
+    );
     if (!response.ok) {
         throw new Error("Network Error");
     }
@@ -252,21 +272,25 @@ export const updateUsername = async (
 
 export const updatePassword = async (
     userId: number | undefined,
-    password: string
+    password: string,
 ) => {
-    const response = await fetch(`http://localhost:8080/users/${userId}/password`, {
-        method: "PATCH",
-        headers: { 
-            "Content-Type": "application/json",
+    const response = await fetch(
+        `http://localhost:8080/users/${userId}/password`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ updatedPassword: password }),
+            credentials: "include",
         },
-        body: JSON.stringify({updatedPassword: password}),
-        credentials: "include",
-    });
+    );
     if (!response.ok) {
         throw new Error("Network Error");
     }
     return response.text();
 };
+
 export const getVenues = async () => {
     const response = await fetch("http://localhost:8080/venues", {
         method: "GET",
@@ -445,12 +469,15 @@ export const getEventsByOrganizer = async (userID: number) => {
     return response.json();
 };
 export const getAllEventsByVenue = async (venueID: number) => {
-    const response = await fetch(`http://localhost:8080/events/venue/${venueID}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
+    const response = await fetch(
+        `http://localhost:8080/events/venue/${venueID}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
         },
-    });
+    );
     if (!response.ok) {
         throw new Error("Network Error");
     }
