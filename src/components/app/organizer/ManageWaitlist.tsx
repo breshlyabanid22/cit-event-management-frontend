@@ -11,10 +11,11 @@ import {
 import ManageWaitlistCard from "@/components/app/organizer/ManageWaitlistCard";
 import { getAllRegistrationsforOrganizer } from "@/api/utils";
 import { useQuery } from "@tanstack/react-query";
+
 export default function ManageWaitlist({ event }: { event: Event }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-    const { isSuccess, data: registration } = useQuery<Event[], Error>({
+    const { isSuccess, data: registrations } = useQuery<Event[], Error>({
         queryKey: ["registrationsforOrganizer", event?.id],
         queryFn: () => getAllRegistrationsforOrganizer(event?.id),
     });
@@ -38,13 +39,18 @@ export default function ManageWaitlist({ event }: { event: Event }) {
                             <p className="text-secondary-500">{event.name}</p>
                         </ModalHeader>
                         <ModalBody className="min-h-[500px] overflow-y-auto">
-                            {registration.status === "Pending" &&
-                                registration?.map((registration) => (
-                                    <ManageWaitlistCard
-                                        key={registration.id}
-                                        registration={registration}
-                                    />
-                                ))}
+                            {isSuccess ? (
+                                registrations.map((registration) =>
+                                    registration.status === "Pending" ? (
+                                        <ManageWaitlistCard
+                                            key={registration.id}
+                                            registration={registration}
+                                        />
+                                    ) : null,
+                                )
+                            ) : (
+                                <Spinner />
+                            )}
                         </ModalBody>
                     </>
                 </ModalContent>
