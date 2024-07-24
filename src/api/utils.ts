@@ -232,6 +232,26 @@ export const editAccount = async (account: {
     }
     return response.text();
 };
+export const updateUsername = async (
+    userId: number | undefined,
+    username: string
+) => {
+    const response = await fetch(`http://localhost:8080/users/${userId}/username`, {
+        method: "PATCH",
+        headers: { 
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({updatedUsername: username}),
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    console.log("Username:", username);
+    return response.text();
+};
+
+
 
 export const getVenues = async () => {
     const response = await fetch("http://localhost:8080/venues", {
