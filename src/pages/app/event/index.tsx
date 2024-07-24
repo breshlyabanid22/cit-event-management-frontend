@@ -155,7 +155,7 @@ export default function Event() {
                     </Button>
                 ) : (
                     user?.username !== event?.organizer &&
-                    user?.role !== "admin" &&
+                    user?.role !== "ADMIN" &&
                     (registration?.status === "Accepted" ? (
                         <Button
                             variant="solid"
