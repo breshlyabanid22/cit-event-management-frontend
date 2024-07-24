@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { approvedEvents } from "@/api/utils";
+import UpcomingEventsCard from "@/components/app/participant/UpcomingEventsCard";
+import { Skeleton } from "@nextui-org/react";
 export default function UpcomingEvents() {
-    const { data, isLoading } = useQuery({
-        queryKey: ["upcomingEvents"],
+    const { data, isSuccess } = useQuery({
+        queryKey: ["approvedEvents"],
         queryFn: approvedEvents,
     });
 
-    console.log(data);
     return (
         <div>
             <header className="flex items-center justify-between w-full mb-6">
@@ -17,8 +18,14 @@ export default function UpcomingEvents() {
                     </p>
                 </div>
             </header>
-            <body className="grid grid-cols-1 gap-4">
-                <div className="flex flex-col col-span-1 gap-4"></div>
+            <body className="grid grid-cols-3 gap-4">
+                {isSuccess ? (
+                    data?.map((event) => (
+                        <UpcomingEventsCard event={event} key={event.id} />
+                    ))
+                ) : (
+                    <Skeleton className="rounded-lg h-[300px]" />
+                )}
             </body>
         </div>
     );

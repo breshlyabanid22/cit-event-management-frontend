@@ -1,70 +1,154 @@
-import DeleteEvent from "@/components/app/organizer/deleteEvent";
-import EventImage from "@/assets/event.jpg";
 import {
     Card,
-    CardHeader,
     CardBody,
     Image,
-    Button,
+    CardFooter,
     Chip,
+    Button,
+    Link,
 } from "@nextui-org/react";
-import { IconEdit, IconEye } from "@tabler/icons-react";
 import { Event } from "@/types";
-import { format, parseISO } from "date-fns";
-import { Link } from "react-router-dom";
-import EditEvent from "@/components/app/organizer/EditEvent";
+import { IconEye, IconUserShare } from "@tabler/icons-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    getEventRegistrationByEventandUser,
+    userRegisterEvent,
+    cancelRegistration,
+} from "@/api/utils";
+import useAuthStore from "@/provider/auth";
+import toast, { Toaster } from "react-hot-toast";
+
 export default function UpcomingEventsCard({ event }: { event: Event }) {
-    const imagePath: string = "http://localhost:8080" + event.imagePath;
+    const queryClient = useQueryClient();
+    const { user } = useAuthStore();
+    const {
+        data: registration,
+        isSuccess: isSuccessRegistration,
+        isLoading,
+        isError,
+        refetch,
+    } = useQuery<Event>({
+        queryKey: ["eventRegistrationByEventandUser", event.id],
+        queryFn: () =>
+            getEventRegistrationByEventandUser({
+                eventId: event.id,
+                userId: user?.userID,
+            }),
+        enabled: !!user,
+        retry: 0,
+    });
 
-    const formatDate = (dateString: string) => {
-        const date = parseISO(dateString);
-        return format(date, "MMM dd yyyy hh:mm a");
+    const registerEvent = async () => {
+        try {
+            await userRegisterEvent({
+                eventId: Number(event.id),
+                userId: user?.userID,
+            });
+            toast.success("Registration successful!");
+            refetch();
+        } catch (error) {
+            console.error(error);
+            toast.error("Error registering for event!");
+        }
     };
-    const startDate = formatDate(event.startTime);
-    const endDate = formatDate(event.endTime);
 
+    const onPressCancel = async () => {
+        try {
+            await cancelRegistration(Number(registration?.id));
+            toast.success("Registration cancelled!");
+            refetch();
+        } catch (error) {
+            console.error(error);
+            toast.error("Error canceling registration!");
+        }
+    };
+
+    const imagePath: string = "http://localhost:8080" + event.imagePath;
     return (
-        <Card className="p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
-            <Image
-                isBlurred
-                isZoomed
-                alt="Card background"
-                className="object-cover rounded-xl"
-                src={imagePath}
-                fallbackSrc={EventImage}
-                width={600}
+        <div>
+            <Toaster
+                position="bottom-right"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                    // Define default options
+                    className: "",
+                    duration: 5000,
+                    style: {
+                        background: "#800000",
+                        color: "#fff",
+                    },
+                }}
             />
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start justify-center gap-4">
-                <div className="flex flex-row gap-2">
-                    <h4 className="font-bold text-large">{event.name}</h4>
-                    <Chip color="secondary" size="sm">
-                        {event.status}
+            <Card>
+                <CardBody className="items-end justify-end py-2 overflow-visible">
+                    <Chip
+                        size="sm"
+                        color="warning"
+                        variant="light"
+                        className="mb-2"
+                    >
+                        # of registered participants
                     </Chip>
-                </div>
-                <p className="text-tiny uppercase font-bold">
-                    {event.venueName}
-                </p>
-                <small className="text-default-500">
-                    Start on: {startDate} <br />
-                    until {endDate}
-                </small>
-            </CardHeader>
-            <CardBody className="overflow-visible py-2 items-start justify-center">
-                <p className="text-default-500">{event.description}</p>
-            </CardBody>
-            <CardBody className="pb-0 pt-2 px-4 flex-col items-end justify-center gap-4">
-                <Button
-                    color="secondary"
-                    variant="flat"
-                    as={Link}
-                    to={`/event/${event.id}`}
-                    endContent={<IconEye />}
-                >
-                    View
-                </Button>
-                <EditEvent props={event} />
-                <DeleteEvent props={event} />
-            </CardBody>
-        </Card>
+                    <Image
+                        isBlurred
+                        isZoomed
+                        alt="Card background"
+                        className="object-cover h-[300px]"
+                        radius="lg"
+                        width="100%"
+                        src={imagePath}
+                    ></Image>
+                </CardBody>
+                <CardFooter className="flex-col items-start px-4 py-2">
+                    <p className="font-bold uppercase text-tiny">
+                        {event.status}
+                    </p>{" "}
+                    <h4 className="font-bold text-large">{event.name}</h4>
+                    <small className="text-default-500">
+                        {event.description}
+                    </small>
+                    <div className="flex flex-row gap-4 justify-center self-center items-center">
+                        <Button
+                            color="secondary"
+                            variant="flat"
+                            radius="full"
+                            size="md"
+                            as={Link}
+                            href={`/event/${event.id}`}
+                        >
+                            View
+                        </Button>
+                        {isSuccessRegistration &&
+                            registration?.status === "Pending" ? (
+                            <Button
+                                variant="flat"
+                                color="danger"
+                                radius="full"
+                                size="md"
+                                onPress={onPressCancel}
+                            >
+                                Cancel
+                            </Button>
+                        ) : (
+                            user?.username !== event?.organizer &&
+                            user?.role !== "admin" && (
+                                <Button
+                                    variant="flat"
+                                    color="primary"
+                                    radius="full"
+                                    size="md"
+                                    onPress={registerEvent}
+                                >
+                                    Register
+                                </Button>
+                            )
+                        )}
+                    </div>
+                </CardFooter>
+            </Card>
+        </div>
     );
 }

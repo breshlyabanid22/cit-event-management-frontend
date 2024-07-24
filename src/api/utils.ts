@@ -591,3 +591,20 @@ export const declineUserRegistration = async (registrationId: number) => {
     }
     return response.text();
 };
+
+export const cancelRegistration = async (registrationId: number) => {
+    const response = await fetch(
+        `http://localhost:8080/registrations/cancel/${registrationId}`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};

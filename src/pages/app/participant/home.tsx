@@ -5,7 +5,7 @@ import UpcomingEvents from "@/components/app/participant/UpcomingEvents";
 import CalendarComponent from "@/components/app/participant/Calendar";
 export default function ParticipantHome() {
     useQuery({
-        queryKey: ["events"],
+        queryKey: ["approvedEvents"],
         queryFn: approvedEvents,
         notifyOnChangeProps: [],
     });

@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Event as TypeEvent, TypeUser } from "@/types";
 import {
     getEventRegistrationByEventandUser,
     getEventById,
     userRegisterEvent,
     getUserByUsername,
+    cancelRegistration,
 } from "@/api/utils";
 import {
     Skeleton,
@@ -48,27 +49,49 @@ export default function Event() {
         queryFn: () => getEventById(Number(params.id)),
     });
 
-    const { data: registration, isSuccess: isSuccessRegistration } =
-        useQuery<TypeEvent>({
-            queryKey: ["eventRegistrationByEventandUser", params.id],
-            queryFn: () =>
-                getEventRegistrationByEventandUser({
-                    eventId: Number(params.id),
-                    userId: user?.userID,
-                }),
-        });
+    const {
+        data: registration,
+        isSuccess: isSuccessRegistration,
+        refetch,
+    } = useQuery<TypeEvent>({
+        queryKey: ["eventRegistrationByEventandUser", params.id],
+        queryFn: () =>
+            getEventRegistrationByEventandUser({
+                eventId: Number(params.id),
+                userId: user?.userID,
+            }),
+        enabled: !!user,
+        retry: 0,
+    });
+
+    const { mutate: registerMutate } = useMutation({
+        mutationFn: () =>
+            userRegisterEvent({
+                eventId: Number(params.id),
+                userId: user?.userID,
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["approvedEvents"] });
+            refetch();
+            toast.success("Registration successful!");
+        },
+    });
+
+    const { mutate: cancelMutate } = useMutation({
+        mutationFn: () => cancelRegistration(Number(registration?.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["approvedEvents"] });
+            refetch();
+            toast.success("Registration cancelled!");
+        },
+    });
 
     const registerEvent = async () => {
-        await userRegisterEvent({
-            eventId: Number(params.id),
-            userId: user?.userID,
-        });
-        queryClient.invalidateQueries({ queryKey: ["eventById", params.id] });
-        toast.success("Registration successful!");
+        registerMutate();
     };
 
-    const onPressPending = async () => {
-        toast.error("Please wait for the event organizer to approve.");
+    const onPressCancel = async () => {
+        cancelMutate();
     };
 
     const { data: userByUsername } = useQuery<TypeUser>({
@@ -117,29 +140,29 @@ export default function Event() {
                 >
                     Go Back{" "}
                 </Button>
-                {registration?.status !== "Pending" &&
+                {isSuccessRegistration && registration?.status === "Pending" ? (
+                    <Button
+                        variant="solid"
+                        color="danger"
+                        startContent={<IconUserShare />}
+                        onPress={onPressCancel}
+                    >
+                        Cancel
+                    </Button>
+                ) : (
                     user?.username !== event?.organizer &&
                     user?.role !== "admin" && (
                         <Button
                             variant="solid"
-                            color="primary"
+                            color="warning"
                             startContent={<IconUserShare />}
                             onPress={registerEvent}
+                            className="text-white"
                         >
                             Register
                         </Button>
-                    )}
-
-                {registration?.status === "Pending" && (
-                    <Button
-                        variant="solid"
-                        color="primary"
-                        startContent={<IconUserShare />}
-                        onPress={onPressPending}
-                    >
-                        Pending
-                    </Button>
-                )}
+                    )
+                )}{" "}
             </header>
             <Card className="min-h-[1000px] gap-4">
                 <Skeleton className="rounded-lg" isLoaded={isSuccess}>
