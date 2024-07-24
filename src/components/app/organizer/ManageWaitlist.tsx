@@ -38,12 +38,13 @@ export default function ManageWaitlist({ event }: { event: Event }) {
                             <p className="text-secondary-500">{event.name}</p>
                         </ModalHeader>
                         <ModalBody className="min-h-[500px] overflow-y-auto">
-                            {registration?.map((registration) => (
-                                <ManageWaitlistCard
-                                    key={registration.id}
-                                    registration={registration}
-                                />
-                            ))}
+                            {registration.status === "Pending" &&
+                                registration?.map((registration) => (
+                                    <ManageWaitlistCard
+                                        key={registration.id}
+                                        registration={registration}
+                                    />
+                                ))}
                         </ModalBody>
                     </>
                 </ModalContent>
