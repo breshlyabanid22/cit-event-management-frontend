@@ -63,6 +63,10 @@ export default function UpcomingEventsCard({ event }: { event: Event }) {
         }
     };
 
+    const onPressAccepted = async () => {
+        toast.success("Registration already accepted!");
+    };
+
     const imagePath: string = "http://localhost:8080" + event.imagePath;
     return (
         <div>
@@ -103,9 +107,6 @@ export default function UpcomingEventsCard({ event }: { event: Event }) {
                     ></Image>
                 </CardBody>
                 <CardFooter className="flex-col items-start px-4 py-2">
-                    <p className="font-bold uppercase text-tiny">
-                        {event.status}
-                    </p>{" "}
                     <h4 className="font-bold text-large">{event.name}</h4>
                     <small className="text-default-500">
                         {event.description}
@@ -127,24 +128,36 @@ export default function UpcomingEventsCard({ event }: { event: Event }) {
                                 variant="flat"
                                 color="danger"
                                 radius="full"
-                                size="md"
+                                startContent={<IconUserShare />}
                                 onPress={onPressCancel}
                             >
                                 Cancel
                             </Button>
                         ) : (
                             user?.username !== event?.organizer &&
-                            user?.role !== "admin" && (
+                            user?.role !== "admin" &&
+                            (registration?.status === "Accepted" ? (
                                 <Button
                                     variant="flat"
-                                    color="primary"
                                     radius="full"
-                                    size="md"
+                                    color="success"
+                                    startContent={<IconUserShare />}
+                                    onPress={onPressAccepted}
+                                >
+                                    Accepted
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant="flat"
+                                    radius="full"
+                                    color="warning"
+                                    startContent={<IconUserShare />}
                                     onPress={registerEvent}
+                                    className="text-white"
                                 >
                                     Register
                                 </Button>
-                            )
+                            ))
                         )}
                     </div>
                 </CardFooter>

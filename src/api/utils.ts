@@ -608,3 +608,20 @@ export const cancelRegistration = async (registrationId: number) => {
     }
     return response.text();
 };
+
+export const getScheduledEvents = async () => {
+    const response = await fetch(
+        "http://localhost:8080/registrations/acceptedEvents",
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.json();
+};

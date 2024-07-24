@@ -94,6 +94,10 @@ export default function Event() {
         cancelMutate();
     };
 
+    const onPressAccepted = async () => {
+        toast.success("Registration already accepted!");
+    };
+
     const { data: userByUsername } = useQuery<TypeUser>({
         queryKey: ["userByUsername", event?.organizer],
         queryFn: () => getUserByUsername(event?.organizer),
@@ -151,7 +155,16 @@ export default function Event() {
                     </Button>
                 ) : (
                     user?.username !== event?.organizer &&
-                    user?.role !== "admin" && (
+                    user?.role !== "admin" &&
+                    (registration?.status === "Accepted" ? (
+                        <Button
+                            variant="solid"
+                            color="success"
+                            onPress={onPressAccepted}
+                        >
+                            Accepted
+                        </Button>
+                    ) : (
                         <Button
                             variant="solid"
                             color="warning"
@@ -161,8 +174,8 @@ export default function Event() {
                         >
                             Register
                         </Button>
-                    )
-                )}{" "}
+                    ))
+                )}
             </header>
             <Card className="min-h-[1000px] gap-4">
                 <Skeleton className="rounded-lg" isLoaded={isSuccess}>
