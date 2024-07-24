@@ -7,6 +7,7 @@ import {
     Button,
     User,
 } from "@nextui-org/react";
+import toast, { Toaster } from "react-hot-toast";
 import { acceptUserRegistration, declineUserRegistration } from "@/api/utils";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -16,6 +17,7 @@ export default function ManageWaitlistCard({
     const queryClient = useQueryClient();
     const acceptRegistration = async () => {
         await acceptUserRegistration(registration.id);
+        toast.success("Added to participant list");
         queryClient.invalidateQueries({
             queryKey: ["registrationsforOrganizer", registration.id],
         });
@@ -23,6 +25,7 @@ export default function ManageWaitlistCard({
 
     const declineRegistration = async () => {
         await declineUserRegistration(registration.id);
+        toast.success("Removed from participant list")
         queryClient.invalidateQueries({
             queryKey: ["registrationsforOrganizer", registration.id],
         });
@@ -30,10 +33,26 @@ export default function ManageWaitlistCard({
 
     return (
         <div>
+            <Toaster
+                position="bottom-right"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                    // Define default options
+                    className: "text-sm",
+                    duration: 5000,
+                    style: {
+                        background: "#800000",
+                        color: "#fff",
+                    },
+                }}
+            />
             <Card
                 shadow="sm"
                 radius="lg"
-                className="p-4 flex flex-row items-center justify-between "
+                className="flex flex-row items-center justify-between p-4 "
             >
                 <User
                     name={registration.fullName}

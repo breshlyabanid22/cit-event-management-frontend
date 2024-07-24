@@ -117,7 +117,8 @@ export default function Settings() {
         resolver: zodResolver(changeNameSchema),
         defaultValues: {
             firstName: user?.firstName,
-            lastName: user?.lastName
+            lastName: user?.lastName,
+
         },
     });
 

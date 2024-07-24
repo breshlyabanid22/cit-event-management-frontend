@@ -213,7 +213,7 @@ export const activateUser = async (userID: number) => {
 };
 
 export const editAccount = async (account: {
-    firstName: string;
+    firstName: string;  
     lastName: string;
     course: string | undefined;
     department: string | undefined;
