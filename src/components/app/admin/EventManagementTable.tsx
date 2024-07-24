@@ -22,7 +22,7 @@ import { IconSearch, IconChevronDown } from "@tabler/icons-react";
 import DeleteEvent from "@/components/app/admin/DeleteEvent";
 import EditEvent from "@/components/app/admin/EditEvent";
 import AcceptEvent from "@/components/app/admin/AcceptEvent";
-
+import { format, parseISO } from 'date-fns';
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -135,7 +135,7 @@ export default function eventManagementTable() {
     const [page, setPage] = React.useState(1);
 
     const hasSearchFilter = Boolean(filterValue);
-
+      
     const headerColumns = React.useMemo(() => {
         if (visibleColumns === "all") return columns;
 
@@ -146,7 +146,7 @@ export default function eventManagementTable() {
 
     const filteredItems = React.useMemo(() => {
         let filteredEvents = data || []; // Use data from React Query
-
+        
         if (hasSearchFilter) {
             filteredEvents = filteredEvents.filter(
                 (event) =>
@@ -227,7 +227,39 @@ export default function eventManagementTable() {
                             : "Deactivated"}
                     </Chip>
                 );
-
+            case "organizerId":
+                    return (
+                        <Chip
+                            className="capitalize"
+                            color={statusColorMap2[event.organizer]}
+                            size="sm"
+                            variant="flat"
+                        >
+                            {event.organizer}
+                        </Chip>
+                    );
+            case "startDate":
+                return (
+                    <Chip
+                        className="capitalize"
+                        color={statusColorMap2[event.startDate]}
+                        size="sm"
+                        variant="flat"
+                    >
+                        {event.startTime}
+                    </Chip>
+                );
+            case "endDate":
+                    return (
+                        <Chip
+                            className="capitalize"
+                            color={statusColorMap2[event.endDate]}
+                            size="sm"
+                            variant="flat"
+                        >
+                            {event.endTime}
+                        </Chip>
+                    );
             case "status":
                 return (
                     <Chip
@@ -238,7 +270,7 @@ export default function eventManagementTable() {
                     >
                         {event.status}
                     </Chip>
-                );
+                    );
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2 ">
