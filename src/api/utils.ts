@@ -290,6 +290,28 @@ export const updatePassword = async (
     }
     return response.text();
 };
+export const updateEmail = async (
+    userId: number | undefined,
+    email: string,
+) => {
+    const response = await fetch(
+        `http://localhost:8080/users/${userId}/email`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ updatedEmail: email }),
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+
+
 
 export const getVenues = async () => {
     const response = await fetch("http://localhost:8080/venues", {
