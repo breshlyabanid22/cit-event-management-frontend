@@ -38,7 +38,7 @@ export default function DeleteEvent({ props }: { props: Event }) {
                     },
                 }}
             />
-            <Button onPress={onOpen} color="danger" variant="flat">
+            <Button onPress={onOpen} color="danger" variant="flat" endContent={<IconTrash />}>
                 Delete
             </Button>
             <Modal
