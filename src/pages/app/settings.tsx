@@ -121,6 +121,8 @@ export default function Settings() {
 
         },
     });
+    //Sorts notifications before mapping
+    const sortedNotifications = notifications.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     const nameOnSubmit = async (data: z.infer<typeof changeNameSchema>) => {
             await editAccount({
@@ -468,7 +470,7 @@ export default function Settings() {
                                     size={100}
                                     className="overflow-y-auto h-[600px]"
                                 >
-                                    {notifications.map((notification) => (
+                                    {sortedNotifications.map((notification) => (
                                         <Card
                                             key={notification.id}
                                             className="flex flex-row self-center justify-between gap-4 p-4 m-4"
