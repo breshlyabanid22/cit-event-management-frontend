@@ -3,6 +3,9 @@ import { approvedEvents, getScheduledEvents } from "@/api/utils";
 import UpcomingEvents from "@/components/app/participant/UpcomingEvents";
 import CalendarComponent from "@/components/app/participant/Calendar";
 import ScheduledEventsCard from "@/components/app/participant/ScheduledEventsCard";
+import TotalEventAttended from "@/components/app/participant/TotalEventAttended";
+import TotalEvents from "@/components/app/participant/TotalEvents";
+import FeedbackCounterCard from "@/components/app/participant/FeedbackCounterCard";
 export default function ParticipantHome() {
     useQuery({
         queryKey: ["approvedEvents"],
@@ -21,6 +24,9 @@ export default function ParticipantHome() {
                 </div>
             </header>
             <body className="grid grid-cols-3 gap-4">
+                <TotalEventAttended />
+                <FeedbackCounterCard />
+                <TotalEvents />
                 <UpcomingEvents />
                 <CalendarComponent />
                 <ScheduledEventsCard />
