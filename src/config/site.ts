@@ -28,10 +28,6 @@ export const ParticipantSideBarItems = [
         label: "Upcoming Events",
         href: "/participant/upcoming-event",
     },
-    {
-        label: "Feedback",
-        href: "/participant/feedback",
-    },
 ];
 
 export const OrganizerSideBarItems = [
