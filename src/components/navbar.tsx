@@ -118,8 +118,8 @@ export const Navbar = () => {
                                         ? "primary"
                                         : index ===
                                             siteConfig.navMenuItems.length - 1
-                                          ? "danger"
-                                          : "foreground"
+                                            ? "danger"
+                                            : "foreground"
                                 }
                                 href="#"
                                 size="lg"
