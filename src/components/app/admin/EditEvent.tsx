@@ -86,7 +86,7 @@ export default function EditEvent({ event }: { event: Event }) {
             name: event.name,
             description: event.description,
             venueId: event.venueId,
-            resourceId: event.resourceId,
+            resourceId: [],
             image: event.image,
             startTime: event.startTime,
             endTime: event.endTime,
@@ -118,8 +118,7 @@ export default function EditEvent({ event }: { event: Event }) {
             if (createEventData.image) {
                 formData.append("imageFile", createEventData.image);
             }
-            console.log(createEventData);
-            await fetch("http://localhost:8080/events", {
+            await fetch(`http://localhost:8080/events/${event.id}`, {
                 method: "PATCH",
                 body: formData,
                 credentials: "include",
@@ -137,8 +136,6 @@ export default function EditEvent({ event }: { event: Event }) {
                 .catch((error) => {
                     console.error("Error creating event:", error);
                 });
-
-            console.log(createEventData);
         } catch (error) {
             console.error("error submitting", error);
         }

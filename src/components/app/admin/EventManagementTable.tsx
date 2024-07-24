@@ -99,6 +99,12 @@ const activeColorMap = {
     false: "danger",
 };
 
+const statusColorMap2 = {
+    Pending: "warning",
+    Approved: "success",
+    Cancelled: "danger",
+};
+
 const INITIAL_VISIBLE_COLUMNS = [
     "name",
     "venueId",
@@ -219,6 +225,18 @@ export default function eventManagementTable() {
                         {event.active.toString() === "true"
                             ? "Active"
                             : "Deactivated"}
+                    </Chip>
+                );
+
+            case "status":
+                return (
+                    <Chip
+                        className="capitalize"
+                        color={statusColorMap2[event.status]}
+                        size="sm"
+                        variant="flat"
+                    >
+                        {event.status}
                     </Chip>
                 );
             case "actions":
