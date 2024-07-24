@@ -448,7 +448,7 @@ export default function Settings() {
                             </form>
                         </Tab>
                         <Tab key="security" title="Security">
-                            <div className="sm:w-[300px] md:w-[500px] lg:w-[700px]">
+                            <div className="sm:w-[300px] md:w-[500px] lg:w-[760px]">
                                 <div>
                                     <UsernameCard username={user?.username} />
                                 </div>
