@@ -18,7 +18,6 @@ import {
     DropdownItem,
 } from "@nextui-org/react";
 import { getLocalTimeZone, now, parseDateTime } from "@internationalized/date";
-import LogoIcon from "@/components/icons/LogoIcon.tsx";
 import z from "zod";
 import { Venue, Resource, Event } from "@/types";
 import toast, { Toaster } from "react-hot-toast";
@@ -30,14 +29,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const eventSchema = z
     .object({
-        id: z.number().min(1, "Event ID must be at least 1 characters long"),
         name: z
             .string()
             .min(3, "Event name must be at least 3 characters long"),
         description: z.string().max(300, "Maximum of 300 characters only"),
         venueId: z.coerce.number(),
         resourceId: z.array(z.coerce.number()),
-        image: z.instanceof(File),
+        image: z.instanceof(File).optional(),
         startTime: z.string(),
         endTime: z.string(),
     })
@@ -46,7 +44,7 @@ const eventSchema = z
         path: ["endTime"],
     });
 
-export default function EditEvent({ event }: { event: Event }) {
+export default function EditEvent({ event } : {event: Event}) {
     const queryClient = useQueryClient();
     const {
         isPending,
@@ -78,23 +76,24 @@ export default function EditEvent({ event }: { event: Event }) {
         register,
         handleSubmit,
         setValue,
-        formState: { errors, isSubmitting, isSubmitSuccessful, isDirty },
+        formState: { errors, isSubmitting, isDirty },
     } = useForm<FormField>({
         resolver: zodResolver(eventSchema),
         defaultValues: {
-            id: event.id,
+            resourceId: [],
+            image: undefined,
             name: event.name,
             description: event.description,
             venueId: event.venueId,
-            resourceId: [],
-            image: event.image,
             startTime: event.startTime,
             endTime: event.endTime,
+
         },
     });
 
     const submitEvent: SubmitHandler<FormField> = async (data) => {
         try {
+
             const createEventData: Event = {
                 name: data.name,
                 description: data.description,
@@ -107,17 +106,20 @@ export default function EditEvent({ event }: { event: Event }) {
 
             const formData = new FormData();
             formData.append(
-                "eventDTO",
+                "updatedEventDTO",
                 new Blob([JSON.stringify(createEventData)], {
                     type: "application/json",
                 }),
             );
-            createEventData.resourceId.forEach((id) => {
-                formData.append("resourceId", id.toString());
-            });
+            if(createEventData.resourceId){
+                createEventData.resourceId.forEach((id) => {
+                    formData.append("resourceId", id.toString());
+                });
+            }
             if (createEventData.image) {
                 formData.append("imageFile", createEventData.image);
             }
+            console.log(createEventData);
             await fetch(`http://localhost:8080/events/${event.id}`, {
                 method: "PATCH",
                 body: formData,
@@ -160,12 +162,12 @@ export default function EditEvent({ event }: { event: Event }) {
                     },
                 }}
             />
-            <Button
+           <Button
+                onPress={onOpen}
                 size="sm"
-                radius="full"
                 variant="flat"
                 color="warning"
-                onPress={onOpen}
+                radius="full"
             >
                 Edit
             </Button>
@@ -175,7 +177,7 @@ export default function EditEvent({ event }: { event: Event }) {
                         {(onClose) => (
                             <>
                                 <ModalHeader className="flex flex-col gap-1">
-                                    Edit Event
+                                    Add Event
                                 </ModalHeader>
                                 <ModalBody>
                                     <form className="flex flex-col gap-4">
@@ -233,7 +235,6 @@ export default function EditEvent({ event }: { event: Event }) {
                                                     src={URL.createObjectURL(
                                                         thumbnail,
                                                     )}
-                                                    className="items-center self-center object-cover hover:object-contain justify-self-center"
                                                 />
                                             )}
                                         </div>

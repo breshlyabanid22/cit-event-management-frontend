@@ -385,6 +385,7 @@ export const editEvent = async (event: Event) => {
     if (!response.ok) {
         throw new Error("Network Error");
     }
+    console.log("Event: ", response.json());
     return response.text();
 };
 

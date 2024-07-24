@@ -36,7 +36,7 @@ const eventSchema = z
         description: z.string().max(300, "Maximum of 300 characters only"),
         venueId: z.coerce.number(),
         resourceId: z.array(z.coerce.number()),
-        image: z.instanceof(File),
+        image: z.instanceof(File).optional(),
         startTime: z.string(),
         endTime: z.string(),
     })
@@ -93,6 +93,7 @@ export default function EditEvent({ props }: { props: Event }) {
 
     const submitEvent: SubmitHandler<FormField> = async (data) => {
         try {
+            console.log("Data:", data);
             const createEventData: Event = {
                 name: data.name,
                 description: data.description,
@@ -105,19 +106,21 @@ export default function EditEvent({ props }: { props: Event }) {
 
             const formData = new FormData();
             formData.append(
-                "eventDTO",
+                "updatedEventDTO",
                 new Blob([JSON.stringify(createEventData)], {
                     type: "application/json",
                 }),
             );
-            createEventData.resourceId.forEach((id) => {
-                formData.append("resourceId", id.toString());
-            });
+            if(createEventData.resourceId){
+                createEventData.resourceId.forEach((id) => {
+                    formData.append("resourceId", id.toString());
+                });
+            }
             if (createEventData.image) {
                 formData.append("imageFile", createEventData.image);
             }
             console.log(createEventData);
-            await fetch("http://localhost:8080/events", {
+            await fetch(`http://localhost:8080/events/${props.id}`, {
                 method: "PATCH",
                 body: formData,
                 credentials: "include",
@@ -135,8 +138,6 @@ export default function EditEvent({ props }: { props: Event }) {
                 .catch((error) => {
                     console.error("Error creating event:", error);
                 });
-
-            console.log(createEventData);
         } catch (error) {
             console.error("error submitting", error);
         }
@@ -175,7 +176,7 @@ export default function EditEvent({ props }: { props: Event }) {
                         {(onClose) => (
                             <>
                                 <ModalHeader className="flex flex-col gap-1">
-                                    Edit Event
+                                    Add Event
                                 </ModalHeader>
                                 <ModalBody>
                                     <form className="flex flex-col gap-4">
