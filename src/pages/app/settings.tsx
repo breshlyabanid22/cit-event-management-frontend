@@ -264,21 +264,25 @@ export default function Settings() {
                                             }
                                         />
                                     </div>
-                                    <div className="grid grid-cols-3 gap-4 mb-3 mt-3">
-                                        <p className="text-red-900 font-bold">
+                                    {user?.role !== "ADMIN" && (
+                                        <>
+                                        <div className="grid grid-cols-3 gap-4 mt-3 mb-3">
+                                        <p className="font-bold text-red-900">
                                             Department: 
                                             <p className="font-normal text-default-foreground">{user?.department}</p>
                                         </p>
-                                        <p className="text-red-900 font-bold">
+                                        <p className="font-bold text-red-900">
                                             Course:
                                             <p className="font-normal text-default-foreground">{user?.course}</p>
                                         </p> 
-                                        <p className="text-red-900 font-bold">
+                                        <p className="font-bold text-red-900">
                                             Year:
                                             <p className="font-normal text-default-foreground">{user?.year}</p>
                                         </p> 
                                     </div>
                                     <hr/>
+                                        </>
+                                    )}
                                     {user?.role !== "ADMIN" && (
                                         <div>
                                             <h3 className="mt-4 text-lg font-bold">
@@ -449,7 +453,7 @@ export default function Settings() {
                                     <UsernameCard username={user?.username} />
                                 </div>
                                 <div className="mt-4">
-                                    <PasswordCard />
+                                    <PasswordCard password={user?.password}/>
                                 </div>
                                 <div className="mt-4">
                                     <EmailCard email={user?.email} />
@@ -467,7 +471,7 @@ export default function Settings() {
                                     {notifications.map((notification) => (
                                         <Card
                                             key={notification.id}
-                                            className="m-4 p-4 gap-4 flex flex-row justify-between self-center"
+                                            className="flex flex-row self-center justify-between gap-4 p-4 m-4"
                                             radius="lg"
                                         >
                                             <div>
