@@ -137,6 +137,7 @@ export default function Login() {
                 const errorMessage = await response.text();
                 toast.error(errorMessage || "Registration Failed")
             }
+            await login({ username: data.username, password: data.password });
             return response;
         } catch (error) {
             console.error("Registration failed:", error);

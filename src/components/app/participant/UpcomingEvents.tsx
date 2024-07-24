@@ -47,8 +47,7 @@ export default function UpcomingEvents() {
                                 >
                                     <p className="text-md">{event.name}</p>
                                     <p className="text-sm text-default-500">
-                                        {formatDate(event.startTime)} -{" "}
-                                        {formatDate(event.endTime)}
+                                        {formatDate(event.startTime)}
                                     </p>
                                 </Link>
                             );
