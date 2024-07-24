@@ -17,9 +17,14 @@ export default function DeleteVenue({ venue }: { venue: Venue }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const submitDelete = async (venueID: number) => {
+        try{
         await deleteVenue(venue.id);
         queryClient.invalidateQueries({ queryKey: ["venues"] });
         toast.success("Venue deleted successfully");
+        }catch(error){
+            const message: string = "The venue is currently in used.";
+            toast.error(message);
+        }
         isOpen ? onOpenChange() : null;
     };
 
