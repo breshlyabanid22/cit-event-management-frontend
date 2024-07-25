@@ -32,7 +32,6 @@ export default function EventCard({ event }: { event: Event }) {
                 className="object-cover rounded-xl"
                 src={imagePath}
                 fallbackSrc={EventImage}
-                heigth={600}
                 width={600}
             />
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start justify-center gap-4">
