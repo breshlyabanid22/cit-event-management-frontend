@@ -7,7 +7,6 @@ export default function ScheduledList() {
         queryFn: () => getScheduledEvents(),
     });
 
-    console.log(scheduledEvents);
     return (
         <div>
             <header className="mb-6 flex w-full items-center justify-between">

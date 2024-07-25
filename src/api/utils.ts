@@ -407,7 +407,6 @@ export const editEvent = async (event: Event) => {
     if (!response.ok) {
         throw new Error("Network Error");
     }
-    console.log("Event: ", response.json());
     return response.text();
 };
 
@@ -504,7 +503,6 @@ export const getAllEventsByVenue = async (venueID: number) => {
     if (!response.ok) {
         throw new Error("Network Error");
     }
-    console.log("Events By Venue: ", response.json());
     return response.json();
 };
 
