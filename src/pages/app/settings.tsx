@@ -3,7 +3,7 @@ import {
     Tab,
     Card,
     CardBody,
-    Image,
+    User,
     Chip,
     Input,
     Select,
@@ -125,20 +125,20 @@ export default function Settings() {
     const sortedNotifications = notifications.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     const nameOnSubmit = async (data: z.infer<typeof changeNameSchema>) => {
-            await editAccount({
-                firstName: data.firstName,
-                lastName: data.lastName,
-                course: data.course,
-                department: data.department,
-                year: data.year,
-            });
-            queryClient.invalidateQueries({ queryKey: ["users"] });
-            toast.success("Successfully saved");
+        await editAccount({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            course: data.course,
+            department: data.department,
+            year: data.year,
+        });
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+        toast.success("Successfully saved");
     };
 
     return (
         <div>
-             <Toaster
+            <Toaster
                 position="bottom-right"
                 reverseOrder={false}
                 gutter={8}
@@ -182,12 +182,10 @@ export default function Settings() {
                                         className="gap-4 mt-4"
                                     >
                                         <CardBody className="flex flex-row gap-4">
-                                            <Image
-                                                isBlurred
+                                            <User
                                                 width={50}
                                                 radius="full"
-                                                src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
-                                                alt="NextUI Album Cover"
+                                                alt="Profile Picture"
                                                 className="col-span-2"
                                             />
                                             <div className="items-center justify-center">
@@ -268,21 +266,21 @@ export default function Settings() {
                                     </div>
                                     {user?.role !== "ADMIN" && (
                                         <>
-                                        <div className="grid grid-cols-3 gap-4 mt-3 mb-3">
-                                        <p className="font-bold text-red-900">
-                                            Department: 
-                                            <p className="font-normal text-default-foreground">{user?.department}</p>
-                                        </p>
-                                        <p className="font-bold text-red-900">
-                                            Course:
-                                            <p className="font-normal text-default-foreground">{user?.course}</p>
-                                        </p> 
-                                        <p className="font-bold text-red-900">
-                                            Year:
-                                            <p className="font-normal text-default-foreground">{user?.year}</p>
-                                        </p> 
-                                    </div>
-                                    <hr/>
+                                            <div className="grid grid-cols-3 gap-4 mt-3 mb-3">
+                                                <p className="font-bold text-red-900">
+                                                    Department:
+                                                    <p className="font-normal text-default-foreground">{user?.department}</p>
+                                                </p>
+                                                <p className="font-bold text-red-900">
+                                                    Course:
+                                                    <p className="font-normal text-default-foreground">{user?.course}</p>
+                                                </p>
+                                                <p className="font-bold text-red-900">
+                                                    Year:
+                                                    <p className="font-normal text-default-foreground">{user?.year}</p>
+                                                </p>
+                                            </div>
+                                            <hr />
                                         </>
                                     )}
                                     {user?.role !== "ADMIN" && (
@@ -324,23 +322,23 @@ export default function Settings() {
                                             <div className="grid grid-cols-2 gap-4">
                                                 {selectedDepartment ===
                                                     "College" && (
-                                                    <Select
-                                                        {...changeNameRegister("course")}
-                                                        placeholder="Select a course"
-                                                        className="w-full mt-2"
-                                                    >
-                                                        {Course.map((item) => (
-                                                            <SelectItem
-                                                            key={item.value}
-                                                            value={
-                                                                item.value
-                                                            }
+                                                        <Select
+                                                            {...changeNameRegister("course")}
+                                                            placeholder="Select a course"
+                                                            className="w-full mt-2"
                                                         >
-                                                            {item.label}
-                                                        </SelectItem>
-                                                        ))}
-                                                    </Select>
-                                                )}
+                                                            {Course.map((item) => (
+                                                                <SelectItem
+                                                                    key={item.value}
+                                                                    value={
+                                                                        item.value
+                                                                    }
+                                                                >
+                                                                    {item.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </Select>
+                                                    )}
 
                                                 <Select
                                                     isDisabled={
@@ -455,7 +453,7 @@ export default function Settings() {
                                     <UsernameCard username={user?.username} />
                                 </div>
                                 <div className="mt-4">
-                                    <PasswordCard password={user?.password}/>
+                                    <PasswordCard password={user?.password} />
                                 </div>
                                 <div className="mt-4">
                                     <EmailCard email={user?.email} />

@@ -166,7 +166,7 @@ export default function AppSidebar() {
                                 <Link
                                     color={
                                         `/${user?.role.toLowerCase()}/${item.href.replace(/^\//, "")}` ===
-                                        pathname
+                                            pathname
                                             ? "primary"
                                             : "foreground"
                                     }
@@ -245,9 +245,6 @@ export default function AppSidebar() {
                             href={`/${user?.role.toLowerCase()}/settings`}
                             name={user?.firstName + " " + user?.lastName}
                             description={user?.role}
-                            avatarProps={{
-                                src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-                            }}
                         />
                     </Tooltip>
                 </div>
