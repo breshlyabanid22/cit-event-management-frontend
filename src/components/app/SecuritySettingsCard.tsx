@@ -18,21 +18,29 @@ export function UsernameCard(props: { username: string }) {
     const { user } = useAuthStore();
     const [username, setUsername] = useState(props.username);    
     const [edit, setEdit] = useState(false);
+    const [isChanged, setIsChanged] = useState(false);
 
     const handleChange = () => {
         setEdit(!edit);
     }
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
+        setIsChanged(e.target.value !== props.username);
     };
     const handleSave = async () => {
-        try{
+        if (username.trim() === "") {
+            toast.error("Username cannot be blank or empty");
+            return;
+        }
+
+        try {
             await updateUsername(user?.userID, username);
             queryClient.invalidateQueries({ queryKey: ["users"] });
             toast.success("Username has been updated");
-        }catch(error){
+        } catch (error) {
             toast.error("Username is already taken");
         }
+
         setEdit(false);
     };
     return (
@@ -87,6 +95,7 @@ export function UsernameCard(props: { username: string }) {
                         color="primary"
                         radius="full"
                         type="submit"
+                        isDisabled={!edit || !isChanged}
                         onPress={handleSave}
                     >Save
                     </Button>
@@ -102,18 +111,33 @@ export function PasswordCard(props: {password: string}) {
     const { user } = useAuthStore();
     const [password, setPassword] = useState(props.password);    
     const [edit, setEdit] = useState(false);
+    const [isChanged, setIsChanged] = useState(false);
 
     const handleChange = () => {
         setEdit(!edit);
     }
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
+        setIsChanged(e.target.value !== props.password);
     };
     const handleSave = async () => {
-        await updatePassword(user?.userID, password);
-        queryClient.invalidateQueries({ queryKey: ["users"] });
-        toast.success("Password has been updated");
-        setEdit(false);
+        if (password.trim() === "") {
+            toast.error("Password cannot be blank or empty");
+            return;
+        }
+        if (password.length < 8) {
+            toast.error("Password must be at least 8 characters long");
+            return;
+        }
+        try {
+            await updatePassword(user?.userID, password);
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+            toast.success("Password has been updated");
+            setEdit(false);
+            setIsChanged(false);
+        } catch (error) {
+            toast.error("Failed to update password");
+        }
     };
 
     return (
@@ -151,6 +175,7 @@ export function PasswordCard(props: {password: string}) {
                         color="primary"
                         radius="full"
                         type="submit"
+                        isDisabled={!edit || !isChanged}
                         onPress={handleSave}
                     >Save
                     </Button>
@@ -166,14 +191,21 @@ export function EmailCard(props: { email: string }) {
     const { user } = useAuthStore();
     const [email, setEmail] = useState(props.email);    
     const [edit, setEdit] = useState(false);
+    const [isChanged, setIsChanged] = useState(false);
 
     const handleChange = () => {
         setEdit(!edit);
     }
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
+        setIsChanged(e.target.value !== props.email);
     };
     const handleSave = async () => {
+        if (email.trim() === "") {
+            toast.error("Email cannot be blank or empty");
+            return;
+        }
+
         try{
             await updateEmail(user?.userID, email);
             queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -218,6 +250,7 @@ export function EmailCard(props: { email: string }) {
                         color="primary"
                         radius="full"
                         type="submit"
+                        isDisabled={!edit || !isChanged}
                         onPress={handleSave}
                     >Save
                     </Button>
