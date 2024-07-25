@@ -40,11 +40,11 @@ export default function UpcomingEventsCard({ event }: { event: Event }) {
 
     const registerEvent = async () => {
         try {
-            await userRegisterEvent({
+            const message: string = await userRegisterEvent({
                 eventId: Number(event.id),
                 userId: user?.userID,
             });
-            toast.success("Registration successful!");
+            toast.success(message);
             refetch();
         } catch (error) {
             console.error(error);
@@ -111,7 +111,7 @@ export default function UpcomingEventsCard({ event }: { event: Event }) {
                     <small className="text-default-500">
                         {event.description}
                     </small>
-                    <div className="flex flex-row gap-4 justify-center self-center items-center">
+                    <div className="flex flex-row items-center self-center justify-center gap-4">
                         <Button
                             color="secondary"
                             variant="flat"

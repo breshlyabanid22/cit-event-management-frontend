@@ -33,9 +33,9 @@ const eventSchema = z
         name: z
             .string()
             .min(3, "Event name must be at least 3 characters long"),
-        description: z.string().max(300, "Maximum of 300 characters only"),
+        description: z.string().max(600, "Maximum of 300 characters only"),
         venueId: z.coerce.number(),
-        resourceId: z.array(z.coerce.number()),
+        resourceId: z.array(z.coerce.number()).optional(),
         image: z.instanceof(File),
         startTime: z.string(),
         endTime: z.string(),
