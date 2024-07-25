@@ -90,7 +90,8 @@ export default function Settings() {
     useEffect(() => {
         fetchNotifications();
         setUpdateNotifications(false);
-    }, [notifications, updateNotifications]);
+    }, [updateNotifications]);
+
     const fetchNotifications = async () => {
         try {
             const response = await fetch(
@@ -135,7 +136,6 @@ export default function Settings() {
             department: data.department,
             year: data.year,
         });
-        queryClient.invalidateQueries({ queryKey: ["users"] });
         toast.success("Successfully saved");
     };
 
