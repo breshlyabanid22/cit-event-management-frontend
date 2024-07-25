@@ -17,7 +17,7 @@ export default function TotalEvents() {
                         {isLoading ? "0" : data?.length}
                     </p>
                     <p className="text-2xl  text-primary-500">
-                        Total Events Registration
+                        Events Registered
                     </p>
                 </div>
                 <IconCalendarFilled size={50} className="text-primary-500" />

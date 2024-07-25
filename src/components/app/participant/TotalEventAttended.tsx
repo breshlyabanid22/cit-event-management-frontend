@@ -9,7 +9,7 @@ export default function TotalEventAttended() {
                         0
                     </p>
                     <p className="text-2xl  text-primary-500">
-                        Total Events Attended
+                        Events Attended
                     </p>
                 </div>
                 <IconCalendarWeek size={50} className="text-primary-500" />
