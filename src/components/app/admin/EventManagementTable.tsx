@@ -34,11 +34,6 @@ const columns = [
         sortable: true,
     },
     {
-        name: "Venue Manager",
-        uid: "venueManagerId",
-        sortable: true,
-    },
-    {
         name: "Description",
         uid: "description",
         sortable: true,
@@ -109,7 +104,6 @@ const INITIAL_VISIBLE_COLUMNS = [
     "name",
     "venueId",
     "organizerId",
-    "venueManagerId",
     "startDate",
     "endDate",
     "status",
