@@ -196,7 +196,7 @@ export default function Event() {
                             className="gap-4 p-4 min-h-[200px]"
                         >
                             <CardHeader className="text-2xl flex flex-row gap-2 items-center">
-                                <IconUserPin className="text-primary-500" />
+                                <IconUserPin size={50} className="text-primary-500" />
                                 Event Organizer
                             </CardHeader>
                             <CardBody className="flex flex-col gap-2">
@@ -226,15 +226,15 @@ export default function Event() {
                             className="gap-4 p-4 min-h-[200px]"
                         >
                             <CardHeader className="text-2xl flex flex-row gap-2 items-center">
-                                <IconCalendar className="text-primary-500" />
+                                <IconCalendar size={50} className="text-primary-500" />
                                 {event?.name}
                             </CardHeader>
                             <CardBody className="text-default-500 flex flex-row gap-2">
-                                <IconMapPin className="text-primary-500" />
-                                {event?.location}
+                                <IconMapPin size={25} className="text-primary-500" />
+                                {event?.venueName}
                             </CardBody>
                             <CardBody className="text-default-500 flex flex-row gap-2">
-                                <IconClockHour3 className="text-primary-500" />
+                                <IconClockHour3 size={25} className="text-primary-500" />
                                 {startDate} - {endDate}
                             </CardBody>
                         </Card>
@@ -244,7 +244,7 @@ export default function Event() {
                             className="gap-4 p-4 min-h-[200px]"
                         >
                             <CardHeader className="text-xl flex flex-row gap-2">
-                                <IconPilcrow className="text-primary-500" />
+                                <IconPilcrow size={50} className="text-primary-500" />
                                 Description
                             </CardHeader>
                             <CardBody className="text-default-500 flex flex-row gap-2">
@@ -257,7 +257,7 @@ export default function Event() {
                             className="gap-4 p-4 min-h-[200px]"
                         >
                             <CardHeader className="text-xl flex flex-row gap-2">
-                                <IconTargetArrow className="text-primary-500" />
+                                <IconTargetArrow size={50} className="text-primary-500" />
                                 Objectives
                             </CardHeader>
                             <CardBody className="text-default-500 flex flex-row gap-2">
@@ -270,7 +270,7 @@ export default function Event() {
                             className="gap-4 p-4 m-4 col-span-4 min-h-[400px] overflow-y-auto"
                         >
                             <CardHeader className="text-xl flex flex-row gap-2">
-                                <IconMessages className="text-primary-500" />
+                                <IconMessages size={50} className="text-primary-500" />
                                 Feedback Overview
                             </CardHeader>
                             <CardBody className="flex flex-row gap-2">
