@@ -72,6 +72,7 @@ export default function Event() {
             }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["approvedEvents"] });
+            queryClient.invalidateQueries({ queryKey: ["scheduledEvents"] });
             refetch();
             toast.success("Registration successful!");
         },
@@ -81,6 +82,7 @@ export default function Event() {
         mutationFn: () => cancelRegistration(Number(registration?.id)),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["approvedEvents"] });
+            queryClient.invalidateQueries({ queryKey: ["scheduledEvents"] });
             refetch();
             toast.success("Registration cancelled!");
         },

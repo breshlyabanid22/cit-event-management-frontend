@@ -60,6 +60,8 @@ export default function ScheduledListCard({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["scheduledEvents"] });
             queryClient.invalidateQueries({ queryKey: ["eventById", eventData?.id] });
+            queryClient.invalidateQueries({ queryKey: ["eventRegistrationByEventandUser", eventData?.id] });
+            queryClient.invalidateQueries({ queryKey: ["approvedEvents"] });
             refetch();
             toast.success("Registration cancelled!");
         },
