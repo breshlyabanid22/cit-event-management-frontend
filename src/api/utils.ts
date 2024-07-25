@@ -646,3 +646,21 @@ export const getScheduledEvents = async () => {
     }
     return response.json();
 };
+
+export const deleteNotification = async (notificationId: number) => {
+    const response = await fetch(
+        `http://localhost:8080/notifications/${notificationId}`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        },
+    );
+    if (!response.ok) {
+        throw new Error("Network Error");
+    }
+    return response.text();
+};
+

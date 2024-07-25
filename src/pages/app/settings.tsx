@@ -3,6 +3,7 @@ import {
     Tab,
     Card,
     CardBody,
+    CardFooter,
     User,
     Chip,
     Input,
@@ -31,7 +32,7 @@ import {
     PasswordCard,
     EmailCard,
 } from "@/components/app/SecuritySettingsCard";
-import { editAccount } from "@/api/utils";
+import { editAccount, deleteNotification } from "@/api/utils";
 import toast, { Toaster } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -84,10 +85,12 @@ export default function Settings() {
         setSelectedDepartment(value.currentKey);
     };
     const [notifications, setNotifications] = useState<Notifications[]>([]);
+    const [updateNotifications, setUpdateNotifications] = useState(false);
 
     useEffect(() => {
         fetchNotifications();
-    }, []);
+        setUpdateNotifications(false);
+    }, [notifications, updateNotifications]);
     const fetchNotifications = async () => {
         try {
             const response = await fetch(
@@ -134,6 +137,12 @@ export default function Settings() {
         });
         queryClient.invalidateQueries({ queryKey: ["users"] });
         toast.success("Successfully saved");
+    };
+
+    const onPressDelete = (notificationId: number) => {
+        deleteNotification(notificationId);
+        setUpdateNotifications(true);
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
     };
 
     return (
@@ -482,9 +491,15 @@ export default function Settings() {
                                                     {notification.message}
                                                 </p>
                                             </div>
-                                            <small className="text-default-500">
-                                                {notification.createdAt}
-                                            </small>
+                                            <CardFooter className="flex flex-col justify-end items-end gap-4">
+                                                <Button color="danger" variant="bordered" size="sm" radius="full" className="w-min"
+                                                    onPress={() => onPressDelete(notification.id)}>
+                                                    Delete
+                                                </Button>
+                                                <small className="text-default-500">
+                                                    {notification.createdAt}
+                                                </small>
+                                            </CardFooter>
                                         </Card>
                                     ))}
                                 </ScrollShadow>
