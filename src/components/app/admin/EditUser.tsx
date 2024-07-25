@@ -17,12 +17,15 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { editUser } from "@/api/utils";
 import { useQueryClient } from "@tanstack/react-query";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
+import { useState } from "react";
 
 const roleOptions = ["ADMIN", "PARTICIPANT", "ORGANIZER"];
 
 const userSchema = z.object({
     userID: z.number().min(1, "User ID must be at least 1 characters long"),
     username: z.string().min(2, "Username must be at least 2 characters long"),
+    password: z.string().min(2, "Password must be at least 2 characters long"),
     firstName: z
         .string()
         .min(2, "First name must be at least 2 characters long"),
@@ -52,6 +55,8 @@ export default function EditUser({ user }: { user: TypeUser }) {
         },
     });
 
+    const [isVisible, setIsVisible] = useState(false);
+    const toggleVisibility = () => setIsVisible(!isVisible);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const submitUser = async (data: FormField) => {
         await editUser(data);
@@ -162,6 +167,32 @@ export default function EditUser({ user }: { user: TypeUser }) {
                                                     errors.email?.message
                                                 }
                                                 isInvalid={!!errors.email}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <Input
+                                                className="col-span-2"
+                                                endContent={
+                                                    <button
+                                                        className="focus:outline-none"
+                                                        type="button"
+                                                        onClick={toggleVisibility}
+                                                    >
+                                                        {isVisible ? (
+                                                            <IconEye className="text-2xl pointer-events-none text-default-400" />
+                                                        ) : (
+                                                            <IconEyeOff className="text-2xl pointer-events-none text-default-400" />
+                                                        )}
+                                                    </button>
+                                                }
+                                                label="Password"
+                                                placeholder="Enter your password"
+                                                type={isVisible ? "text" : "password"}
+                                                {...register("password")}
+                                                errorMessage={
+                                                    errors.password?.message
+                                                }
+                                                isInvalid={!!errors.password}
                                             />
                                         </div>
                                         <div className="grid grid-cols-1 gap-2 ">
