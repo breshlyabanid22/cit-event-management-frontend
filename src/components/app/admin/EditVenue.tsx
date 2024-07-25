@@ -66,7 +66,6 @@ export default function EditVenue({ venue }: { venue: Venue }) {
             name: venue.name,
             location: venue.location,
             maxCapacity: venue.maxCapacity,
-            venueManagersID: venue.venueManagersID,
             userID: user?.userID,
             images: undefined,
         },
@@ -194,10 +193,6 @@ export default function EditVenue({ venue }: { venue: Venue }) {
                                             <Controller
                                                 name="venueManagersID"
                                                 control={control}
-                                                rules={{
-                                                    required:
-                                                        "Venue manager is required",
-                                                }}
                                                 render={({ field }) => (
                                                     <Autocomplete
                                                         {...field}
