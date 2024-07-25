@@ -91,7 +91,6 @@ export default function Settings() {
         fetchNotifications();
         setUpdateNotifications(false);
     }, [updateNotifications]);
-
     const fetchNotifications = async () => {
         try {
             const response = await fetch(
@@ -122,7 +121,9 @@ export default function Settings() {
         defaultValues: {
             firstName: user?.firstName,
             lastName: user?.lastName,
-
+            department: user?.department,
+            year: user?.year,
+            course: user?.course
         },
     });
     //Sorts notifications before mapping
@@ -491,7 +492,7 @@ export default function Settings() {
                                                     {notification.message}
                                                 </p>
                                             </div>
-                                            <CardFooter className="flex flex-col justify-end items-end gap-4">
+                                            <CardFooter className="flex flex-col items-end justify-end gap-4">
                                                 <Button color="danger" variant="bordered" size="sm" radius="full" className="w-min"
                                                     onPress={() => onPressDelete(notification.id)}>
                                                     Delete
