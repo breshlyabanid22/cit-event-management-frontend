@@ -43,15 +43,6 @@ export default function IndexPage() {
                     GitHub
                 </Link>
             </div>
-
-            <div className="mt-8">
-                <Snippet hideCopyButton hideSymbol variant="bordered">
-                    <span>
-                        Get started by editing{" "}
-                        <Code color="primary">pages/index.tsx</Code>
-                    </span>
-                </Snippet>
-            </div>
         </section>
     );
 }
