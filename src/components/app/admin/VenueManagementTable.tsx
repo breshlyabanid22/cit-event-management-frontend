@@ -59,11 +59,6 @@ const columns = [
         sortable: true,
     },
     {
-        name: "Department",
-        uid: "department",
-        sortable: true,
-    },
-    {
         name: "Actions",
         uid: "actions",
     },
@@ -100,7 +95,6 @@ const INITIAL_VISIBLE_COLUMNS = [
     "events",
     "date",
     "venue",
-    "department",
     "actions",
 ];
 
@@ -183,17 +177,22 @@ export default function VenueManagementTable() {
                         name={`${venue.name}`}
                     ></User>
                 );
-            case "department":
-                return (
-                    <Chip
-                        className="capitalize"
-                        color={statusColorMap[venue.department]}
-                        size="sm"
-                        variant="flat"
-                    >
-                        {venue.department}
-                    </Chip>
-                );
+            case "venueManager":
+            return (
+                <div className="venue-manager">
+                    {venue?.venueManagers.map((manager, index) => (
+                        <Chip
+                            key={index}
+                            className="capitalize"
+                            color="default" // or any color you prefer
+                            size="sm"
+                            variant="flat"
+                        >
+                            {manager}
+                        </Chip>
+                    ))}
+                </div>
+            );
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2">
