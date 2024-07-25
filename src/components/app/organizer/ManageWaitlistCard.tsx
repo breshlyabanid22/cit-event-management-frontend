@@ -12,14 +12,13 @@ import { acceptUserRegistration, declineUserRegistration } from "@/api/utils";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function ManageWaitlistCard({
-    registration,
-}: { registration: any }) {
+    registration, event }) {
     const queryClient = useQueryClient();
     const acceptRegistration = async () => {
         await acceptUserRegistration(registration.id);
         toast.success("Added to participant list");
         queryClient.invalidateQueries({
-            queryKey: ["registrationsforOrganizer", registration.id],
+            queryKey: ["registrationsforOrganizer", event.id],
         });
     };
 
@@ -27,7 +26,7 @@ export default function ManageWaitlistCard({
         await declineUserRegistration(registration.id);
         toast.success("Removed from participant list")
         queryClient.invalidateQueries({
-            queryKey: ["registrationsforOrganizer", registration.id],
+            queryKey: ["registrationsforOrganizer", event.id],
         });
     };
 

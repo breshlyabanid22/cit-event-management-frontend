@@ -45,6 +45,7 @@ export default function ManageWaitlist({ event }: { event: Event }) {
                                         <ManageWaitlistCard
                                             key={registration.id}
                                             registration={registration}
+                                            event={event}
                                         />
                                     ) : null,
                                 )
