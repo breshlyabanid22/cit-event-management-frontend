@@ -27,16 +27,16 @@ import { useQuery } from "@tanstack/react-query";
 
 const venueSchema = z.object({
     id: z.number().min(1, "Venue ID must be at least 1 characters long"),
-    userID: z.number().min(1, "User ID must be at least 1 characters long"),
+    userID: z.number().optional(),
     images: z
         .array(z.instanceof(File))
-        .min(1, "At least (1) image is required"),
+        .optional(),
     name: z.string().min(3, "Event name must be at least 3 characters long"),
     location: z
         .string()
         .min(3, "Event location must be at least 3 characters long"),
     maxCapacity: z.number().min(1, "Capacity must be at least 1 people"),
-    venueManagersID: z.number(),
+    venueManagersID: z.number().optional(),
 });
 
 export default function EditVenue({ venue }: { venue: Venue }) {
@@ -66,6 +66,9 @@ export default function EditVenue({ venue }: { venue: Venue }) {
             name: venue.name,
             location: venue.location,
             maxCapacity: venue.maxCapacity,
+            venueManagersID: venue.venueManagersID,
+            userID: user?.userID,
+            images: undefined,
         },
     });
 

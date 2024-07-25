@@ -327,28 +327,50 @@ export const getVenues = async () => {
     return response.json();
 };
 
-export const editVenue = async (data: {
-    id: number;
+export async function editVenue(data: {
+    id: number | undefined;
     userID: number;
     venueManagersID: number;
     name: string;
     location: string;
     maxCapacity: number;
     images: File[];
-}) => {
+}) {
+    const createVenueData = {
+        userID: data.userID,
+        venueManagersID: data.venueManagersID,
+        name: data.name,
+        location: data.location,
+        maxCapacity: data.maxCapacity,
+        imageFiles: data.images,
+    };
+
+    const formData = new FormData();
+
+    formData.append(
+        "venueDTO",
+        new Blob([JSON.stringify(createVenueData)], {
+            type: "application/json",
+        }),
+    );
+    if (createVenueData.imageFiles && createVenueData.imageFiles.length > 0) {
+        Array.from(createVenueData.imageFiles).forEach((file) => {
+            formData.append("imageFiles", file);
+        });
+    }
+
     const response = await fetch(`http://localhost:8080/venues/${data.id}`, {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: formData,
         credentials: "include",
     });
+
     if (!response.ok) {
-        throw new Error("Network Error");
+        throw new Error("Failed to add venue");
     }
+
     return response.text();
-};
+}
 
 export const deleteVenue = async (venueID: number) => {
     const response = await fetch(`http://localhost:8080/venues/${venueID}`, {
