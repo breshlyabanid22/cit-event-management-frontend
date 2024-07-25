@@ -13,8 +13,10 @@ import {
 import AppSearch from "@/components/app/search";
 import { ThemeSwitch } from "../theme-switch";
 import { IconBell } from "@tabler/icons-react";
-
+import useAuthStore from "@/provider/auth";
 export default function AppNavBar() {
+    const { user } = useAuthStore();
+
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     return (
@@ -34,7 +36,34 @@ export default function AppNavBar() {
                     <ThemeSwitch />
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex">
-                    <IconBell />
+                    {(() => {
+                        let settingsPath = "";
+                        switch (user?.role) {
+                            case "ADMIN":
+                                settingsPath = "/admin/settings";
+                                break;
+                            case "PARTICIPANT":
+                                settingsPath = "/participant/settings";
+                                break;
+                            case "ORGANIZER":
+                                settingsPath = "/organizer/settings";
+                                break;
+                            case "VENUE_MANAGER":
+                                settingsPath =
+                                    "/venue-management/settings";
+                                break;
+                            default:
+                                return null; // Or some default behavior
+                        }
+
+                        return (
+                            <Link
+                                href={settingsPath}
+                            >
+                                <IconBell />
+                            </Link>
+                        );
+                    })()}
                 </NavbarItem>
             </NavbarContent>
         </Navbar>
